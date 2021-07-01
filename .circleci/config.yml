@@ -134,16 +134,10 @@ workflows:
           filters:
             branches:
               only: development
-      - terraform-init-and-apply-to-development:
-          requires:
-            - assume-role-development
-          filters:
-            branches:
-              only: development
       - deploy-to-development:
           context: api-assume-role-housing-development-context
           requires:
-            - terraform-init-and-apply-to-development
+            - assume-role-development
           filters:
             branches:
               only: development
@@ -160,32 +154,9 @@ workflows:
 #           filters:
 #              branches:
 #                only: master
-#       - terraform-init-and-apply-to-staging:
-#           requires:
-#             - assume-role-staging
-#           filters:
-#             branches:
-#               only: master
 #       - deploy-to-staging:
 #           requires:
-#             - terraform-init-and-apply-to-staging
-#           filters:
-#             branches:
-#               only: master
-#       - permit-production-terraform-release:
-#           type: approval
-#           requires:
-#             - deploy-to-staging
-#       - assume-role-production:
-#           context: api-assume-role-production-context
-#           requires:
-#               - permit-production-terraform-release
-#           filters:
-#              branches:
-#                only: master
-#       - terraform-init-and-apply-to-production:
-#           requires:
-#             - assume-role-production
+#             - assume-role-staging
 #           filters:
 #             branches:
 #               only: master
@@ -196,11 +167,18 @@ workflows:
 #           filters:
 #             branches:
 #               only: master
+#       - assume-role-production:
+#           context: api-assume-role-production-context
+#           requires:
+#               - permit-production-terraform-release
+#           filters:
+#              branches:
+#                only: master
 #       - deploy-to-production:
 #           context: api-assume-role-housing-production-context
 #           requires:
 #             - permit-production-release
-#             - terraform-init-and-apply-to-production
+#             - assume-role-production
 #           filters:
 #             branches:
 #               only: master
