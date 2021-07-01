@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using HackneyVaccinationsApi.V1.Boundary.Requests;
 using HackneyVaccinationsApi.V1.Boundary.Response;
 using HackneyVaccinationsApi.V1.UseCase.Interfaces;
@@ -29,9 +30,9 @@ namespace HackneyVaccinationsApi.V1.Controllers
         /// <response code="400">No ? found for the specified ID</response>
         [HttpPost]
         //TODO: rename to match the identifier that will be used
-        public IActionResult CreateConfirmations(ConfirmationRequest request)
+        public async Task<IActionResult> CreateConfirmations(ConfirmationRequest request)
         {
-            _sendConfirmationUseCase.Execute(request);
+            await _sendConfirmationUseCase.Execute(request).ConfigureAwait(false);
             return Created(new Uri("http://test"), null);
         }
     }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using HackneyVaccinationsApi.V1.Controllers;
 using HackneyVaccinationsApi.V1.UseCase;
 using FluentAssertions;
@@ -25,18 +26,18 @@ namespace HackneyVaccinationsApi.Tests.V1.Controllers
         }
 
         [TestCase(TestName = "Confirmations controller post request returns response with status")]
-        public void ReturnsResponseWithStatus()
+        public async Task ReturnsResponseWithStatus()
         {
             var confirmationRequest = Fakr.Create<ConfirmationRequest>();
-            var response = _classUnderTest.CreateConfirmations(confirmationRequest) as CreatedResult;
+            var response = await _classUnderTest.CreateConfirmations(confirmationRequest).ConfigureAwait(false) as CreatedResult;
             response.StatusCode.Should().Be(201);
         }
 
         [TestCase(TestName = "Confirmations controller post request calls the send confirmation use case")]
-        public void CallsSendConfirmationUseCase()
+        public async Task CallsSendConfirmationUseCase()
         {
             var confirmationRequest = Fakr.Create<ConfirmationRequest>();
-            _classUnderTest.CreateConfirmations(confirmationRequest);
+            await _classUnderTest.CreateConfirmations(confirmationRequest).ConfigureAwait(false);
             _mockUseCase.Verify(u => u.Execute(It.IsAny<ConfirmationRequest>()), Times.Once);
         }
     }

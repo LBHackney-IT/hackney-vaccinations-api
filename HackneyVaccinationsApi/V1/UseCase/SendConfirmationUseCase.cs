@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using HackneyVaccinationsApi.V1.Boundary.Requests;
 using HackneyVaccinationsApi.V1.Gateways.Interfaces;
 using HackneyVaccinationsApi.V1.UseCase.Interfaces;
@@ -12,16 +13,16 @@ namespace HackneyVaccinationsApi.V1.UseCase
         {
             _notifyGateway = gateway;
         }
-        public void Execute(ConfirmationRequest request)
+        public async Task Execute(ConfirmationRequest request)
         {
             if (!string.IsNullOrWhiteSpace(request.Email))
             {
-                _notifyGateway.SendEmailConfirmation(request.Email, request.BookingSlot);
+                await _notifyGateway.SendEmailConfirmation(request.Email, request.BookingSlot).ConfigureAwait(false);
             }
 
             if (!string.IsNullOrWhiteSpace(request.MobileNumber))
             {
-                _notifyGateway.SendTextMessageConfirmation(request.MobileNumber, request.BookingSlot);
+                await _notifyGateway.SendTextMessageConfirmation(request.MobileNumber, request.BookingSlot).ConfigureAwait(false);
             }
         }
     }
