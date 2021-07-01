@@ -1,8 +1,8 @@
 version: "3.2"
 
 services:
-  base-api:
-    image: base-api
+  hackney-vaccinations-api:
+    image: hackney-vaccinations-api
     build:
       context: HackneyVaccinationsApi/
       dockerfile: ./Dockerfile
@@ -25,8 +25,8 @@ services:
     volumes:
       - ./database:/docker-entrypoint-initdb.d
 
-  base-api-test:
-    image: base-api-test
+  hackney-vaccinations-api-test:
+    image: hackney-vaccinations-api-test
     build:
       context: .
       dockerfile: HackneyVaccinationsApi.Tests/Dockerfile
