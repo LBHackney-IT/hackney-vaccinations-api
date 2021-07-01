@@ -16,18 +16,18 @@ namespace HackneyVaccinationsApi.V1.Gateways
             _resources = resources;
             _client = new NotificationClient(_resources.NotifyKey);
         }
-        public async Task<bool> SendEmailConfirmation(string email)
+        public async Task<bool> SendEmailConfirmation(string email, string slot)
         {
             var personalisation = new Dictionary<string, dynamic>();
-            personalisation.Add("slot", "testing");
+            personalisation.Add("slot", slot);
             await _client.SendEmailAsync(email, _resources.EmailTemplate, personalisation).ConfigureAwait(false);
             return true;
         }
 
-        public async Task<bool> SendTextMessageConfirmation(string mobileNumber)
+        public async Task<bool> SendTextMessageConfirmation(string mobileNumber, string slot)
         {
             var personalisation = new Dictionary<string, dynamic>();
-            personalisation.Add("slot", "testing");
+            personalisation.Add("slot", slot);
             await _client.SendSmsAsync(mobileNumber, _resources.TextMessageTemplate, personalisation).ConfigureAwait(false);
             return true;
         }

@@ -13,10 +13,11 @@ namespace HackneyVaccinationsApi.Tests.V1.Boundary.Requests
         public void ConfirmationRequestShouldHaveCorrectProperties()
         {
             var entityType = typeof(ConfirmationRequest);
-            entityType.GetProperties().Length.Should().Be(2);
+            entityType.GetProperties().Length.Should().Be(3);
             var entity = Fakr.Create<ConfirmationRequest>();
             Assert.That(entity, Has.Property("Email").InstanceOf(typeof(string)));
             Assert.That(entity, Has.Property("MobileNumber").InstanceOf(typeof(string)));
+            Assert.That(entity, Has.Property("BookingSlot").InstanceOf(typeof(string)));
         }
     }
 }

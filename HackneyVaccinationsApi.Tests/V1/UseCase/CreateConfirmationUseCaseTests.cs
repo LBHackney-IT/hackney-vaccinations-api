@@ -31,7 +31,7 @@ namespace HackneyVaccinationsApi.Tests.V1.UseCase
         {
             var request = Fakr.Create<ConfirmationRequest>();
             _classUnderTest.Execute(request);
-            _mockGateway.Verify(gw => gw.SendEmailConfirmation(It.IsAny<string>()), Times.Once);
+            _mockGateway.Verify(gw => gw.SendEmailConfirmation(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace HackneyVaccinationsApi.Tests.V1.UseCase
         {
             var request = Fakr.Create<ConfirmationRequest>();
             _classUnderTest.Execute(request);
-            _mockGateway.Verify(gw => gw.SendTextMessageConfirmation(It.IsAny<string>()), Times.Once);
+            _mockGateway.Verify(gw => gw.SendTextMessageConfirmation(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
 
     }

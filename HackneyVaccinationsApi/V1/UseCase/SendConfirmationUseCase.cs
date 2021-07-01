@@ -16,12 +16,12 @@ namespace HackneyVaccinationsApi.V1.UseCase
         {
             if (!string.IsNullOrWhiteSpace(request.Email))
             {
-                _notifyGateway.SendEmailConfirmation(request.Email);
+                _notifyGateway.SendEmailConfirmation(request.Email, request.BookingSlot);
             }
 
             if (!string.IsNullOrWhiteSpace(request.MobileNumber))
             {
-                _notifyGateway.SendTextMessageConfirmation(request.MobileNumber);
+                _notifyGateway.SendTextMessageConfirmation(request.MobileNumber, request.BookingSlot);
             }
         }
     }
