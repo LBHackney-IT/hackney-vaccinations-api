@@ -128,14 +128,14 @@ workflows:
       - check-code-formatting
       - build-and-test
       - assume-role-development:
-          context: api-assume-role-housing-development-context
+          context: api-assume-role-development-context
           requires:
             - build-and-test
           filters:
             branches:
               only: development
       - deploy-to-development:
-          context: api-assume-role-housing-development-context
+          context: api-assume-role-development-context
           requires:
             - assume-role-development
           filters:
@@ -175,7 +175,7 @@ workflows:
 #              branches:
 #                only: master
 #       - deploy-to-production:
-#           context: api-assume-role-housing-production-context
+#           context: api-assume-role-production-context
 #           requires:
 #             - permit-production-release
 #             - assume-role-production
