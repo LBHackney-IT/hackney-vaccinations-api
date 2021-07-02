@@ -30,7 +30,7 @@ namespace HackneyVaccinationsApi.Tests.V1.E2ETests
         //     var requestUri = new Uri("api/v1/confirmations", UriKind.Relative);
         //
         //     //act
-        //     var response = await Client.PostAsync(requestUri, postContent).ConfigureAwait(false);
+        //     var response = await Client.PostAsync(requestUri, postContent).ConfigureAwait(true);
         //     postContent.Dispose();
         //
         //     //assert

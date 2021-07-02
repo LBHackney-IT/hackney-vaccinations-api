@@ -28,7 +28,7 @@ namespace HackneyVaccinationsApi.Tests.V1.Infrastructure
             httpContext.HttpContext.Request.Headers.Add(Constants.CorrelationId, headerValue);
 
             // Act
-            await _sut.InvokeAsync(httpContext).ConfigureAwait(false);
+            await _sut.InvokeAsync(httpContext).ConfigureAwait(true);
 
             // Assert
             httpContext.HttpContext.Request.Headers[Constants.CorrelationId].Should().BeEquivalentTo(headerValue);
@@ -41,7 +41,7 @@ namespace HackneyVaccinationsApi.Tests.V1.Infrastructure
             var httpContext = new DefaultHttpContext();
 
             // Act
-            await _sut.InvokeAsync(httpContext).ConfigureAwait(false);
+            await _sut.InvokeAsync(httpContext).ConfigureAwait(true);
 
             // Assert
             httpContext.HttpContext.Request.Headers[Constants.CorrelationId].Should().HaveCountGreaterThan(0);

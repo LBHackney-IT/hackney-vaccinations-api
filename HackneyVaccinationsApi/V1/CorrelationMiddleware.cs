@@ -22,7 +22,7 @@ namespace HackneyVaccinationsApi.V1.Controllers
             }
 
             if (_next != null)
-                await _next(context).ConfigureAwait(false);
+                await _next(context).ConfigureAwait(true);
         }
     }
 

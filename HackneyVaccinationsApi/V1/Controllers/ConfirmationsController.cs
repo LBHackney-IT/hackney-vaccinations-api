@@ -32,7 +32,7 @@ namespace HackneyVaccinationsApi.V1.Controllers
         //TODO: rename to match the identifier that will be used
         public async Task<IActionResult> CreateConfirmations(ConfirmationRequest request)
         {
-            await _sendConfirmationUseCase.Execute(request).ConfigureAwait(false);
+            await _sendConfirmationUseCase.Execute(request).ConfigureAwait(true);
             return Created(new Uri("http://test"), null);
         }
     }

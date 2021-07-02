@@ -40,7 +40,7 @@ using System.Threading.Tasks;
 //    /// <returns></returns>
 //    private async Task SetupTestData(Entity entity)
 //    {
-//        await DynamoDbContext.SaveAsync(entity.ToDatabase()).ConfigureAwait(false);
+//        await DynamoDbContext.SaveAsync(entity.ToDatabase()).ConfigureAwait(true);
 //        CleanupActions.Add(async () => await DynamoDbContext.DeleteAsync<DatabaseEntity>(entity.Id).ConfigureAwait(false));
 //    }
 
@@ -50,7 +50,7 @@ using System.Threading.Tasks;
 //        int id = 123456789;
 //        //TODO: Update uri route to match the APIs endpoint
 //        var uri = new Uri($"api/v1/notes/{id}", UriKind.Relative);
-//        var response = await Client.GetAsync(uri).ConfigureAwait(false);
+//        var response = await Client.GetAsync(uri).ConfigureAwait(true);
 
 //        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
 //    }
@@ -59,15 +59,15 @@ using System.Threading.Tasks;
 //    public async Task GetNoteBydIdFoundReturnsResponse()
 //    {
 //        var entity = ConstructTestEntity();
-//        await SetupTestData(entity).ConfigureAwait(false);
+//        await SetupTestData(entity).ConfigureAwait(true);
 
 //        //TODO: Update uri route to match the APIs endpoint
 //        var uri = new Uri($"api/v1/notes/{entity.Id}", UriKind.Relative);
-//        var response = await Client.GetAsync(uri).ConfigureAwait(false);
+//        var response = await Client.GetAsync(uri).ConfigureAwait(true);
 
 //        response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-//        var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+//        var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
 //        var apiEntity = JsonConvert.DeserializeObject<Entity>(responseContent);
 
 //        apiEntity.Should().BeEquivalentTo(entity, (x) => x.Excluding(y => y.CreatedAt));

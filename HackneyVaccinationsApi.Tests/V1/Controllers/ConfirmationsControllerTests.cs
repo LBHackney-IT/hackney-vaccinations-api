@@ -29,7 +29,7 @@ namespace HackneyVaccinationsApi.Tests.V1.Controllers
         public async Task ReturnsResponseWithStatus()
         {
             var confirmationRequest = Fakr.Create<ConfirmationRequest>();
-            var response = await _classUnderTest.CreateConfirmations(confirmationRequest).ConfigureAwait(false) as CreatedResult;
+            var response = await _classUnderTest.CreateConfirmations(confirmationRequest).ConfigureAwait(true) as CreatedResult;
             response.StatusCode.Should().Be(201);
         }
 
@@ -37,7 +37,7 @@ namespace HackneyVaccinationsApi.Tests.V1.Controllers
         public async Task CallsSendConfirmationUseCase()
         {
             var confirmationRequest = Fakr.Create<ConfirmationRequest>();
-            await _classUnderTest.CreateConfirmations(confirmationRequest).ConfigureAwait(false);
+            await _classUnderTest.CreateConfirmations(confirmationRequest).ConfigureAwait(true);
             _mockUseCase.Verify(u => u.Execute(It.IsAny<ConfirmationRequest>()), Times.Once);
         }
     }

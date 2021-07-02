@@ -20,7 +20,7 @@ namespace HackneyVaccinationsApi.V1.Gateways
         {
             var personalisation = new Dictionary<string, dynamic>();
             personalisation.Add("slot", slot);
-            await _client.SendEmailAsync(email, _resources.EmailTemplate, personalisation).ConfigureAwait(false);
+            await _client.SendEmailAsync(email, _resources.EmailTemplate, personalisation).ConfigureAwait(true);
             return true;
         }
 
@@ -28,7 +28,7 @@ namespace HackneyVaccinationsApi.V1.Gateways
         {
             var personalisation = new Dictionary<string, dynamic>();
             personalisation.Add("slot", slot);
-            await _client.SendSmsAsync(mobileNumber, _resources.TextMessageTemplate, personalisation).ConfigureAwait(false);
+            await _client.SendSmsAsync(mobileNumber, _resources.TextMessageTemplate, personalisation).ConfigureAwait(true);
             return true;
         }
     }
