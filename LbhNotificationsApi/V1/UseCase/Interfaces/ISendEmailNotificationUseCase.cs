@@ -3,8 +3,8 @@ using LbhNotificationsApi.V1.Boundary.Requests;
 
 namespace LbhNotificationsApi.V1.UseCase.Interfaces
 {
-    public interface ISendConfirmationUseCase
+    public interface ISendEmailNotificationUseCase
     {
-        public Task Execute(ConfirmationRequest request);
+        public void Execute(EmailNotificationRequest request);
     }
 }

@@ -14,32 +14,24 @@ using NUnit.Framework;
 
 namespace LbhNotificationsApi.Tests.V1.UseCase
 {
-    public class CreateConfirmationUseCaseTests
+    public class SendEmailNotificationUseCaseTests
     {
         private Mock<INotifyGateway> _mockGateway;
-        private SendConfirmationUseCase _classUnderTest;
+        private SendEmailNotificationUseCase _classUnderTest;
 
         [SetUp]
         public void SetUp()
         {
             _mockGateway = new Mock<INotifyGateway>();
-            _classUnderTest = new SendConfirmationUseCase(_mockGateway.Object);
+            _classUnderTest = new SendEmailNotificationUseCase(_mockGateway.Object);
         }
 
         [Test]
         public void UseCaseCallsGatewaySendEmail()
         {
-            var request = Fakr.Create<ConfirmationRequest>();
+            var request = Fakr.Create<EmailNotificationRequest>();
             _classUnderTest.Execute(request);
-            _mockGateway.Verify(gw => gw.SendEmailConfirmation(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-        }
-
-        [Test]
-        public void UseCaseCallsGatewaySendText()
-        {
-            var request = Fakr.Create<ConfirmationRequest>();
-            _classUnderTest.Execute(request);
-            _mockGateway.Verify(gw => gw.SendTextMessageConfirmation(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            _mockGateway.Verify(gw => gw.SendEmailNotification(It.IsAny<EmailNotificationRequest>()), Times.Once);
         }
 
     }

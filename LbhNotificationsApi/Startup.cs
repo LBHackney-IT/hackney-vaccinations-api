@@ -152,21 +152,14 @@ namespace LbhNotificationsApi
 
         private static void RegisterGateways(IServiceCollection services)
         {
-            var notifyResources = new NotifyResources
-            {
-                NotifyKey = Environment.GetEnvironmentVariable("GOV_NOTIFY_API_KEY"),
-                EmailTemplate = Environment.GetEnvironmentVariable("GOV_NOTIFY_EMAIL_TEMPLATE"),
-                TextMessageTemplate = Environment.GetEnvironmentVariable("GOV_NOTIFY_TEXT_TEMPLATE")
-            };
             services.AddScoped<IExampleGateway, ExampleGateway>();
-            services.AddTransient<INotifyGateway>(x => notifyResources.NotifyKey == null ? null : new NotifyGateway(notifyResources));
+            services.AddScoped<INotifyGateway, NotifyGateway>();
         }
 
         private static void RegisterUseCases(IServiceCollection services)
         {
-            services.AddScoped<IGetAllUseCase, GetAllUseCase>();
-            services.AddScoped<IGetByIdUseCase, GetByIdUseCase>();
-            services.AddScoped<ISendConfirmationUseCase, SendConfirmationUseCase>();
+            services.AddScoped<ISendSmsNotificationUseCase, SendSmsNotificationUseCase>();
+            services.AddScoped<ISendEmailNotificationUseCase, SendEmailNotificationUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
