@@ -1,4 +1,4 @@
-service: hackney-vaccinations-api
+service: lbh-notifications-api
 provider:
   name: aws
   runtime: dotnetcore3.1
@@ -23,7 +23,7 @@ provider:
 
 package:
 # TODO: Rename zipfile in build.sh and build.cmd to match this
-  artifact: ./bin/release/netcoreapp3.1/hackney-vaccinations-api.zip
+  artifact: ./bin/release/netcoreapp3.1/lbh-notifications-api.zip
 
 functions:
   LbhNotificationsApi:

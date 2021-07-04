@@ -1,8 +1,8 @@
 version: "3.2"
 
 services:
-  hackney-vaccinations-api:
-    image: hackney-vaccinations-api
+  lbh-notifications-api:
+    image: lbh-notifications-api
     build:
       context: LbhNotificationsApi/
       dockerfile: ./Dockerfile
@@ -25,8 +25,8 @@ services:
     volumes:
       - ./database:/docker-entrypoint-initdb.d
 
-  hackney-vaccinations-api-test:
-    image: hackney-vaccinations-api-test
+  lbh-notifications-api-test:
+    image: lbh-notifications-api-test
     build:
       context: .
       dockerfile: LbhNotificationsApi.Tests/Dockerfile

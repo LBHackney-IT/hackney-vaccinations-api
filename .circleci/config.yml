@@ -84,10 +84,10 @@ jobs:
       - setup_remote_docker
       - run:
           name: build
-          command: docker-compose build hackney-vaccinations-api-test
+          command: docker-compose build lbh-notifications-api-test
       - run:
           name: Run tests
-          command: docker-compose run hackney-vaccinations-api-test
+          command: docker-compose run lbh-notifications-api-test
   assume-role-development:
     executor: docker-python
     steps:
