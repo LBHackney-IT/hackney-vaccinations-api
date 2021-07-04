@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LbhNotificationsApi.V1.Boundary.Requests;
@@ -9,13 +10,14 @@ namespace LbhNotificationsApi.V1.Gateways
 {
     public class NotifyGateway : INotifyGateway
     {
-        private readonly NotificationClient _client;
+        private NotificationClient _client;
 
         public NotifyGateway()
         {
         }
         public bool SendEmailNotification(EmailNotificationRequest request)
         {
+            _client = new NotificationClient(request.ServiceKey);
             var personalisation = new Dictionary<string, dynamic>();
             if (request.PersonalisationParams != null)
             {
@@ -38,6 +40,15 @@ namespace LbhNotificationsApi.V1.Gateways
 
         public bool SendTextMessageNotification(SmsNotificationRequest request)
         {
+            if (string.IsNullOrWhiteSpace(request.ServiceKey))
+            {
+                throw new ArgumentNullException(request.ServiceKey);
+            }
+            if (string.IsNullOrWhiteSpace(request.TemplateId))
+            {
+                throw new ArgumentNullException(request.TemplateId);
+            }
+            _client = new NotificationClient(request.ServiceKey);
             var personalisation = new Dictionary<string, dynamic>();
             if (request.PersonalisationParams != null)
             {
