@@ -17,7 +17,7 @@ namespace LbhNotificationsApi.V1.UseCase
         {
             if (!string.IsNullOrWhiteSpace(request.Email))
             {
-                _notifyGateway.SendEmailConfirmation(request);
+                _notifyGateway.SendEmailNotification(request);
             }
         }
     }

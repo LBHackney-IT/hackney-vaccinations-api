@@ -37,7 +37,7 @@ namespace LbhNotificationsApi.V1.Controllers
         public IActionResult CreateSMSNotification(SmsNotificationRequest request)
         {
             _sendSmsNotificationUseCase.Execute(request);
-            return Created(new Uri(""), null);
+            return Created(new Uri("http://test"), null);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace LbhNotificationsApi.V1.Controllers
         public IActionResult CreateEmailNotification(EmailNotificationRequest request)
         {
             _sendEmailNotificationUseCase.Execute(request);
-            return Created(new Uri(""), null);
+            return Created(new Uri("http://test"), null);
         }
     }
 }

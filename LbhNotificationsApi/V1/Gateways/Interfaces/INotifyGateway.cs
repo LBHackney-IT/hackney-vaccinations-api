@@ -5,7 +5,7 @@ namespace LbhNotificationsApi.V1.Gateways.Interfaces
 {
     public interface INotifyGateway
     {
-        bool SendEmailConfirmation(EmailNotificationRequest request);
-        bool SendTextMessageConfirmation(SmsNotificationRequest request);
+        bool SendEmailNotification(EmailNotificationRequest request);
+        bool SendTextMessageNotification(SmsNotificationRequest request);
     }
 }

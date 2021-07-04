@@ -16,7 +16,7 @@ namespace LbhNotificationsApi.Tests.V1.Boundary.Requests
             var entityType = typeof(SmsNotificationRequest);
             entityType.GetProperties().Length.Should().Be(4);
             var entity = Fakr.Create<SmsNotificationRequest>();
-            Assert.That(entity, Has.Property("Sms").InstanceOf(typeof(string)));
+            Assert.That(entity, Has.Property("MobileNumber").InstanceOf(typeof(string)));
             Assert.That(entity, Has.Property("ServiceKey").InstanceOf(typeof(string)));
             Assert.That(entity, Has.Property("TemplateId").InstanceOf(typeof(string)));
             Assert.That(entity, Has.Property("PersonalisationParams").InstanceOf(typeof(Dictionary<string, string>)));

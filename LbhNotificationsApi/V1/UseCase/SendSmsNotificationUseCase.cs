@@ -18,7 +18,7 @@ namespace LbhNotificationsApi.V1.UseCase
 
             if (!string.IsNullOrWhiteSpace(request.MobileNumber))
             {
-                _notifyGateway.SendTextMessageConfirmation(request);
+                _notifyGateway.SendTextMessageNotification(request);
             }
         }
     }

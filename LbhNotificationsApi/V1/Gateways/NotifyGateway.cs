@@ -14,7 +14,7 @@ namespace LbhNotificationsApi.V1.Gateways
         public NotifyGateway()
         {
         }
-        public bool SendEmailConfirmation(EmailNotificationRequest request)
+        public bool SendEmailNotification(EmailNotificationRequest request)
         {
             var personalisation = new Dictionary<string, dynamic>();
             if (request.PersonalisationParams != null)
@@ -36,7 +36,7 @@ namespace LbhNotificationsApi.V1.Gateways
             return true;
         }
 
-        public bool SendTextMessageConfirmation(SmsNotificationRequest request)
+        public bool SendTextMessageNotification(SmsNotificationRequest request)
         {
             var personalisation = new Dictionary<string, dynamic>();
             if (request.PersonalisationParams != null)

@@ -14,31 +14,51 @@ namespace LbhNotificationsApi.Tests.V1.Controllers
 {
 
     [TestFixture]
-    public class ConfirmationsControllerTests
+    public class NotificationsControllerTests
     {
-        private ConfirmationsController _classUnderTest;
-        private Mock<ISendConfirmationUseCase> _mockUseCase;
+        private NotificationsController _classUnderTest;
+        private Mock<ISendSmsNotificationUseCase> _mockSmsNotificationUseCase;
+        private Mock<ISendEmailNotificationUseCase> _mockEmailNotificationUseCase;
         [SetUp]
         public void SetUp()
         {
-            _mockUseCase = new Mock<ISendConfirmationUseCase>();
-            _classUnderTest = new ConfirmationsController(_mockUseCase.Object);
+            _mockEmailNotificationUseCase = new Mock<ISendEmailNotificationUseCase>();
+            _mockSmsNotificationUseCase = new Mock<ISendSmsNotificationUseCase>();
+            _classUnderTest = new NotificationsController(_mockSmsNotificationUseCase.Object, _mockEmailNotificationUseCase.Object);
         }
 
-        [TestCase(TestName = "Confirmations controller post request returns response with status")]
-        public void ReturnsResponseWithStatus()
+        [TestCase(TestName = "Notifications controller sms post request returns response with status")]
+        public void SMSControllerCreateReturnsResponseWithStatus()
         {
-            var confirmationRequest = Fakr.Create<ConfirmationRequest>();
-            var response = _classUnderTest.CreateConfirmations(confirmationRequest) as CreatedResult;
+            var smsNotificationRequest = Fakr.Create<SmsNotificationRequest>();
+            var response = _classUnderTest.CreateSMSNotification(smsNotificationRequest) as CreatedResult;
             response.StatusCode.Should().Be(201);
         }
 
-        [TestCase(TestName = "Confirmations controller post request calls the send confirmation use case")]
-        public void CallsSendConfirmationUseCase()
+
+        [TestCase(TestName = "Notifications controller email post request returns response with status")]
+        public void EmailControllerCreateReturnsResponseWithStatus()
         {
-            var confirmationRequest = Fakr.Create<ConfirmationRequest>();
-            _classUnderTest.CreateConfirmations(confirmationRequest);
-            _mockUseCase.Verify(u => u.Execute(It.IsAny<ConfirmationRequest>()), Times.Once);
+            var emailNotificationRequest = Fakr.Create<EmailNotificationRequest>();
+            var response = _classUnderTest.CreateEmailNotification(emailNotificationRequest) as CreatedResult;
+            response.StatusCode.Should().Be(201);
         }
+
+        [TestCase(TestName = "Notifications controller sms post request calls the send confirmation use case")]
+        public void CallsSendSmsNotificationUseCase()
+        {
+            var smsNotificationRequest = Fakr.Create<SmsNotificationRequest>();
+            _classUnderTest.CreateSMSNotification(smsNotificationRequest);
+            _mockSmsNotificationUseCase.Verify(u => u.Execute(It.IsAny<SmsNotificationRequest>()), Times.Once);
+        }
+
+        [TestCase(TestName = "Notifications controller sms post request calls the send confirmation use case")]
+        public void CallsSendEmailNotificationUseCase()
+        {
+            var emailNotificationRequest = Fakr.Create<EmailNotificationRequest>();
+            _classUnderTest.CreateEmailNotification(emailNotificationRequest);
+            _mockEmailNotificationUseCase.Verify(u => u.Execute(It.IsAny<EmailNotificationRequest>()), Times.Once);
+        }
+
     }
 }
