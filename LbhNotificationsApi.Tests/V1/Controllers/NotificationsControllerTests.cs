@@ -26,18 +26,18 @@ namespace LbhNotificationsApi.Tests.V1.Controllers
         }
 
         [TestCase(TestName = "Confirmations controller post request returns response with status")]
-        public async Task ReturnsResponseWithStatus()
+        public void ReturnsResponseWithStatus()
         {
             var confirmationRequest = Fakr.Create<ConfirmationRequest>();
-            var response = await _classUnderTest.CreateConfirmations(confirmationRequest).ConfigureAwait(true) as CreatedResult;
+            var response = _classUnderTest.CreateConfirmations(confirmationRequest) as CreatedResult;
             response.StatusCode.Should().Be(201);
         }
 
         [TestCase(TestName = "Confirmations controller post request calls the send confirmation use case")]
-        public async Task CallsSendConfirmationUseCase()
+        public void CallsSendConfirmationUseCase()
         {
             var confirmationRequest = Fakr.Create<ConfirmationRequest>();
-            await _classUnderTest.CreateConfirmations(confirmationRequest).ConfigureAwait(true);
+            _classUnderTest.CreateConfirmations(confirmationRequest);
             _mockUseCase.Verify(u => u.Execute(It.IsAny<ConfirmationRequest>()), Times.Once);
         }
     }

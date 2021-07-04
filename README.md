@@ -1,6 +1,6 @@
-# Hackney Vaccinations API
+# LBH Notifications API
 
-An API to provide backgroud processing of actions for vaccination bookings
+An API to provide access to notification channels via gov.uk notify
 
 ## Stack
 
