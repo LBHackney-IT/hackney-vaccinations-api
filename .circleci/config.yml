@@ -57,13 +57,13 @@ commands:
       - run:
           name: Build lambda
           command: |
-            cd ./HackneyVaccinationsApi/
+            cd ./LbhNotificationsApi/
             chmod +x ./build.sh
             ./build.sh
       - run:
           name: Deploy lambda
           command: |
-            cd ./HackneyVaccinationsApi/
+            cd ./LbhNotificationsApi/
             sls deploy --stage <<parameters.stage>> --account <<parameters.aws-account>> --conceal
 
 jobs:

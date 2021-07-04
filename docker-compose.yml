@@ -4,7 +4,7 @@ services:
   hackney-vaccinations-api:
     image: hackney-vaccinations-api
     build:
-      context: HackneyVaccinationsApi/
+      context: LbhNotificationsApi/
       dockerfile: ./Dockerfile
     ports:
       - 3000:3000
@@ -29,7 +29,7 @@ services:
     image: hackney-vaccinations-api-test
     build:
       context: .
-      dockerfile: HackneyVaccinationsApi.Tests/Dockerfile
+      dockerfile: LbhNotificationsApi.Tests/Dockerfile
     environment:
       - DB_HOST=test-database
       - DB_PORT=5432
