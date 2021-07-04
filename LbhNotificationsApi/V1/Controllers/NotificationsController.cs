@@ -36,8 +36,15 @@ namespace LbhNotificationsApi.V1.Controllers
         //TODO: rename to match the identifier that will be used
         public IActionResult CreateSMSNotification(SmsNotificationRequest request)
         {
-            _sendSmsNotificationUseCase.Execute(request);
-            return Created(new Uri("http://test"), null);
+            try
+            {
+                _sendSmsNotificationUseCase.Execute(request);
+                return Created(new Uri("http://test"), null);
+            }
+            catch (ArgumentNullException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         /// <summary>
@@ -50,8 +57,15 @@ namespace LbhNotificationsApi.V1.Controllers
         //TODO: rename to match the identifier that will be used
         public IActionResult CreateEmailNotification(EmailNotificationRequest request)
         {
-            _sendEmailNotificationUseCase.Execute(request);
-            return Created(new Uri("http://test"), null);
+            try
+            {
+                _sendEmailNotificationUseCase.Execute(request);
+                return Created(new Uri("http://test"), null);
+            }
+            catch (ArgumentNullException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

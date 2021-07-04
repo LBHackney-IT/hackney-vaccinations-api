@@ -17,6 +17,18 @@ namespace LbhNotificationsApi.V1.Gateways
         }
         public bool SendEmailNotification(EmailNotificationRequest request)
         {
+            if (string.IsNullOrWhiteSpace(request.ServiceKey))
+            {
+                throw new ArgumentNullException(request.ServiceKey);
+            }
+            if (string.IsNullOrWhiteSpace(request.TemplateId))
+            {
+                throw new ArgumentNullException(request.TemplateId);
+            }
+            if (string.IsNullOrWhiteSpace(request.Email))
+            {
+                throw new ArgumentNullException(request.Email);
+            }
             _client = new NotificationClient(request.ServiceKey);
             var personalisation = new Dictionary<string, dynamic>();
             if (request.PersonalisationParams != null)
@@ -48,6 +60,10 @@ namespace LbhNotificationsApi.V1.Gateways
             {
                 throw new ArgumentNullException(request.TemplateId);
             }
+            if (string.IsNullOrWhiteSpace(request.MobileNumber))
+            {
+                throw new ArgumentNullException(request.MobileNumber);
+            }
             _client = new NotificationClient(request.ServiceKey);
             var personalisation = new Dictionary<string, dynamic>();
             if (request.PersonalisationParams != null)
@@ -57,14 +73,13 @@ namespace LbhNotificationsApi.V1.Gateways
                     personalisation.Add(requestPersonalisationParam.Key, requestPersonalisationParam.Value);
                 }
             }
-
             if (personalisation.Count > 0)
             {
-                _client.SendEmail(request.MobileNumber, request.TemplateId, personalisation);
+                _client.SendSms(request.MobileNumber, request.TemplateId, personalisation);
             }
             else
             {
-                _client.SendEmail(request.MobileNumber, request.TemplateId);
+                _client.SendSms(request.MobileNumber, request.TemplateId);
             }
             return true;
         }
