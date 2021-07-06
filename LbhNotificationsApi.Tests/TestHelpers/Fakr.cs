@@ -7,7 +7,7 @@ namespace LbhNotificationsApi.Tests.TestHelpers
 {
     public static class Fakr
     {
-        private static Faker _faker = new Faker();                 // Good for single values
+        private static Bogus.Faker _faker = new Bogus.Faker();                 // Good for single values
         private static Fixture _fixture = new Fixture();           // Good for complex objects
         static Fakr()                                           // Gets called automatically by common language runtime (CLR)
         {

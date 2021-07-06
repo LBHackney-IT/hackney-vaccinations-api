@@ -15,7 +15,7 @@ namespace LbhNotificationsApi.Tests.V1.UseCase
         private Mock<IHealthCheckService> _mockHealthCheckService;
         private DbHealthCheckUseCase _classUnderTest;
 
-        private readonly Faker _faker = new Faker();
+        private readonly Bogus.Faker _faker = new Bogus.Faker();
         private string _description;
 
         [SetUp]
