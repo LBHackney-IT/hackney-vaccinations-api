@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using LbhNotificationsApi.V1.Controllers;
 using Amazon.XRay.Recorder.Handlers.AwsSdk;
+using LbhNotificationsApi.V1.Controllers.Validators;
+using LbhNotificationsApi.V1.Controllers.Validators.Interfaces;
 using LbhNotificationsApi.V1.Gateways;
 using LbhNotificationsApi.V1.Gateways.Interfaces;
 using LbhNotificationsApi.V1.Infrastructure;
@@ -120,6 +122,7 @@ namespace LbhNotificationsApi
 
             RegisterGateways(services);
             RegisterUseCases(services);
+            RegisterValidators(services);
         }
 
         private static void ConfigureDbContext(IServiceCollection services)
@@ -160,6 +163,12 @@ namespace LbhNotificationsApi
         {
             services.AddScoped<ISendSmsNotificationUseCase, SendSmsNotificationUseCase>();
             services.AddScoped<ISendEmailNotificationUseCase, SendEmailNotificationUseCase>();
+        }
+
+        private static void RegisterValidators(IServiceCollection services)
+        {
+            services.AddScoped<IEmailRequestValidator, EmailRequestValidator>();
+            services.AddScoped<ISmsRequestValidator, SmsRequestValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
