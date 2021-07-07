@@ -4,19 +4,19 @@ setup:
 
 .PHONY: build
 build:
-	docker-compose build base-api
+	docker-compose build lbh-notifications-api
 
 .PHONY: serve
 serve:
-	docker-compose build base-api && docker-compose up base-api
+	docker-compose build lbh-notifications-api && docker-compose up lbh-notifications-api
 
 .PHONY: shell
 shell:
-	docker-compose run base-api bash
+	docker-compose run lbh-notifications-api bash
 
 .PHONY: test
 test:
-	docker-compose up test-database & docker-compose build base-api-test && docker-compose up base-api-test
+	docker-compose up test-database & docker-compose build lbh-notifications-api-test && docker-compose up lbh-notifications-api-test
 
 .PHONY: lint
 lint:
