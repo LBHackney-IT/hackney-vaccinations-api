@@ -126,13 +126,13 @@ workflows:
   check-and-deploy-development:
     jobs:
       - check-code-formatting
-        filters:
-          branches:
-            ignore: master
+          filters:
+            branches:
+              ignore: master
       - build-and-test
-        filters:
-          branches:
-            ignore: master
+          filters:
+            branches:
+              ignore: master
       - assume-role-development:
           context: api-assume-role-development-context
           requires:
