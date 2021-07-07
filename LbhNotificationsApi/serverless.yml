@@ -30,12 +30,6 @@ functions:
     name: ${self:service}-${self:provider.stage}
     handler: LbhNotificationsApi::LbhNotificationsApi.LambdaEntryPoint::FunctionHandlerAsync
     role: lambdaExecutionRole
-    environment:
-      GOV_NOTIFY_EMAIL_TEMPLATE: ${ssm:/hackney/covid-vaccinations/${self:provider.stage}/email-template}
-      GOV_NOTIFY_TEXT_TEMPLATE: ${ssm:/hackney/covid-vaccinations/${self:provider.stage}/text-message-template}
-      GOV_NOTIFY_API_KEY: ${ssm:/hackney/covid-vaccinations/${self:provider.stage}/gov-notify-key}
-      TEST_EMAIL_ADDRESS: ${ssm:/hackney/covid-vaccinations/${self:provider.stage}/test-email-address}
-      TEST_MOBILE_NUMBER: ${ssm:/hackney/covid-vaccinations/${self:provider.stage}/test-mobile-number}
     events:
       - http:
           path: /{proxy+}
