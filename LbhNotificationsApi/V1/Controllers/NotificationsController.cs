@@ -1,11 +1,8 @@
 using System;
-using System.Threading.Tasks;
 using LbhNotificationsApi.V1.Boundary.Requests;
-using LbhNotificationsApi.V1.Boundary.Response;
 using LbhNotificationsApi.V1.Controllers.Validators;
 using LbhNotificationsApi.V1.Controllers.Validators.Interfaces;
 using LbhNotificationsApi.V1.UseCase.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LbhNotificationsApi.V1.Controllers
@@ -46,7 +43,7 @@ namespace LbhNotificationsApi.V1.Controllers
         {
             try
             {
-                _smsRequestValidator.ValidateSms(request.MobileNumber);
+                _smsRequestValidator.ValidateSmsRequest(request);
                 _sendSmsNotificationUseCase.Execute(request);
                 return Created(new Uri("http://test"), null);
             }
@@ -72,7 +69,7 @@ namespace LbhNotificationsApi.V1.Controllers
         {
             try
             {
-                _emailRequestValidator.ValidateEmail(request.Email);
+                _emailRequestValidator.ValidateEmailRequest(request);
                 _sendEmailNotificationUseCase.Execute(request);
                 return Created(new Uri("http://test"), null);
             }
