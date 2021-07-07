@@ -125,11 +125,11 @@ jobs:
 workflows:
   check-and-deploy-development:
     jobs:
-      - check-code-formatting
+      - check-code-formatting:
           filters:
             branches:
               ignore: master
-      - build-and-test
+      - build-and-test:
           filters:
             branches:
               ignore: master
