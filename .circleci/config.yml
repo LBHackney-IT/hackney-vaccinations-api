@@ -170,14 +170,13 @@ workflows:
       - assume-role-production:
            context: api-assume-role-production-context
            requires:
-             - permit-production-terraform-release
+             - permit-production-release
            filters:
              branches:
                only: master
       - deploy-to-production:
            context: api-assume-role-production-context
            requires:
-             - permit-production-release
              - assume-role-production
            filters:
              branches:
