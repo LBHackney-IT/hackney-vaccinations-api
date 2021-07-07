@@ -20,7 +20,7 @@ namespace LbhNotificationsApi.V1.Controllers.Validators
             {
                 throw new ValidationException("A template id must be provided");
             }
-            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,10})+)$");
             Match match = regex.Match(request.Email);
             if (!match.Success)
             {
