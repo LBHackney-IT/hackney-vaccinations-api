@@ -141,7 +141,6 @@ workflows:
             branches:
               only: development
       - deploy-to-development:
-          context: api-assume-role-development-context
           requires:
             - assume-role-development
           filters:
@@ -181,7 +180,6 @@ workflows:
              branches:
                only: master
       - deploy-to-production:
-           context: api-assume-role-production-context
            requires:
              - assume-role-production
            filters:
