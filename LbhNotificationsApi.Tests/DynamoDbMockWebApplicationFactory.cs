@@ -29,7 +29,7 @@ namespace LbhNotificationsApi.Tests
                 .UseStartup<Startup>();
             builder.ConfigureServices(services =>
             {
-                services.ConfigureDynamoDB();
+                services.ConfigureDynamoDb();
 
                 var serviceProvider = services.BuildServiceProvider();
                 DynamoDb = serviceProvider.GetRequiredService<IAmazonDynamoDB>();

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NotificationsApi.V1.Infrastructure;
 
 namespace LbhNotificationsApi.V1.Infrastructure
 {
@@ -11,6 +12,6 @@ namespace LbhNotificationsApi.V1.Infrastructure
         {
         }
 
-        public DbSet<DatabaseEntity> DatabaseEntities { get; set; }
+        public DbSet<NotificationEntity> DatabaseEntities { get; set; }
     }
 }

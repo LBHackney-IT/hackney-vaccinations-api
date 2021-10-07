@@ -15,12 +15,12 @@ namespace LbhNotificationsApi.Tests.V1.Infrastructure
         [TestCase(null)]
         [TestCase("false")]
         [TestCase("true")]
-        public void ConfigureDynamoDBTestNoLocalModeEnvVarUsesAWSService(string localModeEnvVar)
+        public void ConfigureDynamoDbTestNoLocalModeEnvVarUsesAwsService(string localModeEnvVar)
         {
             Environment.SetEnvironmentVariable("DynamoDb_LocalMode", localModeEnvVar);
 
-            ServiceCollection services = new ServiceCollection();
-            services.ConfigureDynamoDB();
+            var services = new ServiceCollection();
+            services.ConfigureDynamoDb();
 
             services.Any(x => x.ServiceType == typeof(IAmazonDynamoDB)).Should().BeTrue();
             services.Any(x => x.ServiceType == typeof(IDynamoDBContext)).Should().BeTrue();
