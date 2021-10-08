@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using LbhNotificationsApi.V1.Boundary.Requests;
+using LbhNotificationsApi.V1.Validators;
 using LbhNotificationsApi.V1.Validators.Interfaces;
 
 namespace LbhNotificationsApi.V1.Controllers.Validators

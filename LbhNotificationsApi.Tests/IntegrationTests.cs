@@ -1,53 +1,61 @@
+using System;
 using System.Net.Http;
 using LbhNotificationsApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Npgsql;
-using NUnit.Framework;
-
 namespace LbhNotificationsApi.Tests
 {
     public class IntegrationTests<TStartup> where TStartup : class
     {
-        protected HttpClient Client { get; private set; }
-        protected DatabaseContext DatabaseContext { get; private set; }
+        private HttpClient Client { get; set; }
+        private DatabaseContext DatabaseContext { get; set; }
 
-        private MockWebApplicationFactory<TStartup> _factory;
-        private NpgsqlConnection _connection;
-        private IDbContextTransaction _transaction;
-        private DbContextOptionsBuilder _builder;
+        private readonly MockWebApplicationFactory<TStartup> _factory;
+        private readonly IDbContextTransaction _transaction;
 
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
+
+        protected IntegrationTests()
         {
-            _connection = new NpgsqlConnection(ConnectionString.TestDatabase());
-            _connection.Open();
-            var npgsqlCommand = _connection.CreateCommand();
+            var connection = new NpgsqlConnection(ConnectionString.TestDatabase());
+            connection.Open();
+            var npgsqlCommand = connection.CreateCommand();
             npgsqlCommand.CommandText = "SET deadlock_timeout TO 30";
             npgsqlCommand.ExecuteNonQuery();
 
-            _builder = new DbContextOptionsBuilder();
-            _builder.UseNpgsql(_connection);
-
-        }
-
-        [SetUp]
-        public void BaseSetup()
-        {
-            _factory = new MockWebApplicationFactory<TStartup>(_connection);
+            var builder = new DbContextOptionsBuilder();
+            builder.UseNpgsql(connection);
+            EnsureEnvVarConfigured("DynamoDb_LocalMode", "true");
+            EnsureEnvVarConfigured("DynamoDb_LocalServiceUrl", "http://localhost:8000");
+            //_factory = new DynamoDbMockWebApplicationFactory<TStartup>(_tables);
+            //Client = _factory.CreateClient();
+            _factory = new MockWebApplicationFactory<TStartup>(connection);
             Client = _factory.CreateClient();
-            DatabaseContext = new DatabaseContext(_builder.Options);
+            DatabaseContext = new DatabaseContext(builder.Options);
             DatabaseContext.Database.EnsureCreated();
             _transaction = DatabaseContext.Database.BeginTransaction();
+            //CleanupActions = new List<Action>();
         }
 
-        [TearDown]
-        public void BaseTearDown()
+        public void Dispose()
         {
+            Dispose(true);
+        }
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing || _disposed) return;
+            _factory?.Dispose();
+            _disposed = true;
             Client.Dispose();
-            _factory.Dispose();
             _transaction.Rollback();
             _transaction.Dispose();
+        }
+        private static void EnsureEnvVarConfigured(string name, string defaultValue)
+        {
+            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable(name)))
+                Environment.SetEnvironmentVariable(name, defaultValue);
         }
     }
 }

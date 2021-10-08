@@ -3,18 +3,19 @@ using Amazon.DynamoDBv2.DataModel;
 using LbhNotificationsApi.V1.Infrastructure;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
 using System;
 using System.Linq;
+using Xunit;
 
 namespace LbhNotificationsApi.Tests.V1.Infrastructure
 {
-    [TestFixture]
+   
     public class DynamoDbInitilisationExtensionsTests
     {
-        [TestCase(null)]
-        [TestCase("false")]
-        [TestCase("true")]
+        [Theory]
+        [InlineData(null)]
+        [InlineData("false")]
+        [InlineData("true")]
         public void ConfigureDynamoDbTestNoLocalModeEnvVarUsesAwsService(string localModeEnvVar)
         {
             Environment.SetEnvironmentVariable("DynamoDb_LocalMode", localModeEnvVar);

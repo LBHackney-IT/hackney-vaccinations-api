@@ -29,6 +29,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using FluentValidation.AspNetCore;
+using LbhNotificationsApi.V1.Validators;
 using LbhNotificationsApi.V1.Validators.Interfaces;
 
 namespace LbhNotificationsApi

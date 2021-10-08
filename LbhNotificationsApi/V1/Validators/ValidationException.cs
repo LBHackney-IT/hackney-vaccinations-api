@@ -1,6 +1,6 @@
 using System;
 
-namespace LbhNotificationsApi.V1.Controllers.Validators
+namespace LbhNotificationsApi.V1.Validators
 {
     public class ValidationException : Exception
     {

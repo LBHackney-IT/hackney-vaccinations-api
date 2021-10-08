@@ -4,6 +4,7 @@ using LbhNotificationsApi.V1.Boundary.Requests;
 using LbhNotificationsApi.V1.Boundary.Response;
 using LbhNotificationsApi.V1.Controllers.Validators;
 using LbhNotificationsApi.V1.UseCase.Interfaces;
+using LbhNotificationsApi.V1.Validators;
 using LbhNotificationsApi.V1.Validators.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,8 @@ namespace LbhNotificationsApi.V1.Controllers
         private readonly IGetByIdNotificationCase _getByIdNotificationCase;
         private readonly IAddNotificationUseCase _addNotificationUseCase;
         private readonly IUpdateNotificationUseCase _updateNotificationUseCase;
-        public NotificationsController(ISendSmsNotificationUseCase sendSmsNotificationUseCase,
+        public NotificationsController(
+            ISendSmsNotificationUseCase sendSmsNotificationUseCase,
             ISendEmailNotificationUseCase sendEmailNotificationUseCase,
             IEmailRequestValidator emailRequestValidator,
             ISmsRequestValidator smsRequestValidator,
