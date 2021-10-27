@@ -6,7 +6,7 @@ using LbhNotificationsApi.V1.Factories;
 using LbhNotificationsApi.V1.Infrastructure;
 using FluentAssertions;
 using Newtonsoft.Json;
-using NUnit.Framework;
+
 using System;
 using System.Net;
 using System.Threading.Tasks;

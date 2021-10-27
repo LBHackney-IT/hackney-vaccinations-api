@@ -1,8 +1,7 @@
-using System.Text.RegularExpressions;
 using LbhNotificationsApi.V1.Boundary.Requests;
-using LbhNotificationsApi.V1.Controllers.Validators.Interfaces;
+using LbhNotificationsApi.V1.Validators.Interfaces;
 
-namespace LbhNotificationsApi.V1.Controllers.Validators
+namespace LbhNotificationsApi.V1.Validators
 {
     public class SmsRequestValidator : ISmsRequestValidator
     {

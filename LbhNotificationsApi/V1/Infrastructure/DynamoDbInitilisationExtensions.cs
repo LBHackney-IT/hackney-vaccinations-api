@@ -1,16 +1,15 @@
+using System;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace LbhNotificationsApi.V1.Infrastructure
 {
     public static class DynamoDbInitilisationExtensions
     {
-        public static void ConfigureDynamoDB(this IServiceCollection services)
+        public static void ConfigureDynamoDb(this IServiceCollection services)
         {
-            bool localMode = false;
-            _ = bool.TryParse(Environment.GetEnvironmentVariable("DynamoDb_LocalMode"), out localMode);
+            _ = bool.TryParse(Environment.GetEnvironmentVariable("DynamoDb_LocalMode"), out var localMode);
 
             if (localMode)
             {

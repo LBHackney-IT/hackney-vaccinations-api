@@ -8,24 +8,37 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="V1\Factories\EntityFactoryTest.cs" />
+    <Compile Remove="V1\Factories\ResponseFactoryTest.cs" />
+    <Compile Remove="V1\Gateways\DynamoDbGatewayTests.cs" />
+    <Compile Remove="V1\Gateways\ExampleGatewayTests.cs" />
+    <Compile Remove="V1\Infrastructure\ExampleContextTests.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.11.0" />
     <PackageReference Include="Faker.NETCore" Version="1.0.2" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="JetBrains.DotMemoryUnit" Version="3.1.20200127.214830" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.12.0" />
     <PackageReference Include="Bogus" Version="25.0.4" />
     <PackageReference Include="Moq" Version="4.10.1" />
-    <PackageReference Include="nunit" Version="3.11.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\LbhNotificationsApi\LbhNotificationsApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="V1\Factories\" />
+    <Folder Include="V1\Gateways\" />
   </ItemGroup>
 
 </Project>

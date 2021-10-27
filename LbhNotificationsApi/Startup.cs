@@ -1,17 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using LbhNotificationsApi.V1.Controllers;
 using Amazon.XRay.Recorder.Handlers.AwsSdk;
-using LbhNotificationsApi.V1.Controllers.Validators;
-using LbhNotificationsApi.V1.Controllers.Validators.Interfaces;
+using LbhNotificationsApi.V1.Controllers;
 using LbhNotificationsApi.V1.Gateways;
 using LbhNotificationsApi.V1.Gateways.Interfaces;
 using LbhNotificationsApi.V1.Infrastructure;
 using LbhNotificationsApi.V1.UseCase;
 using LbhNotificationsApi.V1.UseCase.Interfaces;
+using LbhNotificationsApi.V1.Validators.Interfaces;
 using LbhNotificationsApi.Versioning;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,6 +19,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using LbhNotificationsApi.V1.Validators;
 
 namespace LbhNotificationsApi
 {
@@ -155,7 +155,7 @@ namespace LbhNotificationsApi
 
         private static void RegisterGateways(IServiceCollection services)
         {
-            services.AddScoped<IExampleGateway, ExampleGateway>();
+            //services.AddScoped<IExampleGateway, ExampleGateway>();
             services.AddScoped<INotifyGateway, NotifyGateway>();
         }
 

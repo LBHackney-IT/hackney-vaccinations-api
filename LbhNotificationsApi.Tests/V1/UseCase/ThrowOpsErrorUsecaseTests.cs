@@ -1,19 +1,20 @@
 using LbhNotificationsApi.V1.UseCase;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
+
 
 namespace LbhNotificationsApi.Tests.V1.UseCase
 {
-    [TestFixture]
+
     public class ThrowOpsErrorUsecaseTests
     {
-        [Test]
+        [Fact]
         public void ThrowsTestOpsErrorException()
         {
             var ex = Assert.Throws<TestOpsErrorException>(
-                delegate { ThrowOpsErrorUsecase.Execute(); });
+                ThrowOpsErrorUsecase.Execute);
 
-            var expected = "This is a test exception to test our integrations";
+            const string expected = "This is a test exception to test our integrations";
 
             ex.Message.Should().BeEquivalentTo(expected);
         }

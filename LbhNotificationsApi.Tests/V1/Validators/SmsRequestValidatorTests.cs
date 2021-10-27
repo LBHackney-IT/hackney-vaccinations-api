@@ -1,25 +1,22 @@
-using Bogus;
 using FluentAssertions;
 using LbhNotificationsApi.Tests.TestHelpers;
 using LbhNotificationsApi.V1.Boundary.Requests;
-using LbhNotificationsApi.V1.Controllers.Validators;
-using NUnit.Framework;
-using ValidationException = LbhNotificationsApi.V1.Controllers.Validators.ValidationException;
+using LbhNotificationsApi.V1.Validators;
+using Xunit;
+using ValidationException = LbhNotificationsApi.V1.Validators.ValidationException;
 
 namespace LbhNotificationsApi.Tests.V1.Validators
 {
-    [TestFixture]
+
     public class SmsRequestValidatorTests
     {
-        private SmsRequestValidator _classUnderTest;
+        private readonly SmsRequestValidator _classUnderTest;
 
-        [SetUp]
-        public void SetUp()
+        public SmsRequestValidatorTests()
         {
             _classUnderTest = new SmsRequestValidator();
         }
-
-        [TestCase(TestName = "The sms request validator return true for valid mobile number")]
+        [Fact(DisplayName = "The sms request validator return true for valid mobile number")]
         public void SmsValidatorShouldReturnTrueForValidMobileNumber()
         {
             var request = Fakr.Create<SmsNotificationRequest>();
@@ -27,7 +24,7 @@ namespace LbhNotificationsApi.Tests.V1.Validators
             validationResponse.Should().BeTrue();
         }
 
-        [TestCase(TestName = "The sms request validator throws validation exception if mobile number is empty")]
+        [Fact(DisplayName = "The sms request validator throws validation exception if mobile number is empty")]
         public void SmsValidatorShouldThrowExceptionForEmptyEmail()
         {
             var request = Fakr.Create<SmsNotificationRequest>();
@@ -36,7 +33,7 @@ namespace LbhNotificationsApi.Tests.V1.Validators
             ex.Message.Should().Be("Mobile number cannot be blank");
         }
 
-        [TestCase(TestName = "The sms request validator throws validation exception if a service key is not provided")]
+        [Fact(DisplayName = "The sms request validator throws validation exception if a service key is not provided")]
         public void SmsValidatorShouldThrowExceptionForEmptyServiceKey()
         {
             var request = Fakr.Create<SmsNotificationRequest>();
@@ -45,7 +42,7 @@ namespace LbhNotificationsApi.Tests.V1.Validators
             ex.Message.Should().Be("A service key must be provided");
         }
 
-        [TestCase(TestName = "The sms request validator throws validation exception if mobile number is empty")]
+        [Fact(DisplayName = "The sms request validator throws validation exception if mobile number is empty")]
         public void SmsValidatorShouldThrowExceptionForEmptyTemplateId()
         {
             var request = Fakr.Create<SmsNotificationRequest>();

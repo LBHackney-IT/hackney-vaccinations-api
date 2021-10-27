@@ -1,9 +1,9 @@
-using System;
 using LbhNotificationsApi.V1.Boundary.Requests;
-using LbhNotificationsApi.V1.Controllers.Validators;
-using LbhNotificationsApi.V1.Controllers.Validators.Interfaces;
 using LbhNotificationsApi.V1.UseCase.Interfaces;
+using LbhNotificationsApi.V1.Validators;
+using LbhNotificationsApi.V1.Validators.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace LbhNotificationsApi.V1.Controllers
 {

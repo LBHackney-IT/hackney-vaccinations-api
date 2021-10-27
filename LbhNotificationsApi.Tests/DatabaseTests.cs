@@ -1,32 +1,38 @@
 using LbhNotificationsApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using NUnit.Framework;
 
 namespace LbhNotificationsApi.Tests
 {
-    [TestFixture]
-    public class DatabaseTests
-    {
-        private IDbContextTransaction _transaction;
-        protected DatabaseContext DatabaseContext { get; private set; }
 
-        [SetUp]
-        public void RunBeforeAnyTests()
+    public abstract class DatabaseTests
+    {
+        private readonly IDbContextTransaction _transaction;
+        protected DatabaseContext DatabaseContext { get; set; }
+
+        protected DatabaseTests(IDbContextTransaction transaction)
         {
             var builder = new DbContextOptionsBuilder();
             builder.UseNpgsql(ConnectionString.TestDatabase());
             DatabaseContext = new DatabaseContext(builder.Options);
 
             DatabaseContext.Database.EnsureCreated();
-            _transaction = DatabaseContext.Database.BeginTransaction();
+            _transaction = transaction;
         }
 
-        [TearDown]
-        public void RunAfterAnyTests()
+        public void Dispose()
         {
+            Dispose(true);
+        }
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing || _disposed) return;
             _transaction.Rollback();
             _transaction.Dispose();
+            _disposed = true;
         }
+
     }
 }
