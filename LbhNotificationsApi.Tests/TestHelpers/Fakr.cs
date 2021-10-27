@@ -40,6 +40,12 @@ namespace LbhNotificationsApi.Tests.TestHelpers
             _fixture.Customize(new PreventCircularReferencesCustomisation());
         }
         #endregion
+
+        public static bool HasProperty(this object objectToCheck, string propertyName)
+        {
+            var type = objectToCheck.GetType();
+            return type.GetProperty(propertyName) != null;
+        }
     }
     #region Autofixture Customization
     public class PreventCircularReferencesCustomisation : ICustomization
@@ -52,4 +58,6 @@ namespace LbhNotificationsApi.Tests.TestHelpers
         }
     }
     #endregion
+
+
 }

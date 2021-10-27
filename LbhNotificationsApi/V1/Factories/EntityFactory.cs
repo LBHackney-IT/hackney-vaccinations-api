@@ -5,25 +5,38 @@ namespace LbhNotificationsApi.V1.Factories
 {
     public static class EntityFactory
     {
-        public static Entity ToDomain(this DatabaseEntity databaseEntity)
+        public static Notification ToDomain(this NotificationEntity databaseEntity)
         {
-            //TODO: Map the rest of the fields in the domain object.
-            // More information on this can be found here https://github.com/LBHackney-IT/lbh-base-api/wiki/Factory-object-mappings
 
-            return new Entity
+            return new Notification
             {
                 Id = databaseEntity.Id,
+                TargetId = databaseEntity.TargetId,
+                TargetType = databaseEntity.TargetType,
+                Message = databaseEntity.Message,
+                ApprovalStatus = databaseEntity.ApprovalStatus,
+                AuthorizedBy = databaseEntity.AuthorizedBy,
+                AuthorizedDate = databaseEntity.AuthorizedDate,
+                AuthorizerNote = databaseEntity.AuthorizerNote,
+                IsReadStatus = databaseEntity.IsReadStatus,
                 CreatedAt = databaseEntity.CreatedAt
             };
         }
 
-        public static DatabaseEntity ToDatabase(this Entity entity)
+        public static NotificationEntity ToDatabase(this Notification entity)
         {
-            //TODO: Map the rest of the fields in the database object.
 
-            return new DatabaseEntity
+            return new NotificationEntity
             {
-                Id = entity.Id,
+                // Id = entity.Id,
+                TargetId = entity.TargetId,
+                TargetType = entity.TargetType,
+                Message = entity.Message,
+                ApprovalStatus = entity.ApprovalStatus,
+                AuthorizedBy = entity.AuthorizedBy,
+                AuthorizedDate = entity.AuthorizedDate,
+                AuthorizerNote = entity.AuthorizerNote,
+                IsReadStatus = entity.IsReadStatus,
                 CreatedAt = entity.CreatedAt
             };
         }

@@ -1,25 +1,22 @@
-using Bogus;
 using FluentAssertions;
 using LbhNotificationsApi.Tests.TestHelpers;
 using LbhNotificationsApi.V1.Boundary.Requests;
-using LbhNotificationsApi.V1.Controllers.Validators;
-using NUnit.Framework;
-using ValidationException = LbhNotificationsApi.V1.Controllers.Validators.ValidationException;
+using LbhNotificationsApi.V1.Validators;
+using Xunit;
+
 
 namespace LbhNotificationsApi.Tests.V1.Validators
 {
-    [TestFixture]
+
     public class EmailRequestValidatorTests
     {
-        private EmailRequestValidator _classUnderTest;
+        private readonly EmailRequestValidator _classUnderTest;
 
-        [SetUp]
-        public void SetUp()
+        public EmailRequestValidatorTests()
         {
             _classUnderTest = new EmailRequestValidator();
         }
-
-        [TestCase(TestName = "The email request validator return true for valid email")]
+        [Fact(DisplayName = "The email request validator return true for valid email")]
         public void EmailValidatorShouldReturnTrueForValidEmail()
         {
             var request = Fakr.Create<EmailNotificationRequest>();
@@ -28,7 +25,7 @@ namespace LbhNotificationsApi.Tests.V1.Validators
             validationResponse.Should().BeTrue();
         }
 
-        [TestCase(TestName = "The email request validator throws validation exception if email is empty")]
+        [Fact(DisplayName = "The email request validator throws validation exception if email is empty")]
         public void EmailValidatorShouldThrowExceptionForEmptyEmail()
         {
             var request = Fakr.Create<EmailNotificationRequest>();
@@ -37,7 +34,7 @@ namespace LbhNotificationsApi.Tests.V1.Validators
             ex.Message.Should().Be("Email cannot be blank");
         }
 
-        [TestCase(TestName = "The email request validator throws validation exception if email is not a valid email")]
+        [Fact(DisplayName = "The email request validator throws validation exception if email is not a valid email")]
         public void EmailValidatorShouldThrowExceptionForInvalidEmail()
         {
             var request = Fakr.Create<EmailNotificationRequest>();
@@ -46,7 +43,7 @@ namespace LbhNotificationsApi.Tests.V1.Validators
             ex.Message.Should().Be("Email invalid");
         }
 
-        [TestCase(TestName = "The email request validator throws validation exception if a service key is not provided")]
+        [Fact(DisplayName = "The email request validator throws validation exception if a service key is not provided")]
         public void SmsValidatorShouldThrowExceptionForEmptyServiceKey()
         {
             var request = Fakr.Create<EmailNotificationRequest>();
@@ -55,7 +52,7 @@ namespace LbhNotificationsApi.Tests.V1.Validators
             ex.Message.Should().Be("A service key must be provided");
         }
 
-        [TestCase(TestName = "The email request validator throws validation exception if mobile number is empty")]
+        [Fact(DisplayName = "The email request validator throws validation exception if mobile number is empty")]
         public void SmsValidatorShouldThrowExceptionForEmptyTemplateId()
         {
             var request = Fakr.Create<EmailNotificationRequest>();

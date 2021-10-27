@@ -13,7 +13,7 @@ namespace LbhNotificationsApi.Tests.V1.Helper
             return CreateDatabaseEntityFrom(entity);
         }
 
-        public static DatabaseEntity CreateDatabaseEntityFrom(Entity entity)
+        private static DatabaseEntity CreateDatabaseEntityFrom(Entity entity)
         {
             return new DatabaseEntity
             {

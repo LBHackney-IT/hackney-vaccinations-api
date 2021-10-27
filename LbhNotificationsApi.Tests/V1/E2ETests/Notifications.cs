@@ -4,18 +4,14 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
-using NUnit.Framework;
+
 
 namespace LbhNotificationsApi.Tests.V1.E2ETests
 {
-    [TestFixture]
+    
     public class ConfirmationsTests : IntegrationTests<Startup>
     {
-        [SetUp]
-        public void SetUp()
-        {
-
-        }
+       
 
         // [TestCase(TestName = "Given valid email and mobile number a notification is sent to the details provided")]
         // public async Task PostEmailAndTextConfirmations()
