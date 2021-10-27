@@ -1,23 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Reflection;
-using LbhNotificationsApi.V1.Controllers;
 using Amazon.XRay.Recorder.Handlers.AwsSdk;
-using Hellang.Middleware.ProblemDetails;
-using Hellang.Middleware.ProblemDetails.Mvc;
-using LbhNotificationsApi.V1.Controllers.Validators;
+using LbhNotificationsApi.V1.Controllers;
 using LbhNotificationsApi.V1.Gateways;
 using LbhNotificationsApi.V1.Gateways.Interfaces;
 using LbhNotificationsApi.V1.Infrastructure;
 using LbhNotificationsApi.V1.UseCase;
 using LbhNotificationsApi.V1.UseCase.Interfaces;
+using LbhNotificationsApi.V1.Validators.Interfaces;
 using LbhNotificationsApi.Versioning;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -28,9 +19,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using FluentValidation.AspNetCore;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using LbhNotificationsApi.V1.Validators;
-using LbhNotificationsApi.V1.Validators.Interfaces;
 
 namespace LbhNotificationsApi
 {
@@ -43,30 +37,17 @@ namespace LbhNotificationsApi
             AWSSDKHandler.RegisterXRayForAllServices();
         }
 
-        private IConfiguration Configuration { get; }
-        private static List<ApiVersionDescription> ApiVersions { get; set; }
+        public IConfiguration Configuration { get; }
+        private static List<ApiVersionDescription> _apiVersions { get; set; }
         //TODO update the below to the name of your API
         private const string ApiName = "Your API Name";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services
-            //    .AddMvc()
-            //    .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            services.AddMvc().AddProblemDetailsConventions()
-                .AddFluentValidation(fv =>
-                {
-                    fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-                })
+            services
+                .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            services.AddProblemDetails(options =>
-            {
-                options.MapToStatusCode<NotImplementedException>(StatusCodes.Status501NotImplemented);
-                options.MapToStatusCode<HttpRequestException>(StatusCodes.Status503ServiceUnavailable);
-                options.MapToStatusCode<Exception>(StatusCodes.Status500InternalServerError);
-            });
-
             services.AddApiVersioning(o =>
             {
                 o.DefaultApiVersion = new ApiVersion(1, 0);
@@ -114,8 +95,9 @@ namespace LbhNotificationsApi
                 });
 
                 //Get every ApiVersion attribute specified and create swagger docs for them
-                foreach (var version in ApiVersions.Select(apiVersion => $"v{apiVersion.ApiVersion.ToString()}"))
+                foreach (var apiVersion in _apiVersions)
                 {
+                    var version = $"v{apiVersion.ApiVersion.ToString()}";
                     c.SwaggerDoc(version, new OpenApiInfo
                     {
                         Title = $"{ApiName}-api {version}",
@@ -148,10 +130,7 @@ namespace LbhNotificationsApi
             var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 
             services.AddDbContext<DatabaseContext>(
-                opt =>
-                {
-                    if (connectionString != null) opt.UseNpgsql(connectionString).AddXRayInterceptor(true);
-                });
+                opt => opt.UseNpgsql(connectionString).AddXRayInterceptor(true));
         }
 
         private static void ConfigureLogging(IServiceCollection services, IConfiguration configuration)
@@ -208,17 +187,17 @@ namespace LbhNotificationsApi
 
             // TODO
             // If you DON'T use the renaming script, PLEASE replace with your own API name manually
-            app.UseXRay("lbh-notifications-api");
+            app.UseXRay("base-api");
 
 
             //Get All ApiVersions,
             var api = app.ApplicationServices.GetService<IApiVersionDescriptionProvider>();
-            ApiVersions = api.ApiVersionDescriptions.ToList();
+            _apiVersions = api.ApiVersionDescriptions.ToList();
 
             //Swagger ui to view the swagger.json file
             app.UseSwaggerUI(c =>
             {
-                foreach (var apiVersionDescription in ApiVersions)
+                foreach (var apiVersionDescription in _apiVersions)
                 {
                     //Create a swagger endpoint for each swagger version
                     c.SwaggerEndpoint($"{apiVersionDescription.GetFormattedApiVersion()}/swagger.json",
