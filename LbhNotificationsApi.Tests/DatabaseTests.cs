@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace LbhNotificationsApi.Tests
 {
-    
+
     public abstract class DatabaseTests
     {
         private readonly IDbContextTransaction _transaction;
@@ -33,6 +33,6 @@ namespace LbhNotificationsApi.Tests
             _transaction.Dispose();
             _disposed = true;
         }
-        
+
     }
 }

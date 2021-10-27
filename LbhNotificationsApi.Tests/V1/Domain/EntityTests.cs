@@ -6,7 +6,7 @@ using Xunit;
 
 namespace LbhNotificationsApi.Tests.V1.Domain
 {
-   
+
     public class EntityTests
     {
         [Fact]

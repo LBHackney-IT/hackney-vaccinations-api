@@ -8,10 +8,10 @@ using FluentAssertions;
 
 namespace LbhNotificationsApi.Tests.V1.E2ETests
 {
-    
+
     public class ConfirmationsTests : IntegrationTests<Startup>
     {
-       
+
 
         // [TestCase(TestName = "Given valid email and mobile number a notification is sent to the details provided")]
         // public async Task PostEmailAndTextConfirmations()

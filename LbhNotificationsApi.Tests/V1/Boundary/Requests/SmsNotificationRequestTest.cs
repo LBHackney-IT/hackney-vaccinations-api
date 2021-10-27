@@ -8,7 +8,7 @@ using Xunit;
 
 namespace LbhNotificationsApi.Tests.V1.Boundary.Requests
 {
-   
+
     public class SmsNotificationRequestTest
     {
         [Fact(DisplayName = "The notification request should have the correct properties")]

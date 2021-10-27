@@ -16,7 +16,7 @@ namespace LbhNotificationsApi.Tests.V1.Infrastructure
             _sut = new CorrelationMiddleware(null);
         }
 
-       
+
 
         [Fact]
         public async Task DoesNotReplaceCorrelationIdIfOneExists()

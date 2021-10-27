@@ -9,7 +9,7 @@ using Xunit;
 namespace LbhNotificationsApi.Tests.V1.Controllers
 {
 
-   
+
     public class HealthCheckControllerTests
     {
         private readonly HealthCheckController _classUnderTest;

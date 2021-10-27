@@ -10,23 +10,30 @@ using Xunit;
 
 namespace LbhNotificationsApi.Tests.V1.Controllers
 {
-
-
-    public class NotificationsControllerTests
+    public class NotificationsV2ControllerTests
     {
-        private readonly NotificationsController _classUnderTest;
+        private readonly NotificationsV2Controller _classUnderTest;
         private readonly Mock<ISendSmsNotificationUseCase> _mockSmsNotificationUseCase;
         private readonly Mock<ISendEmailNotificationUseCase> _mockEmailNotificationUseCase;
+        private readonly Mock<IGetAllNotificationCase> _getAllNotificationCase;
+        private readonly Mock<IGetByIdNotificationCase> _getByIdNotificationCase;
+        private readonly Mock<IAddNotificationUseCase> _addNotificationUseCase;
+        private readonly Mock<IUpdateNotificationUseCase> _updateNotificationUseCase;
 
-        public NotificationsControllerTests()
+        public NotificationsV2ControllerTests()
         {
             _mockSmsNotificationUseCase = new Mock<ISendSmsNotificationUseCase>();
             _mockEmailNotificationUseCase = new Mock<ISendEmailNotificationUseCase>();
             var mockEmailRequestValidator = new Mock<IEmailRequestValidator>();
             var mockSmsRequestValidator = new Mock<ISmsRequestValidator>();
-            _classUnderTest = new NotificationsController(_mockSmsNotificationUseCase.Object,
+            _getAllNotificationCase = new Mock<IGetAllNotificationCase>();
+            _getByIdNotificationCase = new Mock<IGetByIdNotificationCase>();
+            _addNotificationUseCase = new Mock<IAddNotificationUseCase>();
+            _updateNotificationUseCase = new Mock<IUpdateNotificationUseCase>();
+            _classUnderTest = new NotificationsV2Controller(_mockSmsNotificationUseCase.Object,
                 _mockEmailNotificationUseCase.Object, mockEmailRequestValidator.Object,
-                mockSmsRequestValidator.Object);
+                mockSmsRequestValidator.Object, _getAllNotificationCase.Object, _getByIdNotificationCase.Object,
+                _addNotificationUseCase.Object, _updateNotificationUseCase.Object);
         }
 
 
@@ -34,7 +41,7 @@ namespace LbhNotificationsApi.Tests.V1.Controllers
         public void SmsControllerCreateReturnsResponseWithStatus()
         {
             var smsNotificationRequest = Fakr.Create<SmsNotificationRequest>();
-            var response = _classUnderTest.CreateSMSNotification(smsNotificationRequest) as CreatedResult;
+            var response = _classUnderTest.CreateSmsNotification(smsNotificationRequest) as CreatedResult;
             response?.StatusCode.Should().Be(201);
         }
 
@@ -53,7 +60,7 @@ namespace LbhNotificationsApi.Tests.V1.Controllers
         public void CreateSmsNotificationCallsValidator()
         {
             var smsNotificationRequest = Fakr.Create<SmsNotificationRequest>();
-            _classUnderTest.CreateSMSNotification(smsNotificationRequest);
+            _classUnderTest.CreateSmsNotification(smsNotificationRequest);
             _mockSmsNotificationUseCase.Verify(u => u.Execute(It.IsAny<SmsNotificationRequest>()), Times.Once);
         }
 
@@ -71,7 +78,7 @@ namespace LbhNotificationsApi.Tests.V1.Controllers
         public void CallsSendSmsNotificationUseCase()
         {
             var smsNotificationRequest = Fakr.Create<SmsNotificationRequest>();
-            _classUnderTest.CreateSMSNotification(smsNotificationRequest);
+            _classUnderTest.CreateSmsNotification(smsNotificationRequest);
             _mockSmsNotificationUseCase.Verify(u => u.Execute(It.IsAny<SmsNotificationRequest>()), Times.Once);
         }
 
@@ -83,6 +90,5 @@ namespace LbhNotificationsApi.Tests.V1.Controllers
             _classUnderTest.CreateEmailNotification(emailNotificationRequest);
             _mockEmailNotificationUseCase.Verify(u => u.Execute(It.IsAny<EmailNotificationRequest>()), Times.Once);
         }
-
     }
 }

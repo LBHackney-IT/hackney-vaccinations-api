@@ -9,7 +9,7 @@ using Xunit;
 
 namespace LbhNotificationsApi.Tests.V1.Infrastructure
 {
-   
+
     public class DynamoDbInitilisationExtensionsTests
     {
         [Theory]
