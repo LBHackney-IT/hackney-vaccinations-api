@@ -1,7 +1,7 @@
 using FluentAssertions;
 using LbhNotificationsApi.Tests.TestHelpers;
 using LbhNotificationsApi.V1.Boundary.Requests;
-using LbhNotificationsApi.V1.Validators;
+using LbhNotificationsApi.V1.Controllers.Validators;
 using Xunit;
 using ValidationException = LbhNotificationsApi.V1.Validators.ValidationException;
 
