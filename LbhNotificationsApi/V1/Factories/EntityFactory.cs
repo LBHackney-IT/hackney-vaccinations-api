@@ -28,7 +28,7 @@ namespace LbhNotificationsApi.V1.Factories
 
             return new NotificationEntity
             {
-                // Id = entity.Id,
+                Id = entity.Id,
                 TargetId = entity.TargetId,
                 TargetType = entity.TargetType,
                 Message = entity.Message,
@@ -36,6 +36,7 @@ namespace LbhNotificationsApi.V1.Factories
                 AuthorizedBy = entity.AuthorizedBy,
                 AuthorizedDate = entity.AuthorizedDate,
                 AuthorizerNote = entity.AuthorizerNote,
+                PersonalisationParams = entity.PersonalisationParams,
                 IsReadStatus = entity.IsReadStatus,
                 CreatedAt = entity.CreatedAt
             };

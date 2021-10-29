@@ -5,7 +5,7 @@ using LbhNotificationsApi.V1.Factories;
 using LbhNotificationsApi.V1.Gateways.Interfaces;
 using LbhNotificationsApi.V1.UseCase.Interfaces;
 
-namespace NotificationsApi.V1.UseCase
+namespace LbhNotificationsApi.V1.UseCase
 {
     //TODO: Rename class name and interface name to reflect the entity they are representing eg. GetClaimantByIdUseCase
     public class GetByIdNotificationCase : IGetByIdNotificationCase

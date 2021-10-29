@@ -40,7 +40,7 @@ namespace LbhNotificationsApi
         public IConfiguration Configuration { get; }
         private static List<ApiVersionDescription> _apiVersions { get; set; }
         //TODO update the below to the name of your API
-        private const string ApiName = "Your API Name";
+        private const string ApiName = "notifications";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -116,10 +116,11 @@ namespace LbhNotificationsApi
 
             ConfigureLogging(services, Configuration);
 
-            ConfigureDbContext(services);
+            //ConfigureDbContext(services);
             //TODO: For DynamoDb, remove the line above and uncomment the line below.
-            // services.ConfigureDynamoDB();
-
+            //services.ConfigureDynamoDB();
+            ConfigureLogging(services, Configuration);
+            services.ConfigureDynamoDb();
             RegisterGateways(services);
             RegisterUseCases(services);
             RegisterValidators(services);
@@ -155,7 +156,7 @@ namespace LbhNotificationsApi
 
         private static void RegisterGateways(IServiceCollection services)
         {
-            //services.AddScoped<IExampleGateway, ExampleGateway>();
+            services.AddScoped<INotificationGateway, DynamoDbGateway>();
             services.AddScoped<INotifyGateway, NotifyGateway>();
         }
 
@@ -163,6 +164,11 @@ namespace LbhNotificationsApi
         {
             services.AddScoped<ISendSmsNotificationUseCase, SendSmsNotificationUseCase>();
             services.AddScoped<ISendEmailNotificationUseCase, SendEmailNotificationUseCase>();
+            services.AddScoped<IGetAllNotificationCase, GetAllNotificationCase>();
+            services.AddScoped<IGetByIdNotificationCase, GetByIdNotificationCase>();
+            services.AddScoped<IAddNotificationUseCase, AddNotificationUseCase>();
+            services.AddScoped<IUpdateNotificationUseCase, UpdateNotificationUseCase>();
+            services.AddScoped<IGetTargetDetailsCase, GetTargetDetailsCase>();
         }
 
         private static void RegisterValidators(IServiceCollection services)

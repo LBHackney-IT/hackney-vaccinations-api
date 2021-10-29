@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using NotificationsApi.V1.Infrastructure;
 
 namespace LbhNotificationsApi.V1.Infrastructure
 {

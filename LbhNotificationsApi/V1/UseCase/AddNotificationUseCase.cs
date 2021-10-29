@@ -11,15 +11,57 @@ namespace LbhNotificationsApi.V1.UseCase
     public class AddNotificationUseCase : IAddNotificationUseCase
     {
         private readonly INotificationGateway _gateway;
+        private readonly INotifyGateway _notifyGateway;
 
-        public AddNotificationUseCase(INotificationGateway gateway)
+        public AddNotificationUseCase(INotificationGateway gateway, INotifyGateway notifyGateway)
         {
             _gateway = gateway;
+            _notifyGateway = notifyGateway;
         }
 
-        public async Task<Guid> ExecuteAsync(OnScreenNotificationRequest request)
+        public async Task<Guid> ExecuteAsync(NotificationRequestObject request)
         {
-            var notification = new Notification { TargetId = request.TargetId, TargetType = request.TargetType, Message = GetMessage(request.TargetType) };
+            var messageSent = false;
+            if (request.RequireEmailNotification)
+            {
+                var emailRequest = new EmailNotificationRequest
+                {
+                    ServiceKey = request.ServiceKey,
+                    TemplateId = request.TemplateId,
+                    Email = request.Email,
+                    PersonalisationParams = request.PersonalisationParams
+                };
+            messageSent=    _notifyGateway.SendEmailNotification(emailRequest);
+            }
+            if (request.RequireSmsNotification)
+            {
+                var smsRequest = new SmsNotificationRequest()
+                {
+                    ServiceKey = request.ServiceKey,
+                    TemplateId = request.TemplateId,
+                    MobileNumber = request.MobileNumber,
+                    PersonalisationParams = request.PersonalisationParams
+                };
+            messageSent=    _notifyGateway.SendTextMessageNotification(smsRequest);
+            }
+            var notification = new Notification
+            {
+                TargetId = request.TargetId,
+                TargetType = request.TargetType,
+                Message = GetMessage(request.TargetType),
+                Email = request.Email,
+                RequireEmailNotification = request.RequireEmailNotification,
+                TemplateId = request.TemplateId,
+                ServiceKey = request.ServiceKey,
+                RequireLetter = request.RequireLetter,
+                NotificationType = request.NotificationType,
+                MobileNumber = request.MobileNumber,
+                RequireSmsNotification = request.RequireSmsNotification,
+                PersonalisationParams = request.PersonalisationParams,
+                RequireAction = request.RequireAction,
+                User = request.User,
+                IsMessageSent = messageSent
+            };
             await _gateway.AddAsync(notification).ConfigureAwait(false);
             return notification.TargetId;
         }
