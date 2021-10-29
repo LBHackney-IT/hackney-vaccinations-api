@@ -33,10 +33,10 @@ namespace LbhNotificationsApi.V1.Infrastructure
         public bool IsApprovalRequired { get; set; }
         [DynamoDBProperty(AttributeName = "authorizer_note")]
         public string AuthorizerNote { get; set; }
-        [DynamoDBProperty(AttributeName = "service_key")]
-        public string ServiceKey { get; set; }
-        [DynamoDBProperty(AttributeName = "template_Id")]
-        public string TemplateId { get; set; }
+        //[DynamoDBProperty(AttributeName = "service_key")]
+        //public string ServiceKey { get; set; }
+        //[DynamoDBProperty(AttributeName = "template_Id")]
+        //public string TemplateId { get; set; }
         [DynamoDBProperty(AttributeName = "mobile_number")]
         public string MobileNumber { get; set; }
         [DynamoDBProperty(AttributeName = "email")]

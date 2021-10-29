@@ -47,7 +47,7 @@ namespace LbhNotificationsApi.V1.Gateways
             };
             if (query.NotificationType != NotificationType.All)
             {
-                conditions.Add(new ScanCondition("notificationType", Amazon.DynamoDBv2.DocumentModel.ScanOperator.Equal, query.NotificationType));
+                conditions.Add(new ScanCondition("notification_type", Amazon.DynamoDBv2.DocumentModel.ScanOperator.Equal, query.NotificationType));
             }
             if (!string.IsNullOrEmpty(query.User))
             {
@@ -56,7 +56,7 @@ namespace LbhNotificationsApi.V1.Gateways
 
             if (query.TargetId != Guid.Empty)
             {
-                conditions.Add(new ScanCondition("targetId", Amazon.DynamoDBv2.DocumentModel.ScanOperator.Equal, query.TargetId));
+                conditions.Add(new ScanCondition("TargetId", Amazon.DynamoDBv2.DocumentModel.ScanOperator.Equal, query.TargetId));
             }
 
             var data = await _dynamoDbContext.ScanAsync<NotificationEntity>(conditions, null).GetRemainingAsync().ConfigureAwait(false);

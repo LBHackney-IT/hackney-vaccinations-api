@@ -106,7 +106,7 @@ namespace LbhNotificationsApi.V1.Controllers
         /// <response code="400">Invalid Query Parameter.</response>
         [ProducesResponseType(typeof(NotificationResponseObjectList), StatusCodes.Status200OK)]
         [HttpGet]
-        public async Task<IActionResult> ListNotificationAsync(NotificationSearchQuery query)
+        public async Task<IActionResult> ListNotificationAsync([FromQuery]NotificationSearchQuery query)
         {
             return Ok(await _getAllNotificationCase.ExecuteAsync(query).ConfigureAwait(false));
         }
