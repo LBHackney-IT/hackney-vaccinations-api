@@ -12,6 +12,6 @@ namespace LbhNotificationsApi.V1.Common.Enums
         ViewNewProperty,
         ValuateNewProperty,
         ViewNewTenancy,
-        ApproveSuspenseAccountTransfer
+        SuspenseAccount
     }
 }

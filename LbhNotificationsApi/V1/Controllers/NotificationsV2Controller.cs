@@ -122,12 +122,12 @@ namespace LbhNotificationsApi.V1.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet]
-        [Route("{targetId:guid}")]
-        public async Task<IActionResult> GetAsync(Guid targetId)
+        [Route("{id:guid}")]
+        public async Task<IActionResult> GetAsync(Guid id)
         {
-            var result = await _getByIdNotificationCase.ExecuteAsync(targetId).ConfigureAwait(false);
+            var result = await _getByIdNotificationCase.ExecuteAsync(id).ConfigureAwait(false);
             if (result == null)
-                return NotFound(targetId);
+                return NotFound(id);
 
             return Ok(result);
         }
@@ -150,13 +150,13 @@ namespace LbhNotificationsApi.V1.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPatch]
-        [Route("{targetId}")]
-        public async Task<IActionResult> UpdateAsync(Guid targetId, [FromBody] ApprovalRequest request)
+        [Route("{id}")]
+        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] ApprovalRequest request)
         {
-            var result = await _getByIdNotificationCase.ExecuteAsync(targetId).ConfigureAwait(false);
+            var result = await _getByIdNotificationCase.ExecuteAsync(id).ConfigureAwait(false);
             if (result == null)
-                return NotFound(targetId);
-            var updateResult = await _updateNotificationUseCase.ExecuteAsync(targetId, request).ConfigureAwait(false);
+                return NotFound(id);
+            var updateResult = await _updateNotificationUseCase.ExecuteAsync(id, request).ConfigureAwait(false);
             if (updateResult.Status)
                 return Ok(updateResult);
 

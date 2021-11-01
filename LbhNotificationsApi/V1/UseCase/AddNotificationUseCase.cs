@@ -48,7 +48,7 @@ namespace LbhNotificationsApi.V1.UseCase
             {
                 TargetId = request.TargetId,
                 TargetType = request.TargetType,
-                Message = GetMessage(request.TargetType),
+                Message = request.Message,
                 Email = request.Email,
                 RequireEmailNotification = request.RequireEmailNotification,
                 TemplateId = request.TemplateId,
@@ -92,7 +92,7 @@ namespace LbhNotificationsApi.V1.UseCase
                 case TargetType.ViewNewTenancy:
                     message = "2 Adjustments approved  12/12/12";
                     break;
-                case TargetType.ApproveSuspenseAccountTransfer:
+                case TargetType.SuspenseAccount:
                     message = "A Journal Transfer is awaiting your approval  12/12/12";
                     break;
                 default:

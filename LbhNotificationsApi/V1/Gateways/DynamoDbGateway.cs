@@ -90,11 +90,7 @@ namespace LbhNotificationsApi.V1.Gateways
             //};
             //var response = client.Query(request);
         }
-        public Notification GetEntityById(Guid id)
-        {
-            var result = _dynamoDbContext.LoadAsync<NotificationEntity>(id).GetAwaiter().GetResult();
-            return result?.ToDomain();
-        }
+        
 
         public async Task<Notification> GetEntityByIdAsync(Guid id)
         {
