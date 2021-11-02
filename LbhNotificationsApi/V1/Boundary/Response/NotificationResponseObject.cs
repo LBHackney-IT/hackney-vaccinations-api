@@ -22,12 +22,12 @@ namespace LbhNotificationsApi.V1.Boundary.Response
         public bool RequireSmsNotification { get; set; }
         public bool RequireLetter { get; set; }
         public bool IsReadStatus { get; set; }
-        public bool IsMessageSent { get; set; }
-        public string AuthorizerNote { get; set; }
-        public string AuthorizedBy { get; set; }
-        public ApprovalStatus ApprovalStatus { get; set; }
+        public string[] SentMessageDetails { get; set; }
+        public string ActionNote { get; set; }
+        public string ActionDoneBy { get; set; }
+        public ActionType ActionPerform { get; set; }
         public Dictionary<string, string> PersonalisationParams { get; set; }
-        public DateTime? AuthorizedDate { get; set; }
+        public DateTime? ActionDate { get; set; }
         public DateTime CreatedDate { get; set; }
 
     }

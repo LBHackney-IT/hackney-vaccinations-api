@@ -6,7 +6,7 @@ namespace LbhNotificationsApi.V1.Common.Enums
     public enum TargetType
     {
         FailedDirectDebits,
-        MissedServiceChargePayments,
+        MissedServiceCharge,
         Estimates,
         Actuals,
         ViewNewProperty,

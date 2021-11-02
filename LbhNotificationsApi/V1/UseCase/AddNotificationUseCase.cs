@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using LbhNotificationsApi.V1.Boundary.Requests;
 using LbhNotificationsApi.V1.Common.Enums;
@@ -21,7 +22,7 @@ namespace LbhNotificationsApi.V1.UseCase
 
         public async Task<Guid> ExecuteAsync(NotificationRequestObject request)
         {
-            var messageSent = false;
+            List<string> messageSent = new List<string>();
             if (request.RequireEmailNotification)
             {
                 var emailRequest = new EmailNotificationRequest
@@ -31,7 +32,10 @@ namespace LbhNotificationsApi.V1.UseCase
                     Email = request.Email,
                     PersonalisationParams = request.PersonalisationParams
                 };
-            messageSent=    _notifyGateway.SendEmailNotification(emailRequest);
+             if(_notifyGateway.SendEmailNotification(emailRequest))
+                 messageSent.Add("Email Sent");
+
+             messageSent.Add("Email fail to sent");
             }
             if (request.RequireSmsNotification)
             {
@@ -42,7 +46,10 @@ namespace LbhNotificationsApi.V1.UseCase
                     MobileNumber = request.MobileNumber,
                     PersonalisationParams = request.PersonalisationParams
                 };
-            messageSent=    _notifyGateway.SendTextMessageNotification(smsRequest);
+            if(_notifyGateway.SendTextMessageNotification(smsRequest))
+                    messageSent.Add("SMS Sent");
+
+            messageSent.Add("SMS fail to sent");
             }
             var notification = new Notification
             {
@@ -60,7 +67,7 @@ namespace LbhNotificationsApi.V1.UseCase
                 PersonalisationParams = request.PersonalisationParams,
                 RequireAction = request.RequireAction,
                 User = request.User,
-                IsMessageSent = messageSent
+                IsMessageSent = messageSent.ToArray()
             };
             await _gateway.AddAsync(notification).ConfigureAwait(false);
             return notification.TargetId;
@@ -74,7 +81,7 @@ namespace LbhNotificationsApi.V1.UseCase
                 case TargetType.FailedDirectDebits:
                     message = "Direct Debit failed";
                     break;
-                case TargetType.MissedServiceChargePayments:
+                case TargetType.MissedServiceCharge:
                     message = "3 missed service charge payments have exceeded the tolerance period";
                     break;
                 case TargetType.Estimates:

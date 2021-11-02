@@ -16,11 +16,11 @@ namespace LbhNotificationsApi.V1.UseCase
             _gateway = gateway;
         }
 
-        public async Task<ActionResponse> ExecuteAsync(Guid id, ApprovalRequest request)
+        public async Task<ActionResponse> ExecuteAsync(Guid id, UpdateRequest request)
         {
             var notification = await _gateway.UpdateAsync(id, request).ConfigureAwait(false);
 
-            var status = notification != null && notification.AuthorizedDate.HasValue && (notification.AuthorizedDate.Value.Date == DateTime.Today.Date);
+            var status = notification != null && notification.ActionDate.HasValue && (notification.ActionDate.Value.Date == DateTime.Today.Date);
 
             return new ActionResponse { Status = status, Message = status ? "Approval successfully" : "Approval failed" };
         }

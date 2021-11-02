@@ -1,8 +1,7 @@
+using LbhNotificationsApi.V1.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using LbhNotificationsApi.V1.Boundary.Response;
-using LbhNotificationsApi.V1.Common.Enums;
 
 namespace LbhNotificationsApi.V1.Boundary.Requests
 {

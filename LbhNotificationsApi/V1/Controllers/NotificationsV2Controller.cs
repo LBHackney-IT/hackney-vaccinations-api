@@ -151,7 +151,7 @@ namespace LbhNotificationsApi.V1.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPatch]
         [Route("{id}")]
-        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] ApprovalRequest request)
+        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateRequest request)
         {
             var result = await _getByIdNotificationCase.ExecuteAsync(id).ConfigureAwait(false);
             if (result == null)
