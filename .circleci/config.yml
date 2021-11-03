@@ -88,6 +88,7 @@ commands:
             cd ./LbhNotificationsApi/
             sls deploy --stage <<parameters.stage>> --account <<parameters.aws-account>> --conceal
 
+
 jobs:
   check-code-formatting:
     executor: docker-dotnet
@@ -125,6 +126,21 @@ jobs:
     steps:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_PRODUCTION
+  terraform-init-and-apply-to-development:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "development"
+  terraform-init-and-apply-to-staging:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "staging"
+  terraform-init-and-apply-to-production:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "production"
   deploy-to-development:
     executor: docker-dotnet
     steps:
