@@ -11,7 +11,7 @@ resource "aws_dynamodb_table" "notifications_table" {
     }
 
     tags = {
-        Name              = "financial-transactions-api-${var.environment_name}"
+        Name              = "lbh-notifications-api-${var.environment_name}"
         Environment       = var.environment_name
         terraform-managed = true
         project_name      = var.project_name
