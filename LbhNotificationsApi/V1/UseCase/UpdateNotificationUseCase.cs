@@ -20,7 +20,7 @@ namespace LbhNotificationsApi.V1.UseCase
         {
             var notification = await _gateway.UpdateAsync(id, request).ConfigureAwait(false);
 
-            var status = notification != null && notification.ActionDate.HasValue && (notification.ActionDate.Value.Date == DateTime.Today.Date);
+            var status = notification != null && notification.PerformedActionDate.HasValue && (notification.PerformedActionDate.Value.Date == DateTime.Today.Date);
 
             return new ActionResponse { Status = status, Message = status ? "Approval successfully" : "Approval failed" };
         }

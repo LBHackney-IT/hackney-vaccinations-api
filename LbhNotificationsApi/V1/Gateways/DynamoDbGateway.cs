@@ -106,8 +106,8 @@ namespace LbhNotificationsApi.V1.Gateways
             if (!string.IsNullOrWhiteSpace(notification.ActionNote))
                 loadData.ActionNote = notification.ActionNote;
 
-            loadData.ActionPerformed = notification.ActionType;
-            loadData.ActionDate = DateTime.UtcNow;
+            loadData.PerformedActionType = notification.ActionType;
+            loadData.PerformedActionDate = DateTime.UtcNow;
             await _dynamoDbContext.SaveAsync(loadData).ConfigureAwait(false);
 
             return loadData.ToDomain();
