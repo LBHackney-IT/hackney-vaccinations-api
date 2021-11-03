@@ -40,28 +40,32 @@ functions:
       - http:
           path: /{proxy+}
           method: ANY
-          authorizer:
-            arn: ${ssm:/api-authenticator/${self:provider.stage}/arn}
-            type: request
-            resultTtlInSeconds: 0
-            identitySource: method.request.header.Authorization
-            managedExternally: true
-          private: true
-          cors:
-            origin: '*'
-            headers:
-              - Content-Type
-              - If-Match
-              - X-Amz-Date
-              - Authorization
-              - X-Api-Key
-              - X-Amz-Security-Token
-              - X-Amz-User-Agent
-            allowCredentials: false
-      - http:
-          path: /swagger/{proxy+}
-          method: GET
-          private: false
+    #events:
+    #  - http:
+    #      path: /{proxy+}
+    #      method: ANY
+    #      authorizer:
+    #        arn: ${ssm:/api-authenticator/${self:provider.stage}/arn}
+    #        type: request
+    #        resultTtlInSeconds: 0
+    #        identitySource: method.request.header.Authorization
+    #        managedExternally: true
+    #      private: true
+    #      cors:
+    #        origin: '*'
+    #        headers:
+    #          - Content-Type
+    #          - If-Match
+    #          - X-Amz-Date
+    #          - Authorization
+    #          - X-Api-Key
+    #          - X-Amz-Security-Token
+    #          - X-Amz-User-Agent
+    #        allowCredentials: false
+    #  - http:
+    #      path: /swagger/{proxy+}
+    #      method: GET
+    #      private: false
 resources:
   Resources:
     lambdaExecutionRole:
