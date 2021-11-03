@@ -51,12 +51,12 @@ namespace LbhNotificationsApi.V1.Infrastructure
         public bool RequireLetter { get; set; }
         [DynamoDBProperty(AttributeName = "personalisation_params")]
         public Dictionary<string, string> PersonalisationParams { get; set; }
-        [DynamoDBProperty(AttributeName = "action_performed", Converter = typeof(DynamoDbEnumConverter<ActionType>))]
-        public ActionType ActionPerformed { get; set; }
-        [DynamoDBProperty(AttributeName = "action_done_by")]
-        public string ActionDoneBy { get; set; }
-        [DynamoDBProperty(AttributeName = "action_date", Converter = typeof(DynamoDbDateTimeConverter))]
-        public DateTime? ActionDate { get; set; }
+        [DynamoDBProperty(AttributeName = "performed_action_type", Converter = typeof(DynamoDbEnumConverter<ActionType>))]
+        public ActionType PerformedActionType { get; set; }
+        [DynamoDBProperty(AttributeName = "performed_action_done_by")]
+        public string PerformedActionDoneBy { get; set; }
+        [DynamoDBProperty(AttributeName = "performed_action_date", Converter = typeof(DynamoDbDateTimeConverter))]
+        public DateTime? PerformedActionDate { get; set; }
         [DynamoDBProperty(AttributeName = "created_at", Converter = typeof(DynamoDbDateTimeConverter))]
         public DateTime CreatedAt { get; set; }
     }

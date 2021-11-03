@@ -24,10 +24,10 @@ namespace LbhNotificationsApi.V1.Boundary.Response
         public bool IsReadStatus { get; set; }
         public string[] SentMessageDetails { get; set; }
         public string ActionNote { get; set; }
-        public string ActionDoneBy { get; set; }
-        public ActionType ActionPerform { get; set; }
+        public string PerformedActionDoneBy { get; set; }
+        public ActionType PerformedActionType { get; set; }
         public Dictionary<string, string> PersonalisationParams { get; set; }
-        public DateTime? ActionDate { get; set; }
+        public DateTime? PerformedActionDate { get; set; }
         public DateTime CreatedDate { get; set; }
 
     }
