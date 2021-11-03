@@ -45,6 +45,7 @@ namespace LbhNotificationsApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
@@ -181,6 +182,12 @@ namespace LbhNotificationsApi
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCorrelation();
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .WithExposedHeaders("x-correlation-id"));
+
 
             if (env.IsDevelopment())
             {
@@ -193,7 +200,7 @@ namespace LbhNotificationsApi
 
             // TODO
             // If you DON'T use the renaming script, PLEASE replace with your own API name manually
-            app.UseXRay("base-api");
+            app.UseXRay($"{ApiName}-api");
 
 
             //Get All ApiVersions,
