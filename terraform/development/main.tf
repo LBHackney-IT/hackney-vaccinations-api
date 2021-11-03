@@ -34,14 +34,6 @@ locals {
   }
 }
 
-#data "aws_iam_role" "ec2_container_service_role" {
-#  name = "ecsServiceRole"
-#}
-
-#data "aws_iam_role" "ecs_task_execution_role" {
-#  name = "ecsTaskExecutionRole"
-#}
-
 terraform {
   backend "s3" {
     bucket  = "terraform-state-housing-development"
