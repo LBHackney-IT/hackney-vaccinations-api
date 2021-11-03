@@ -32,10 +32,10 @@ namespace LbhNotificationsApi.V1.UseCase
                     Email = request.Email,
                     PersonalisationParams = request.PersonalisationParams
                 };
-             if(_notifyGateway.SendEmailNotification(emailRequest))
-                 messageSent.Add("Email Sent");
+                if (_notifyGateway.SendEmailNotification(emailRequest))
+                    messageSent.Add("Email Sent");
 
-             messageSent.Add("Email fail to sent");
+                messageSent.Add("Email fail to sent");
             }
             if (request.RequireSmsNotification)
             {
@@ -46,10 +46,10 @@ namespace LbhNotificationsApi.V1.UseCase
                     MobileNumber = request.MobileNumber,
                     PersonalisationParams = request.PersonalisationParams
                 };
-            if(_notifyGateway.SendTextMessageNotification(smsRequest))
+                if (_notifyGateway.SendTextMessageNotification(smsRequest))
                     messageSent.Add("SMS Sent");
 
-            messageSent.Add("SMS fail to sent");
+                messageSent.Add("SMS fail to sent");
             }
             var notification = new Notification
             {

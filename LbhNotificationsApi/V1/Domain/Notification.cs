@@ -18,7 +18,7 @@ namespace LbhNotificationsApi.V1.Domain
         public string MobileNumber { get; set; }
         public string Email { get; set; }
         public bool RequireAction { get; set; }
-        public bool RequireEmailNotification { get; set; } 
+        public bool RequireEmailNotification { get; set; }
         public bool RequireSmsNotification { get; set; }
         public bool RequireLetter { get; set; }
         public bool IsReadStatus { get; set; }

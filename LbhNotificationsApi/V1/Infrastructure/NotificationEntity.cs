@@ -13,7 +13,7 @@ namespace LbhNotificationsApi.V1.Infrastructure
         [DynamoDBProperty(AttributeName = "id")]
         [DynamoDBHashKey]
         public Guid Id { get; set; }
-        
+
         [DynamoDBProperty(AttributeName = "target_id")]
         public Guid TargetId { get; set; }
 

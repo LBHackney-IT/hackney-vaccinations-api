@@ -90,7 +90,7 @@ namespace LbhNotificationsApi.V1.Gateways
             //};
             //var response = client.Query(request);
         }
-        
+
 
         public async Task<Notification> GetEntityByIdAsync(Guid id)
         {

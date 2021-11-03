@@ -15,7 +15,7 @@ namespace LbhNotificationsApi.V1.Controllers
     [ApiVersion("1.0")]
     [Route("api/v2/notifications")]
     [Produces("application/json")]
-    
+
     public class NotificationsV2Controller : BaseController
     {
         private readonly ISendSmsNotificationUseCase _sendSmsNotificationUseCase;
@@ -106,7 +106,7 @@ namespace LbhNotificationsApi.V1.Controllers
         /// <response code="400">Invalid Query Parameter.</response>
         [ProducesResponseType(typeof(NotificationResponseObjectList), StatusCodes.Status200OK)]
         [HttpGet]
-        public async Task<IActionResult> ListNotificationAsync([FromQuery]NotificationSearchQuery query)
+        public async Task<IActionResult> ListNotificationAsync([FromQuery] NotificationSearchQuery query)
         {
             return Ok(await _getAllNotificationCase.ExecuteAsync(query).ConfigureAwait(false));
         }
@@ -138,7 +138,7 @@ namespace LbhNotificationsApi.V1.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAsync([FromBody] NotificationRequestObject request)
         {
-        
+
 
             var result = await _addNotificationUseCase.ExecuteAsync(request).ConfigureAwait(false);
             return Created(new Uri("http://test"), result);
