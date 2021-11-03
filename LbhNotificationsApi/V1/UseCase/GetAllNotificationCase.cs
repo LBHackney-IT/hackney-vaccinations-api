@@ -1,10 +1,11 @@
 using System.Threading.Tasks;
+using LbhNotificationsApi.V1.Boundary.Requests;
 using LbhNotificationsApi.V1.Boundary.Response;
 using LbhNotificationsApi.V1.Factories;
 using LbhNotificationsApi.V1.Gateways.Interfaces;
 using LbhNotificationsApi.V1.UseCase.Interfaces;
 
-namespace NotificationsApi.V1.UseCase
+namespace LbhNotificationsApi.V1.UseCase
 {
 
     public class GetAllNotificationCase : IGetAllNotificationCase
@@ -15,9 +16,9 @@ namespace NotificationsApi.V1.UseCase
             _gateway = gateway;
         }
 
-        public async Task<NotificationResponseObjectList> ExecuteAsync()
+        public async Task<NotificationResponseObjectList> ExecuteAsync(NotificationSearchQuery query)
         {
-            var response = await _gateway.GetAllAsync().ConfigureAwait(false);
+            var response = await _gateway.GetAllAsync(query).ConfigureAwait(false);
             return new NotificationResponseObjectList { ResponseObjects = response.ToResponse() };
         }
     }

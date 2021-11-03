@@ -7,6 +7,6 @@ namespace LbhNotificationsApi.V1.UseCase.Interfaces
 {
     public interface IUpdateNotificationUseCase
     {
-        public Task<ActionResponse> ExecuteAsync(Guid id, ApprovalRequest request);
+        public Task<ActionResponse> ExecuteAsync(Guid id, UpdateRequest request);
     }
 }

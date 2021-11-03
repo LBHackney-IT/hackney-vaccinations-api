@@ -14,16 +14,27 @@ namespace LbhNotificationsApi.V1.Factories
                 ? null
                 : new NotificationResponseObject
                 {
-                    //Id = domain.Id,
+                    Id = domain.Id,
                     TargetId = domain.TargetId,
                     TargetType = domain.TargetType,
-                    AuthorizedBy = domain.AuthorizedBy,
-                    AuthorizedDate = domain.AuthorizedDate,
-                    AuthorizerNote = domain.AuthorizerNote,
-                    ApprovalStatus = domain.ApprovalStatus,
+                    ActionDoneBy = domain.ActionDoneBy,
+                    ActionDate = domain.ActionDate,
+                    ActionNote = domain.ActionNote,
+                    ActionPerform = domain.ActionPerformed,
                     IsReadStatus = domain.IsReadStatus,
                     Message = domain.Message,
-                    CreatedDate = domain.CreatedAt
+                    CreatedDate = domain.CreatedAt,
+                    RequireAction = domain.RequireAction,
+                    Email = domain.Email,
+                    RequireEmailNotification = domain.RequireEmailNotification,
+                    SentMessageDetails = domain.IsMessageSent,
+                    //TemplateId = domain.TemplateId,
+                    //ServiceKey = domain.ServiceKey,
+                    RequireLetter = domain.RequireLetter,
+                    MobileNumber = domain.MobileNumber,
+                    NotificationType = domain.NotificationType,
+                    RequireSmsNotification = domain.RequireSmsNotification,
+                    PersonalisationParams = domain.PersonalisationParams
                 };
         }
 

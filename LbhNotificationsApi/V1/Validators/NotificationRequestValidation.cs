@@ -4,7 +4,7 @@ using LbhNotificationsApi.V1.Boundary.Requests;
 
 namespace LbhNotificationsApi.V1.Validators
 {
-    public class NotificationRequestValidation : AbstractValidator<OnScreenNotificationRequest>
+    public class NotificationRequestValidation : AbstractValidator<NotificationRequestObject>
     {
         public NotificationRequestValidation()
         {

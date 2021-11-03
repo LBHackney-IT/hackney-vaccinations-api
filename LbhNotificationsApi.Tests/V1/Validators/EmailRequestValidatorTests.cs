@@ -20,7 +20,7 @@ namespace LbhNotificationsApi.Tests.V1.Validators
         public void EmailValidatorShouldReturnTrueForValidEmail()
         {
             var request = Fakr.Create<EmailNotificationRequest>();
-            request.Email = Faker.Internet.Email(Faker.Name.First());
+            request.Email = Faker.Internet.Email();
             var validationResponse = _classUnderTest.ValidateEmailRequest(request);
             validationResponse.Should().BeTrue();
         }

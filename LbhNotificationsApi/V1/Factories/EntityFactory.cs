@@ -14,12 +14,24 @@ namespace LbhNotificationsApi.V1.Factories
                 TargetId = databaseEntity.TargetId,
                 TargetType = databaseEntity.TargetType,
                 Message = databaseEntity.Message,
-                ApprovalStatus = databaseEntity.ApprovalStatus,
-                AuthorizedBy = databaseEntity.AuthorizedBy,
-                AuthorizedDate = databaseEntity.AuthorizedDate,
-                AuthorizerNote = databaseEntity.AuthorizerNote,
+                ActionPerformed = databaseEntity.ActionPerformed,
+                ActionDoneBy = databaseEntity.ActionDoneBy,
+                ActionDate = databaseEntity.ActionDate,
+                ActionNote = databaseEntity.ActionNote,
                 IsReadStatus = databaseEntity.IsReadStatus,
-                CreatedAt = databaseEntity.CreatedAt
+                CreatedAt = databaseEntity.CreatedAt,
+                RequireAction = databaseEntity.RequireAction,
+                Email = databaseEntity.Email,
+                RequireEmailNotification = databaseEntity.RequireEmailNotification,
+                PersonalisationParams = databaseEntity.PersonalisationParams,
+                //IsRemovedStatus = false,
+                //TemplateId = "",
+                //ServiceKey = "",
+                RequireLetter = databaseEntity.RequireLetter,
+                RequireSmsNotification = databaseEntity.RequireSmsNotification,
+                NotificationType = databaseEntity.NotificationType,
+                MobileNumber = databaseEntity.MobileNumber,
+                User = databaseEntity.User
             };
         }
 
@@ -28,16 +40,28 @@ namespace LbhNotificationsApi.V1.Factories
 
             return new NotificationEntity
             {
-                // Id = entity.Id,
+                Id = entity.Id,
                 TargetId = entity.TargetId,
                 TargetType = entity.TargetType,
                 Message = entity.Message,
-                ApprovalStatus = entity.ApprovalStatus,
-                AuthorizedBy = entity.AuthorizedBy,
-                AuthorizedDate = entity.AuthorizedDate,
-                AuthorizerNote = entity.AuthorizerNote,
+                ActionPerformed = entity.ActionPerformed,
+                ActionDoneBy = entity.ActionDoneBy,
+                ActionDate = entity.ActionDate,
+                ActionNote = entity.ActionNote,
+                PersonalisationParams = entity.PersonalisationParams,
                 IsReadStatus = entity.IsReadStatus,
-                CreatedAt = entity.CreatedAt
+                CreatedAt = entity.CreatedAt,
+                RequireAction = entity.RequireAction,
+                Email = entity.Email,
+                RequireEmailNotification = entity.RequireEmailNotification,
+                IsRemovedStatus = false,
+                //TemplateId = "",
+                //ServiceKey = "",
+                RequireLetter = entity.RequireLetter,
+                RequireSmsNotification = entity.RequireSmsNotification,
+                NotificationType = entity.NotificationType,
+                MobileNumber = entity.MobileNumber,
+                User = entity.User
             };
         }
     }

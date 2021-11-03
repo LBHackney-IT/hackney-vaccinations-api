@@ -3,8 +3,8 @@ using System.Text.Json.Serialization;
 namespace LbhNotificationsApi.V1.Common.Enums
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum ApprovalStatus
+    public enum ActionType
     {
-        Initiated, Approved, Rejected
+        None, Initiated, Approved, Validate, Rejected
     }
 }

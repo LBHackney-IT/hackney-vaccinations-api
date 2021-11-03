@@ -12,9 +12,10 @@ using System.Threading.Tasks;
 namespace LbhNotificationsApi.V1.Controllers
 {
     [ApiController]
+    [ApiVersion("1.0")]
     [Route("api/v2/notifications")]
     [Produces("application/json")]
-    [ApiVersion("1.1")]
+
     public class NotificationsV2Controller : BaseController
     {
         private readonly ISendSmsNotificationUseCase _sendSmsNotificationUseCase;
@@ -105,9 +106,9 @@ namespace LbhNotificationsApi.V1.Controllers
         /// <response code="400">Invalid Query Parameter.</response>
         [ProducesResponseType(typeof(NotificationResponseObjectList), StatusCodes.Status200OK)]
         [HttpGet]
-        public async Task<IActionResult> ListNotificationAsync()
+        public async Task<IActionResult> ListNotificationAsync([FromQuery] NotificationSearchQuery query)
         {
-            return Ok(await _getAllNotificationCase.ExecuteAsync().ConfigureAwait(false));
+            return Ok(await _getAllNotificationCase.ExecuteAsync(query).ConfigureAwait(false));
         }
 
         /// <summary>
@@ -121,12 +122,12 @@ namespace LbhNotificationsApi.V1.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet]
-        [Route("{targetId:guid}")]
-        public async Task<IActionResult> GetAsync(Guid targetId)
+        [Route("{id:guid}")]
+        public async Task<IActionResult> GetAsync(Guid id)
         {
-            var result = await _getByIdNotificationCase.ExecuteAsync(targetId).ConfigureAwait(false);
+            var result = await _getByIdNotificationCase.ExecuteAsync(id).ConfigureAwait(false);
             if (result == null)
-                return NotFound(targetId);
+                return NotFound(id);
 
             return Ok(result);
         }
@@ -135,8 +136,9 @@ namespace LbhNotificationsApi.V1.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] OnScreenNotificationRequest request)
+        public async Task<IActionResult> AddAsync([FromBody] NotificationRequestObject request)
         {
+
 
             var result = await _addNotificationUseCase.ExecuteAsync(request).ConfigureAwait(false);
             return Created(new Uri("http://test"), result);
@@ -148,13 +150,13 @@ namespace LbhNotificationsApi.V1.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPatch]
-        [Route("{targetId}")]
-        public async Task<IActionResult> UpdateAsync(Guid targetId, [FromBody] ApprovalRequest request)
+        [Route("{id}")]
+        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateRequest request)
         {
-            var result = await _getByIdNotificationCase.ExecuteAsync(targetId).ConfigureAwait(false);
+            var result = await _getByIdNotificationCase.ExecuteAsync(id).ConfigureAwait(false);
             if (result == null)
-                return NotFound(targetId);
-            var updateResult = await _updateNotificationUseCase.ExecuteAsync(targetId, request).ConfigureAwait(false);
+                return NotFound(id);
+            var updateResult = await _updateNotificationUseCase.ExecuteAsync(id, request).ConfigureAwait(false);
             if (updateResult.Status)
                 return Ok(updateResult);
 
