@@ -185,8 +185,7 @@ namespace LbhNotificationsApi
             app.UseCors(builder => builder
                 .AllowAnyOrigin()
                 .AllowAnyHeader()
-                .AllowAnyMethod()
-                .WithExposedHeaders("x-correlation-id"));
+                .AllowAnyMethod());
 
 
             if (env.IsDevelopment())
