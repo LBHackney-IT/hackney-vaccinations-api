@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using LbhNotificationsApi.V1.Controllers;
 using LbhNotificationsApi.V1.Infrastructure;
 using FluentAssertions;
+using LbhNotificationsApi.V1;
 using Microsoft.AspNetCore.Http;
 using Xunit;
 

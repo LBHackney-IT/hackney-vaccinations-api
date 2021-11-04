@@ -7,7 +7,7 @@ using LbhNotificationsApi.V1.Infrastructure.Conventers;
 namespace LbhNotificationsApi.V1.Infrastructure
 {
 
-    [DynamoDBTable("Notifications", LowerCamelCaseProperties = true)]
+    [DynamoDBTable("Notifications1", LowerCamelCaseProperties = true)]
     public class NotificationEntity
     {
         [DynamoDBProperty(AttributeName = "id")]

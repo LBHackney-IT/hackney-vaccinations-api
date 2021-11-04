@@ -1,9 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using LbhNotificationsApi.V1.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
-namespace LbhNotificationsApi.V1.Controllers
+namespace LbhNotificationsApi.V1
 {
     public class CorrelationMiddleware
     {

@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using LbhNotificationsApi.V1;
 using LbhNotificationsApi.V1.Validators;
 
 namespace LbhNotificationsApi
@@ -182,6 +183,8 @@ namespace LbhNotificationsApi
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCorrelation();
+            //app.UseLoggingScope();
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseCors(builder => builder
                 .AllowAnyOrigin()
                 .AllowAnyHeader()
