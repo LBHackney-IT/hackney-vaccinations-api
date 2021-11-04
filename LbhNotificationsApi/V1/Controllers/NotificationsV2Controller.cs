@@ -105,6 +105,7 @@ namespace LbhNotificationsApi.V1.Controllers
         /// <response code="200">...</response>
         /// <response code="400">Invalid Query Parameter.</response>
         [ProducesResponseType(typeof(NotificationResponseObjectList), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BaseErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpGet]
         public async Task<IActionResult> ListNotificationAsync([FromQuery] NotificationSearchQuery query)
         {
@@ -120,7 +121,7 @@ namespace LbhNotificationsApi.V1.Controllers
         [ProducesResponseType(typeof(NotificationResponseObject), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(BaseErrorResponse), StatusCodes.Status500InternalServerError)]
         [HttpGet]
         [Route("{id:guid}")]
         public async Task<IActionResult> GetAsync(Guid id)
