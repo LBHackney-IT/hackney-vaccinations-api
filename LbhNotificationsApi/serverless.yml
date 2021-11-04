@@ -143,12 +143,10 @@ custom:
   vpc:
     development:
       securityGroupIds:
-        - sg-0a457bf4e6eda31de
-        # sg-00d2e14f38245dd0b
+        - sg-00d2e14f38245dd0b
       subnetIds:
-        - subnet-000b89c249f12a8ad
-        #- subnet-0140d06fb84fdb547
-        #- subnet-05ce390ba88c42bfd
+        - subnet-0140d06fb84fdb547
+        - subnet-05ce390ba88c42bfd
     staging:
       securityGroupIds:
         - sg-00c197e980177983d
