@@ -13,15 +13,20 @@ resource "aws_dynamodb_table" "notifications_table" {
         name              = "target_id"
         type              = "S"
     }
-
     tags = {
         Name              = "lbh-notifications-api-${var.environment_name}"
         Environment       = var.environment_name
         terraform-managed = true
         project_name      = var.project_name
-        backup_policy     = "Dev"
     }
 
+     global_secondary_index {
+        name               = "target_id_dx"
+        hash_key           = "target_id"
+        write_capacity     = 10
+        read_capacity      = 10
+        projection_type    = "ALL"
+    }
     point_in_time_recovery {
         enabled           = true
     }
