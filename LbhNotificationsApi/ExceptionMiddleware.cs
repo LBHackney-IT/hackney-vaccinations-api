@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Hackney.Core.Logging;
 namespace LbhNotificationsApi
 {
     public class ExceptionMiddleware
