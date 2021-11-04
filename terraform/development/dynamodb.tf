@@ -9,6 +9,10 @@ resource "aws_dynamodb_table" "notifications_table" {
         name              = "id"
         type              = "S"
     }
+    attribute {
+        name              = "target_id"
+        type              = "S"
+    }
 
     tags = {
         Name              = "lbh-notifications-api-${var.environment_name}"
