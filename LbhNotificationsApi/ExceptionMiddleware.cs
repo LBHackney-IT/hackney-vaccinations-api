@@ -1,14 +1,14 @@
+using Amazon.DynamoDBv2;
+using LbhNotificationsApi.V1.Boundary.Response;
+using LbhNotificationsApi.V1.Extensions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Hellang.Middleware.ProblemDetails;
-using LbhNotificationsApi.V1.Extensions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-
 namespace LbhNotificationsApi
 {
     public class ExceptionMiddleware
@@ -44,6 +44,11 @@ namespace LbhNotificationsApi
             {
                 await HandleExceptionAsync(context, ex, HttpStatusCode.BadRequest).ConfigureAwait(false);
             }
+            catch (AmazonDynamoDBException ex)
+            {
+                await HandleExceptionAsync(context, ex, HttpStatusCode.InternalServerError).ConfigureAwait(false);
+            }
+
 #pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception ex)
 #pragma warning restore CA1031 // Do not catch general exception types
@@ -54,7 +59,8 @@ namespace LbhNotificationsApi
 
         private async Task HandleExceptionAsync(HttpContext context, Exception ex, HttpStatusCode code)
         {
-            _logger.LogError(ex, ex.StackTrace);
+            _logger.LogError(ex, $"Exception {ex.StackTrace}{Environment.NewLine}{ex.InnerException?.Message}");
+
 
             var response = context.Response;
             response.ContentType = "application/json";
@@ -64,9 +70,10 @@ namespace LbhNotificationsApi
             var details = _env.IsDevelopment() && code == HttpStatusCode.InternalServerError
                 ? ex.StackTrace :
                   string.Empty;
-
-            await response.WriteAsync(JsonSerializer.Serialize(new ProblemDetailsException((int) code, $"{allMessageText}{Environment.NewLine}{details}")))
-                    .ConfigureAwait(false);
+            await response.WriteAsync(JsonSerializer.Serialize(new BaseErrorResponse((int) code, allMessageText, details)))
+                .ConfigureAwait(false);
+            //await response.WriteAsync(JsonSerializer.Serialize(new ProblemDetailsException((int) code, $"{allMessageText}{Environment.NewLine}{details}")))
+            //        .ConfigureAwait(false);
         }
     }
 
