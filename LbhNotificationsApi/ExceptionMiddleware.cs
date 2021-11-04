@@ -16,16 +16,14 @@ namespace LbhNotificationsApi
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionMiddleware> _logger;
         private readonly IHostEnvironment _env;
-        private ILogger Logger { get; }
 
         public ExceptionMiddleware(RequestDelegate next,
             ILogger<ExceptionMiddleware> logger,
-            IHostEnvironment env, ILogger logger1)
+            IHostEnvironment env)
         {
             _next = next;
             _logger = logger;
             _env = env;
-            Logger = logger1;
         }
 
         public async Task Invoke(HttpContext context)
@@ -61,9 +59,8 @@ namespace LbhNotificationsApi
 
         private async Task HandleExceptionAsync(HttpContext context, Exception ex, HttpStatusCode code)
         {
-            _logger.LogError(ex, ex.StackTrace);
-            Logger.LogError(ex,
-                $"Exception {ex.StackTrace}{Environment.NewLine}{ex.InnerException?.Message}");
+            _logger.LogError(ex, $"Exception {ex.StackTrace}{Environment.NewLine}{ex.InnerException?.Message}");
+
 
             var response = context.Response;
             response.ContentType = "application/json";
