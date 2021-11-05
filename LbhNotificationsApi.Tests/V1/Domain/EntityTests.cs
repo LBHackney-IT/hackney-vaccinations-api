@@ -1,8 +1,7 @@
 using System;
-using LbhNotificationsApi.V1.Domain;
 using FluentAssertions;
+using LbhNotificationsApi.V1.Domain;
 using Xunit;
-
 
 namespace LbhNotificationsApi.Tests.V1.Domain
 {
@@ -12,14 +11,14 @@ namespace LbhNotificationsApi.Tests.V1.Domain
         [Fact]
         public void EntitiesHaveAnId()
         {
-            var entity = new Entity();
-            entity.Id.Should().BeGreaterOrEqualTo(0);
+            var entity = new Notification { TargetId = "yeyeyeyey" };
+            entity.TargetId.Should().NotBeEmpty();//.BeGreaterOrEqualTo(0);
         }
 
         [Fact]
         public void EntitiesHaveACreatedAt()
         {
-            var entity = new Entity();
+            var entity = new Notification();
             var date = new DateTime(2019, 02, 21);
             entity.CreatedAt = date;
 

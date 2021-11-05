@@ -5,7 +5,7 @@ using LbhNotificationsApi.V1.Common.Enums;
 
 namespace LbhNotificationsApi.V1.Validators
 {
-    public class NotificationRequestValidation : AbstractValidator<NotificationRequestObject>
+    public class NotificationRequestValidation : AbstractValidator<NotificationObjectRequest>
     {
         public NotificationRequestValidation()
         {
@@ -18,7 +18,7 @@ namespace LbhNotificationsApi.V1.Validators
             });
             When(p => p.NotificationType == NotificationType.Email || p.RequireEmailNotification, () =>
             {
-                RuleFor(r => r.Email).EmailAddress();
+                RuleFor(r => r.Email).NotEmpty().WithMessage("{PropertyName} is required.").EmailAddress().WithMessage("Provide a valid {PropertyName}");
                 RuleFor(r => r.TemplateId).NotEmpty().WithMessage("{PropertyName} is required.");
                 RuleFor(r => r.ServiceKey).NotEmpty().WithMessage("{PropertyName} is required.");
             });

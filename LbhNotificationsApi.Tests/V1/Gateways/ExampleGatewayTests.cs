@@ -1,11 +1,11 @@
 using AutoFixture;
-using LbhNotificationsApi.Tests.V1.Helper;
-using LbhNotificationsApi.V1.Domain;
-using LbhNotificationsApi.V1.Gateways;
+using NotificationsApi.Tests.V1.Helper;
+using NotificationsApi.V1.Domain;
+using NotificationsApi.V1.Gateways;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace LbhNotificationsApi.Tests.V1.Gateways
+namespace NotificationsApi.Tests.V1.Gateways
 {
     //TODO: Remove this file if Postgres gateway is not being used
     //TODO: Rename Tests to match gateway name
@@ -33,7 +33,7 @@ namespace LbhNotificationsApi.Tests.V1.Gateways
         [Test]
         public void GetEntityByIdReturnsTheEntityIfItExists()
         {
-            var entity = _fixture.Create<Entity>();
+            var entity = _fixture.Create<Notification>();
             var databaseEntity = DatabaseEntityHelper.CreateDatabaseEntityFrom(entity);
 
             DatabaseContext.DatabaseEntities.Add(databaseEntity);

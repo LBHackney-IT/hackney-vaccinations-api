@@ -31,6 +31,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Amazon.XRay.Recorder.Core;
+using Amazon.XRay.Recorder.Core.Strategies;
 
 namespace LbhNotificationsApi
 {
@@ -207,6 +209,7 @@ namespace LbhNotificationsApi
 
             if (env.IsDevelopment())
             {
+                AWSXRayRecorder.Instance.ContextMissingStrategy = ContextMissingStrategy.LOG_ERROR;
                 app.UseDeveloperExceptionPage();
             }
             else

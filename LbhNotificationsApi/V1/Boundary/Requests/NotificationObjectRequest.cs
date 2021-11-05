@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace LbhNotificationsApi.V1.Boundary.Requests
 {
-    public class NotificationRequestObject
+    public class NotificationObjectRequest
     {
         /// <example>
         /// 3fa85f64-5717-4562-b3fc-2c963f66afa6

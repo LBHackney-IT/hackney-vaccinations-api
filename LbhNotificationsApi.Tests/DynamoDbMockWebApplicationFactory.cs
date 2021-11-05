@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
@@ -6,7 +7,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 
 namespace LbhNotificationsApi.Tests
 {
@@ -15,7 +15,7 @@ namespace LbhNotificationsApi.Tests
     {
         private readonly List<TableDef> _tables;
 
-        public IAmazonDynamoDB DynamoDb { get; private set; }
+        private IAmazonDynamoDB DynamoDb { get; set; }
         public IDynamoDBContext DynamoDbContext { get; private set; }
 
         public DynamoDbMockWebApplicationFactory(List<TableDef> tables)

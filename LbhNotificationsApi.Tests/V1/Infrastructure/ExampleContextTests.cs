@@ -1,17 +1,14 @@
-
-
 using System.Linq;
-using FluentAssertions;
-using LbhNotificationsApi.Tests.V1.Helper;
-using Microsoft.EntityFrameworkCore.Storage;
-using Xunit;
+using NotificationsApi.Tests.V1.Helper;
+using NUnit.Framework;
 
-namespace LbhNotificationsApi.Tests.V1.Infrastructure
+namespace NotificationsApi.Tests.V1.Infrastructure
 {
     //TODO: Remove this file if Postgres is not being used
+    [TestFixture]
     public class DatabaseContextTest : DatabaseTests
     {
-        [Fact]
+        [Test]
         public void CanGetADatabaseEntity()
         {
             var databaseEntity = DatabaseEntityHelper.CreateDatabaseEntity();
@@ -21,11 +18,7 @@ namespace LbhNotificationsApi.Tests.V1.Infrastructure
 
             var result = DatabaseContext.DatabaseEntities.ToList().FirstOrDefault();
 
-          result.Should().BeEquivalentTo(databaseEntity);
-        }
-
-        public DatabaseContextTest(IDbContextTransaction transaction) : base(transaction)
-        {
+            Assert.AreEqual(result, databaseEntity);
         }
     }
 }

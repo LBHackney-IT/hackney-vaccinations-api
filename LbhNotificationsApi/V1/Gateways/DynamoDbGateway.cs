@@ -76,6 +76,7 @@ namespace LbhNotificationsApi.V1.Gateways
         {
             var result = await _dynamoDbContext.LoadAsync<NotificationEntity>(id).ConfigureAwait(false);
             //update data status as read
+            if (result == null) return null;
             result.IsReadStatus = true;
             await _dynamoDbContext.SaveAsync(result).ConfigureAwait(false);
             return result.ToDomain();

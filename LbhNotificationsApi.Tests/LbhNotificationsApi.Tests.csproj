@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
 
@@ -9,6 +9,8 @@
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="IntegrationTests.cs" />
+    <Compile Remove="V1\Controllers\NotificationsControllerTest.cs" />
     <Compile Remove="V1\Factories\EntityFactoryTest.cs" />
     <Compile Remove="V1\Factories\ResponseFactoryTest.cs" />
     <Compile Remove="V1\Gateways\DynamoDbGatewayTests.cs" />
