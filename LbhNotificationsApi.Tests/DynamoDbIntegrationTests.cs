@@ -8,9 +8,9 @@ namespace LbhNotificationsApi.Tests
 {
     public class DynamoDbIntegrationTests<TStartup> where TStartup : class
     {
-        protected HttpClient Client { get; private set; }
+        public HttpClient Client { get; private set; }
         private readonly DynamoDbMockWebApplicationFactory<TStartup> _factory;
-        protected IDynamoDBContext DynamoDbContext => _factory?.DynamoDbContext;
+        public IDynamoDBContext DynamoDbContext => _factory?.DynamoDbContext;
         protected List<Action> CleanupActions { get; }
 
         private readonly List<TableDef> _tables = new List<TableDef>
