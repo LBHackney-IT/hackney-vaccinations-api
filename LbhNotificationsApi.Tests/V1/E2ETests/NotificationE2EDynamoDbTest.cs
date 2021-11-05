@@ -57,6 +57,38 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
             return entity;
         }
 
+        private NotificationObjectRequest GivenANewScreenNotificationRequestWithValidationErrors()
+        {
+            var entity = _fixture.Build<NotificationObjectRequest>()
+                .With(_ => _.NotificationType, NotificationType.Screen)
+                .Without(_ => _.TargetId)
+                .Without(_ => _.TargetType)
+                .Without(_ => _.Message)
+                .Create();
+            return entity;
+        }
+        private NotificationObjectRequest GivenANewEmailNotificationRequestWithValidationErrors()
+        {
+            var entity = _fixture.Build<NotificationObjectRequest>()
+                .With(_ => _.NotificationType, NotificationType.Email)
+                .Without(_ => _.ServiceKey)
+                .Without(_ => _.TemplateId)
+                .Without(_ => _.Email)
+                .Create();
+            return entity;
+        }
+
+        private NotificationObjectRequest GivenANewTextNotificationRequestWithValidationErrors()
+        {
+            var entity = _fixture.Build<NotificationObjectRequest>()
+                .With(_ => _.NotificationType, NotificationType.Email)
+                .Without(_ => _.ServiceKey)
+                .Without(_ => _.TemplateId)
+                .Without(_ => _.MobileNumber)
+                .Create();
+            return entity;
+        }
+
         /// <summary>
         /// Method to add an entity instance to the database so that it can be used in a test.
         /// Also adds the corresponding action to remove the upserted data from the database when the test is done.
@@ -75,7 +107,7 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
         }
 
         [Fact]
-        public async Task GetEntityByTargetIdNotFoundReturns404()
+        public async Task GetEntityByIdNotFoundReturns404()
         {
             var id = Guid.NewGuid();
             var uri = new Uri($"api/v2/notifications/{id}", UriKind.Relative);
@@ -165,6 +197,81 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
 
         }
 
+
+        [Fact]
+        public async Task PostScreenNotificationReturnsUnProcessableEntityWithValidationErrors()
+        {
+            var requestObject = GivenANewScreenNotificationRequestWithValidationErrors();
+
+            var uri = new Uri($"api/v2/notifications", UriKind.Relative);
+            var body = JsonSerializer.Serialize(requestObject, CreateJsonOptions());
+
+            using var content = new StringContent(body);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var response = await Client.PostAsync(uri, content).ConfigureAwait(false);
+
+            var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            var jo = JObject.Parse(responseContent);
+            var errors = jo["errors"].Children();
+
+            ShouldHaveErrorFor(errors, "Message");
+            ShouldHaveErrorFor(errors, "TargetType");
+            ShouldHaveErrorFor(errors, "TargetId");
+
+            response.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+
+        }
+
+        [Fact]
+        public async Task PostEmailNotificationReturnsUnProcessableEntityWithValidationErrors()
+        {
+            var requestObject = GivenANewEmailNotificationRequestWithValidationErrors();
+
+            var uri = new Uri($"api/v2/notifications", UriKind.Relative);
+            var body = JsonSerializer.Serialize(requestObject, CreateJsonOptions());
+
+            using var content = new StringContent(body);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var response = await Client.PostAsync(uri, content).ConfigureAwait(false);
+
+            var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            var jo = JObject.Parse(responseContent);
+            var errors = jo["errors"].Children();
+
+            ShouldHaveErrorFor(errors, "ServiceKey");
+            ShouldHaveErrorFor(errors, "TemplateId");
+            ShouldHaveErrorFor(errors, "Email");
+
+            response.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+
+        }
+
+        [Fact]
+        public async Task PostTextNotificationReturnsUnProcessableEntityWithValidationErrors()
+        {
+            var requestObject = GivenANewTextNotificationRequestWithValidationErrors();
+
+            var uri = new Uri($"api/v2/notifications", UriKind.Relative);
+            var body = JsonSerializer.Serialize(requestObject, CreateJsonOptions());
+
+            using var content = new StringContent(body);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var response = await Client.PostAsync(uri, content).ConfigureAwait(false);
+
+            var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            var jo = JObject.Parse(responseContent);
+            var errors = jo["errors"].Children();
+
+            ShouldHaveErrorFor(errors, "ServiceKey");
+            ShouldHaveErrorFor(errors, "TemplateId");
+            ShouldHaveErrorFor(errors, "MobileNumber");
+
+            response.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+
+        }
         private static void ShouldHaveErrorFor(JEnumerable<JToken> errors, string propertyName, string errorCode = null)
         {
             var error = errors.FirstOrDefault(x => (x.Path.Split('.').Last().Trim('\'', ']')) == propertyName) as JProperty;
