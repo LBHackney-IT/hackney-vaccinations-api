@@ -5,7 +5,7 @@ using LbhNotificationsApi.V1.Common.Enums;
 
 namespace LbhNotificationsApi.V1.Validators
 {
-    public class NotificationRequestValidation : AbstractValidator<NotificationRequestObject>
+    public class NotificationRequestValidation : AbstractValidator<NotificationObjectRequest>
     {
         public NotificationRequestValidation()
         {

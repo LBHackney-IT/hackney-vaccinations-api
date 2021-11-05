@@ -1,29 +1,31 @@
+using System.Collections.Generic;
 using FluentAssertions;
 using LbhNotificationsApi.V1.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
-using System.Collections.Generic;
 using Xunit;
-
 
 namespace LbhNotificationsApi.Tests.V1.Controllers
 {
 
     public class BaseControllerTests
     {
-        private readonly BaseController _sut;
-        private readonly HttpContext _stubHttpContext;
+        private BaseController _sut;
+        private ControllerContext _controllerContext;
+        private HttpContext _stubHttpContext;
+
 
         public BaseControllerTests()
         {
             _stubHttpContext = new DefaultHttpContext();
-            var controllerContext = new ControllerContext(new ActionContext(_stubHttpContext, new RouteData(), new ControllerActionDescriptor()));
+            _controllerContext = new ControllerContext(new ActionContext(_stubHttpContext, new RouteData(), new ControllerActionDescriptor()));
             _sut = new BaseController();
 
-            _sut.ControllerContext = controllerContext;
+            _sut.ControllerContext = _controllerContext;
         }
+
         [Fact]
         public void GetCorrelationShouldThrowExceptionIfCorrelationHeaderUnavailable()
         {

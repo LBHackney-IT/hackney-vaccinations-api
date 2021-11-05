@@ -6,6 +6,6 @@ namespace LbhNotificationsApi.V1.UseCase.Interfaces
 {
     public interface IAddNotificationUseCase
     {
-        public Task<Guid> ExecuteAsync(NotificationRequestObject request);
+        public Task<Guid> ExecuteAsync(NotificationObjectRequest request);
     }
 }

@@ -137,7 +137,7 @@ namespace LbhNotificationsApi.V1.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] NotificationRequestObject request)
+        public async Task<IActionResult> AddAsync([FromBody] NotificationObjectRequest request)
         {
 
 

@@ -20,7 +20,7 @@ namespace LbhNotificationsApi.V1.UseCase
             _notifyGateway = notifyGateway;
         }
 
-        public async Task<Guid> ExecuteAsync(NotificationRequestObject request)
+        public async Task<Guid> ExecuteAsync(NotificationObjectRequest request)
         {
             var messageSent = new List<string>();
             if (request.NotificationType == NotificationType.Email || request.RequireEmailNotification)

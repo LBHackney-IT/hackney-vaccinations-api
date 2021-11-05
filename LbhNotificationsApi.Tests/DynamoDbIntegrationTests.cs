@@ -8,15 +8,15 @@ namespace LbhNotificationsApi.Tests
 {
     public class DynamoDbIntegrationTests<TStartup> where TStartup : class
     {
-        private HttpClient Client { get; set; }
+        protected HttpClient Client { get; private set; }
         private readonly DynamoDbMockWebApplicationFactory<TStartup> _factory;
         protected IDynamoDBContext DynamoDbContext => _factory?.DynamoDbContext;
-        private List<Action> CleanupActions { get; }
+        protected List<Action> CleanupActions { get; }
 
         private readonly List<TableDef> _tables = new List<TableDef>
         {
-            // TODO: Populate the list of table(s) and their key property details here, for example:
-            new TableDef { Name = "notifications", KeyName = "target_id", KeyType = ScalarAttributeType.S }
+
+            new TableDef { Name = "Notifications", KeyName = "id", KeyType = ScalarAttributeType.S }
         };
 
         protected DynamoDbIntegrationTests()

@@ -1,15 +1,10 @@
-
-using System;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using FluentAssertions;
+using NotificationsApi.Tests;
 
 
 namespace LbhNotificationsApi.Tests.V1.E2ETests
 {
 
-    public class ConfirmationsTests : IntegrationTests<Startup>
+    public class ConfirmationsTests : DynamoDbIntegrationTests<Startup>
     {
 
 

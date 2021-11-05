@@ -1,17 +1,19 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
-using LbhNotificationsApi.V1.Infrastructure;
+using NotificationsApi.V1.Infrastructure;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
+using LbhNotificationsApi.V1.Infrastructure;
 using Xunit;
 
-namespace LbhNotificationsApi.Tests.V1.Infrastructure
+namespace NotificationsApi.Tests.V1.Infrastructure
 {
 
-    public class DynamoDbInitilisationExtensionsTests
+    public class DynamoDbInitialisationExtensionsTests
     {
+
         [Theory]
         [InlineData(null)]
         [InlineData("false")]

@@ -1,13 +1,12 @@
+using System.Threading;
 using FluentAssertions;
 using LbhNotificationsApi.V1.UseCase;
 using Microsoft.Extensions.HealthChecks;
 using Moq;
-using System.Threading;
 using Xunit;
 
 namespace LbhNotificationsApi.Tests.V1.UseCase
 {
-
     public class DbHealthCheckUseCaseTests
     {
         private readonly DbHealthCheckUseCase _classUnderTest;
