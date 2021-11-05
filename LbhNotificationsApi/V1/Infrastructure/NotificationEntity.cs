@@ -7,7 +7,7 @@ using LbhNotificationsApi.V1.Infrastructure.Conventers;
 namespace LbhNotificationsApi.V1.Infrastructure
 {
 
-    [DynamoDBTable("Notifications1", LowerCamelCaseProperties = true)]
+    [DynamoDBTable("Notifications", LowerCamelCaseProperties = true)]
     public class NotificationEntity
     {
         [DynamoDBProperty(AttributeName = "id")]
@@ -15,11 +15,11 @@ namespace LbhNotificationsApi.V1.Infrastructure
         public Guid Id { get; set; }
 
         [DynamoDBProperty(AttributeName = "target_id")]
-        public Guid TargetId { get; set; }
+        public string TargetId { get; set; }
 
         [DynamoDBProperty(AttributeName = "target_type", Converter = typeof(DynamoDbEnumConverter<TargetType>))]
         public TargetType TargetType { get; set; }
-        [DynamoDBProperty(AttributeName = "notification_type", Converter = typeof(DynamoDbEnumConverter<TargetType>))]
+        [DynamoDBProperty(AttributeName = "notification_type", Converter = typeof(DynamoDbEnumConverter<NotificationType>))]
         public NotificationType NotificationType { get; set; }
         [DynamoDBProperty(AttributeName = "user")]
         public string User { get; set; }
@@ -29,8 +29,6 @@ namespace LbhNotificationsApi.V1.Infrastructure
         public bool IsReadStatus { get; set; }
         [DynamoDBProperty(AttributeName = "is_removed_status", Converter = typeof(DynamoDbBooleanConverter))]
         public bool IsRemovedStatus { get; set; }
-        [DynamoDBProperty(AttributeName = "is_approval_required", Converter = typeof(DynamoDbBooleanConverter))]
-        public bool IsApprovalRequired { get; set; }
         [DynamoDBProperty(AttributeName = "action_note")]
         public string ActionNote { get; set; }
         //[DynamoDBProperty(AttributeName = "service_key")]

@@ -8,7 +8,7 @@ namespace LbhNotificationsApi.V1.Domain
     public class Notification
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid TargetId { get; set; }
+        public string TargetId { get; set; }
         public TargetType TargetType { get; set; }
         public NotificationType NotificationType { get; set; }
         public string User { get; set; }
@@ -22,7 +22,7 @@ namespace LbhNotificationsApi.V1.Domain
         public bool RequireSmsNotification { get; set; }
         public bool RequireLetter { get; set; }
         public bool IsReadStatus { get; set; }
-        public string[] IsMessageSent { get; set; }
+        public List<string> IsMessageSent { get; set; }
         public string ActionNote { get; set; }
         public string PerformedActionDoneBy { get; set; }
         public ActionType PerformedActionType { get; set; }

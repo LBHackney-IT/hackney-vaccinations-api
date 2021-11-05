@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Amazon.DynamoDBv2.DocumentModel;
 
 namespace LbhNotificationsApi.V1.Gateways
 {
@@ -33,8 +34,13 @@ namespace LbhNotificationsApi.V1.Gateways
 
         public async Task<List<Notification>> GetAllAsync()
         {
-            var conditions = new List<ScanCondition>();
-            var data = await _dynamoDbContext.ScanAsync<NotificationEntity>(conditions, null).GetRemainingAsync().ConfigureAwait(false);
+            var conditions = new List<ScanCondition>
+            {
+                new ScanCondition("Id", ScanOperator.NotEqual, Guid.Empty),
+                new ScanCondition("IsRemovedStatus", ScanOperator.NotEqual, true),
+                new ScanCondition("CreatedAt", ScanOperator.Between, DateTime.Today.Date, DateTime.Today.Date.AddMonths(3))
+            };
+            var data = await _dynamoDbContext.ScanAsync<NotificationEntity>(conditions).GetRemainingAsync().ConfigureAwait(false);
             return data.Select(x => x.ToDomain()).ToList();
         }
 
@@ -43,59 +49,36 @@ namespace LbhNotificationsApi.V1.Gateways
         {
             var conditions = new List<ScanCondition>
             {
-                new ScanCondition("Id", Amazon.DynamoDBv2.DocumentModel.ScanOperator.NotEqual, Guid.Empty)
+                new ScanCondition("Id", ScanOperator.NotEqual, Guid.Empty),
+                new ScanCondition("IsRemovedStatus", ScanOperator.NotEqual, true),
+                new ScanCondition("CreatedAt", ScanOperator.Between, DateTime.Today.Date, DateTime.Today.Date.AddMonths(3))
             };
             if (query.NotificationType != NotificationType.All)
             {
-                conditions.Add(new ScanCondition("NotificationType", Amazon.DynamoDBv2.DocumentModel.ScanOperator.Equal, query.NotificationType));
+                conditions.Add(new ScanCondition("NotificationType", ScanOperator.Equal, query.NotificationType));
             }
             if (!string.IsNullOrEmpty(query.User))
             {
-                conditions.Add(new ScanCondition("User", Amazon.DynamoDBv2.DocumentModel.ScanOperator.Equal, query.User));
+                conditions.Add(new ScanCondition("User", ScanOperator.Equal, query.User));
             }
 
             if (query.TargetId != Guid.Empty)
             {
-                conditions.Add(new ScanCondition("TargetId", Amazon.DynamoDBv2.DocumentModel.ScanOperator.Equal, query.TargetId));
+                conditions.Add(new ScanCondition("TargetId", ScanOperator.Equal, query.TargetId));
             }
 
-            var data = await _dynamoDbContext.ScanAsync<NotificationEntity>(conditions, null).GetRemainingAsync().ConfigureAwait(false);
+            var data = await _dynamoDbContext.ScanAsync<NotificationEntity>(conditions).GetRemainingAsync().ConfigureAwait(false);
             return data.Select(x => x.ToDomain()).ToList();
-            //var request = new QueryRequest
-            //{
-            //    TableName = "notifications",
-            //    KeyConditions = new Dictionary<string, Condition>
-            //    {
-            //        { "Id", new Condition()
-            //            {
-            //                ComparisonOperator = ComparisonOperator.EQ,
-            //                AttributeValueList = new List<AttributeValue>
-            //                {
-            //                    new AttributeValue { N = "301" }
-            //                }
-            //            }
-            //        }
-            //    },
-            //    ProjectionExpression = "Id, Title, #pr.ThreeStar",
-            //    ExpressionAttributeNames = new Dictionary<string, string>
-            //    {
-            //        { "#pr", "ProductReviews" },
-            //        { "#p", "Price" }
-            //    },
-            //    ExpressionAttributeValues = new Dictionary<string, AttributeValue>
-            //    {
-            //        { ":val", new AttributeValue { N = "150" } }
-            //    },
-            //    FilterExpression = "#p > :val"
-            //};
-            //var response = client.Query(request);
         }
 
 
         public async Task<Notification> GetEntityByIdAsync(Guid id)
         {
             var result = await _dynamoDbContext.LoadAsync<NotificationEntity>(id).ConfigureAwait(false);
-            return result?.ToDomain();
+            //update data status as read
+            result.IsReadStatus = true;
+            await _dynamoDbContext.SaveAsync(result).ConfigureAwait(false);
+            return result.ToDomain();
         }
 
         public async Task<Notification> UpdateAsync(Guid id, UpdateRequest notification)
@@ -105,6 +88,9 @@ namespace LbhNotificationsApi.V1.Gateways
 
             if (!string.IsNullOrWhiteSpace(notification.ActionNote))
                 loadData.ActionNote = notification.ActionNote;
+
+            if (notification.ActionType == ActionType.Removed)
+                loadData.IsRemovedStatus = true;
 
             loadData.PerformedActionType = notification.ActionType;
             loadData.PerformedActionDate = DateTime.UtcNow;
