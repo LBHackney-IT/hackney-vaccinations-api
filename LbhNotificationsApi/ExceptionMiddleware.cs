@@ -71,7 +71,7 @@ namespace LbhNotificationsApi
 
             var details = _env.IsDevelopment() && code == HttpStatusCode.InternalServerError
                 ? ex.StackTrace :
-                  string.Empty;;
+                  string.Empty; ;
             await response.WriteAsync(JsonSerializer.Serialize(new ProblemDetailsException((int) code, $"{allMessageText}{Environment.NewLine}{details}")))
                     .ConfigureAwait(false);
         }
