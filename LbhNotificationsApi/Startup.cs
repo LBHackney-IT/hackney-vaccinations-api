@@ -1,14 +1,19 @@
 using Amazon.XRay.Recorder.Handlers.AwsSdk;
-using LbhNotificationsApi.V1.Controllers;
+using FluentValidation.AspNetCore;
+using Hellang.Middleware.ProblemDetails;
+using Hellang.Middleware.ProblemDetails.Mvc;
+using LbhNotificationsApi.V1;
 using LbhNotificationsApi.V1.Gateways;
 using LbhNotificationsApi.V1.Gateways.Interfaces;
 using LbhNotificationsApi.V1.Infrastructure;
 using LbhNotificationsApi.V1.UseCase;
 using LbhNotificationsApi.V1.UseCase.Interfaces;
+using LbhNotificationsApi.V1.Validators;
 using LbhNotificationsApi.V1.Validators.Interfaces;
 using LbhNotificationsApi.Versioning;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -23,8 +28,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
-using LbhNotificationsApi.V1.Validators;
+using System.Text.Json.Serialization;
 
 namespace LbhNotificationsApi
 {
@@ -46,9 +52,19 @@ namespace LbhNotificationsApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            services
-                .AddMvc()
+            services.AddMvc().AddProblemDetailsConventions()
+                .AddFluentValidation(fv =>
+                {
+                    fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+                })
+                .AddJsonOptions(opts => opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddProblemDetails(options =>
+            {
+                options.MapToStatusCode<NotImplementedException>(StatusCodes.Status501NotImplemented);
+                options.MapToStatusCode<HttpRequestException>(StatusCodes.Status503ServiceUnavailable);
+                options.MapToStatusCode<Exception>(StatusCodes.Status500InternalServerError);
+            });
             services.AddApiVersioning(o =>
             {
                 o.DefaultApiVersion = new ApiVersion(1, 0);
@@ -184,7 +200,7 @@ namespace LbhNotificationsApi
 
             app.UseCors(builder => builder
                 .AllowAnyOrigin()
-                //.AllowAnyHeader()
+                .AllowAnyHeader()
                 .AllowAnyMethod());
             app.UseCorrelation();
             app.UseMiddleware<ExceptionMiddleware>();

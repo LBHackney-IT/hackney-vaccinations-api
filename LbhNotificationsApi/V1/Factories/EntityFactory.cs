@@ -49,7 +49,7 @@ namespace LbhNotificationsApi.V1.Factories
                 PerformedActionDate = entity.PerformedActionDate,
                 ActionNote = entity.ActionNote,
                 PersonalisationParams = entity.PersonalisationParams,
-                IsReadStatus = entity.IsReadStatus,
+                IsReadStatus = false,
                 CreatedAt = entity.CreatedAt,
                 RequireAction = entity.RequireAction,
                 Email = entity.Email,

@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using LbhNotificationsApi.V1.Boundary.Requests;
-using LbhNotificationsApi.V1.Common.Enums;
 using LbhNotificationsApi.V1.Domain;
 using LbhNotificationsApi.V1.Gateways.Interfaces;
 using LbhNotificationsApi.V1.UseCase.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using LbhNotificationsApi.V1.Common.Enums;
 
 namespace LbhNotificationsApi.V1.UseCase
 {
@@ -22,8 +22,8 @@ namespace LbhNotificationsApi.V1.UseCase
 
         public async Task<Guid> ExecuteAsync(NotificationRequestObject request)
         {
-            List<string> messageSent = new List<string>();
-            if (request.RequireEmailNotification)
+            var messageSent = new List<string>();
+            if (request.NotificationType == NotificationType.Email || request.RequireEmailNotification)
             {
                 var emailRequest = new EmailNotificationRequest
                 {
@@ -37,7 +37,7 @@ namespace LbhNotificationsApi.V1.UseCase
 
                 messageSent.Add("Email fail to sent");
             }
-            if (request.RequireSmsNotification)
+            if (request.NotificationType == NotificationType.Text || request.RequireSmsNotification)
             {
                 var smsRequest = new SmsNotificationRequest()
                 {
@@ -67,45 +67,10 @@ namespace LbhNotificationsApi.V1.UseCase
                 PersonalisationParams = request.PersonalisationParams,
                 RequireAction = request.RequireAction,
                 User = request.User,
-                IsMessageSent = messageSent.ToArray()
+                IsMessageSent = messageSent
             };
             await _gateway.AddAsync(notification).ConfigureAwait(false);
-            return notification.TargetId;
-        }
-
-        private static string GetMessage(TargetType targetType)
-        {
-            var message = string.Empty;
-            switch (targetType)
-            {
-                case TargetType.FailedDirectDebits:
-                    message = "Direct Debit failed";
-                    break;
-                case TargetType.MissedServiceCharge:
-                    message = "3 missed service charge payments have exceeded the tolerance period";
-                    break;
-                case TargetType.Estimates:
-                    message = "2021-2022 estimates have been sent for your approval";
-                    break;
-                case TargetType.Actuals:
-                    message = "2019-2020 Actuals have been approved";
-                    break;
-                case TargetType.ViewNewProperty:
-                    message = "A new property has been added  12/12/12";
-                    break;
-                case TargetType.ValuateNewProperty:
-                    message = "A new property has been added  12/12/12";
-                    break;
-                case TargetType.ViewNewTenancy:
-                    message = "2 Adjustments approved  12/12/12";
-                    break;
-                case TargetType.SuspenseAccount:
-                    message = "A Journal Transfer is awaiting your approval  12/12/12";
-                    break;
-                default:
-                    break;
-            }
-            return message;
+            return notification.Id;
         }
     }
 }

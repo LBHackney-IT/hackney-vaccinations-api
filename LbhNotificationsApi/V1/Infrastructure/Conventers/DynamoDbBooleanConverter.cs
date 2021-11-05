@@ -17,14 +17,14 @@ namespace LbhNotificationsApi.V1.Infrastructure.Conventers
 
             return new Primitive
             {
-                Value = (bool) value == true ? "true" : "false"
+                Value = (bool) value ? "true" : "false"
             };
         }
 
         public object FromEntry(DynamoDBEntry entry)
         {
             var primitive = entry as Primitive;
-            return primitive?.AsBoolean();
+            return primitive != "false";
         }
     }
 }

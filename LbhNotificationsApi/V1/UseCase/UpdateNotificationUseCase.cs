@@ -22,7 +22,7 @@ namespace LbhNotificationsApi.V1.UseCase
 
             var status = notification != null && notification.PerformedActionDate.HasValue && (notification.PerformedActionDate.Value.Date == DateTime.Today.Date);
 
-            return new ActionResponse { Status = status, Message = status ? "Approval successfully" : "Approval failed" };
+            return new ActionResponse { Status = status, Message = status ? "action was successfully" : "action failed" };
         }
     }
 }
