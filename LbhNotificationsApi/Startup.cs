@@ -43,6 +43,10 @@ namespace LbhNotificationsApi
             Configuration = configuration;
 
             AWSSDKHandler.RegisterXRayForAllServices();
+
+            // This command helps to prevent the next exception:
+            // Amazon.XRay.Recorder.Core.Exceptions.EntityNotAvailableException : Entity doesn't exist in AsyncLocal
+            AWSXRayRecorder.Instance.ContextMissingStrategy = ContextMissingStrategy.LOG_ERROR;
         }
 
         public IConfiguration Configuration { get; }
@@ -67,6 +71,7 @@ namespace LbhNotificationsApi
                 options.MapToStatusCode<HttpRequestException>(StatusCodes.Status503ServiceUnavailable);
                 options.MapToStatusCode<Exception>(StatusCodes.Status500InternalServerError);
             });
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddApiVersioning(o =>
             {
                 o.DefaultApiVersion = new ApiVersion(1, 0);
@@ -209,7 +214,6 @@ namespace LbhNotificationsApi
 
             if (env.IsDevelopment())
             {
-                AWSXRayRecorder.Instance.ContextMissingStrategy = ContextMissingStrategy.LOG_ERROR;
                 app.UseDeveloperExceptionPage();
             }
             else
