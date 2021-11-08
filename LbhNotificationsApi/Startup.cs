@@ -209,7 +209,6 @@ namespace LbhNotificationsApi
 
             if (env.IsDevelopment())
             {
-                AWSXRayRecorder.Instance.ContextMissingStrategy = ContextMissingStrategy.LOG_ERROR;
                 app.UseDeveloperExceptionPage();
             }
             else
