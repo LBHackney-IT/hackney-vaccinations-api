@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
 using Amazon.Util;
+using AutoMapper;
 
 namespace LbhNotificationsApi.V1.Gateways
 {
@@ -20,11 +21,13 @@ namespace LbhNotificationsApi.V1.Gateways
     {
         private readonly IDynamoDBContext _dynamoDbContext;
         private readonly IAmazonDynamoDB _amazonDynamoDb;
+        private readonly IMapper _mapper;
         private const string Pk= "lbhNoification";
-        public DynamoDbGateway(IDynamoDBContext dynamoDbContext, IAmazonDynamoDB amazonDynamoDb)
+        public DynamoDbGateway(IDynamoDBContext dynamoDbContext, IAmazonDynamoDB amazonDynamoDb, IMapper mapper)
         {
             _dynamoDbContext = dynamoDbContext;
             _amazonDynamoDb = amazonDynamoDb;
+            _mapper = mapper;
         }
 
         public async Task AddAsync(Notification notification)
@@ -79,7 +82,10 @@ namespace LbhNotificationsApi.V1.Gateways
                     }
             };
 
-            var result = await _amazonDynamoDb.QueryAsync(queryRequest).ConfigureAwait(false);
+            var data = await _amazonDynamoDb.QueryAsync(queryRequest).ConfigureAwait(false);
+            //var resp = data.ToNotification();
+            var results = _mapper.Map<List<Notification>>(data);
+
             var conditions = new List<ScanCondition>
             {
                 new ScanCondition("Id", ScanOperator.NotEqual, Guid.Empty),
@@ -100,8 +106,8 @@ namespace LbhNotificationsApi.V1.Gateways
                 conditions.Add(new ScanCondition("TargetId", ScanOperator.Equal, query.TargetId));
             }
 
-            var data = await _dynamoDbContext.ScanAsync<NotificationEntity>(conditions).GetRemainingAsync().ConfigureAwait(false);
-            return data.Select(x => x.ToDomain()).ToList();
+            var data1 = await _dynamoDbContext.ScanAsync<NotificationEntity>(conditions).GetRemainingAsync().ConfigureAwait(false);
+            return data1.Select(x => x.ToDomain()).ToList();
         }
 
 

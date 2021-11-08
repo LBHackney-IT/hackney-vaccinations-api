@@ -33,8 +33,8 @@ namespace LbhNotificationsApi.V1.Factories
                     PerformedActionType = item["rent_account_number"].S,
                     RequireAction = item["rent_account_number"].S,
                     Email = item["rent_account_number"].S
-                    IsMessageSent = item["rent_account_number"].S,
-                    IsReadStatus = item["rent_account_number"].S,
+                    //IsMessageSent = item["rent_account_number"].S,
+                    //IsReadStatus = item["rent_account_number"].S,
                     Message= item["rent_account_number"].S,
                     MobileNumber= item["rent_account_number"].S,
                     NotificationType= item["rent_account_number"].S,
@@ -42,7 +42,7 @@ namespace LbhNotificationsApi.V1.Factories
                 });
             }
 
-            return statements;
+            return notifications;
         }
     }
 }
