@@ -36,7 +36,7 @@ namespace LbhNotificationsApi.Tests.V1.UseCase
             var entity = _fixture.Build<Notification>()
                                 .With(_ => _.Id, id)
                                 .With(_ => _.PerformedActionDate, DateTime.UtcNow)
-                                .With(_ => _.PerformedActionType, ActionType.Approved)
+                                .With(_ => _.PerformedActionType, ActionType.Approved.ToString())
                                 .Create();
             var request = _fixture.Build<UpdateRequest>()
                                  .With(_ => _.ActionType, ActionType.Approved)

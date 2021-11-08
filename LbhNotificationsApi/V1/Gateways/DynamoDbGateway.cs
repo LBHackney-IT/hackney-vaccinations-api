@@ -53,9 +53,9 @@ namespace LbhNotificationsApi.V1.Gateways
                 new ScanCondition("IsRemovedStatus", ScanOperator.NotEqual, true),
                 new ScanCondition("CreatedAt", ScanOperator.Between, DateTime.Today.Date, DateTime.Today.Date.AddMonths(3))
             };
-            if (query.NotificationType != NotificationType.All)
+            if (query.NotificationType.Equals(NotificationType.Screen))
             {
-                conditions.Add(new ScanCondition("NotificationType", ScanOperator.Equal, query.NotificationType));
+                conditions.Add(new ScanCondition("NotificationType", ScanOperator.Equal, query.NotificationType.ToString()));
             }
             if (!string.IsNullOrEmpty(query.User))
             {
@@ -93,7 +93,7 @@ namespace LbhNotificationsApi.V1.Gateways
             if (notification.ActionType == ActionType.Removed)
                 loadData.IsRemovedStatus = true;
 
-            loadData.PerformedActionType = notification.ActionType;
+            loadData.PerformedActionType = notification.ActionType.ToString();
             loadData.PerformedActionDate = DateTime.UtcNow;
             await _dynamoDbContext.SaveAsync(loadData).ConfigureAwait(false);
 

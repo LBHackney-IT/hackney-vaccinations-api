@@ -219,7 +219,7 @@ namespace LbhNotificationsApi.Tests.V1.Controllers
             var request = new UpdateRequest { ActionNote = "", ActionType = ActionType.Approved };
             var updateResponse = new ActionResponse { Status = true };
             _getByIdNotificationCase.Setup(x => x.ExecuteAsync(It.IsAny<Guid>()))
-                .ReturnsAsync(new NotificationResponseObject() { PerformedActionType = ActionType.Initiated });
+                .ReturnsAsync(new NotificationResponseObject() { PerformedActionType = ActionType.Initiated.ToString() });
             _updateNotificationUseCase.Setup(x => x.ExecuteAsync(id, request)).ReturnsAsync(updateResponse);
 
             // Act
@@ -238,7 +238,7 @@ namespace LbhNotificationsApi.Tests.V1.Controllers
             var request = new UpdateRequest { ActionNote = "", ActionType = ActionType.Approved };
             var updateResponse = new ActionResponse { Status = false };
             _getByIdNotificationCase.Setup(x => x.ExecuteAsync(It.IsAny<Guid>()))
-                .ReturnsAsync(new NotificationResponseObject() { Id = id, PerformedActionType = ActionType.Initiated });
+                .ReturnsAsync(new NotificationResponseObject() { Id = id, PerformedActionType = ActionType.Initiated.ToString() });
             _updateNotificationUseCase.Setup(x => x.ExecuteAsync(id, request)).ReturnsAsync(updateResponse);
 
             // Act
@@ -256,7 +256,7 @@ namespace LbhNotificationsApi.Tests.V1.Controllers
             var id = Guid.NewGuid();
             var exception = new ApplicationException("Test exception");
             _getByIdNotificationCase.Setup(x => x.ExecuteAsync(It.IsAny<Guid>()))
-               .ReturnsAsync(new NotificationResponseObject() { Id = id, PerformedActionType = ActionType.Initiated });
+               .ReturnsAsync(new NotificationResponseObject() { Id = id, PerformedActionType = ActionType.Initiated.ToString() });
             _updateNotificationUseCase.Setup(x => x.ExecuteAsync(id, It.IsAny<UpdateRequest>())).ThrowsAsync(exception);
 
             // Act
