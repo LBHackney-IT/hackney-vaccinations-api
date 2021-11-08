@@ -23,7 +23,7 @@ namespace LbhNotificationsApi.V1.UseCase
         public async Task<Guid> ExecuteAsync(NotificationObjectRequest request)
         {
             var messageSent = new List<string>();
-            if (request.NotificationType == NotificationType.Email || request.RequireEmailNotification)
+            if (request.NotificationType.Equals(NotificationType.Email) || request.RequireEmailNotification)
             {
                 var emailRequest = new EmailNotificationRequest
                 {
@@ -37,7 +37,7 @@ namespace LbhNotificationsApi.V1.UseCase
 
                 messageSent.Add("Email fail to sent");
             }
-            if (request.NotificationType == NotificationType.Text || request.RequireSmsNotification)
+            if (request.NotificationType.Equals(NotificationType.Text) || request.RequireSmsNotification)
             {
                 var smsRequest = new SmsNotificationRequest()
                 {
@@ -54,14 +54,14 @@ namespace LbhNotificationsApi.V1.UseCase
             var notification = new Notification
             {
                 TargetId = request.TargetId,
-                TargetType = request.TargetType,
+                TargetType = request.TargetType.ToString(),
                 Message = request.Message,
                 Email = request.Email,
                 RequireEmailNotification = request.RequireEmailNotification,
                 TemplateId = request.TemplateId,
                 ServiceKey = request.ServiceKey,
                 RequireLetter = request.RequireLetter,
-                NotificationType = request.NotificationType,
+                NotificationType = request.NotificationType.ToString(),
                 MobileNumber = request.MobileNumber,
                 RequireSmsNotification = request.RequireSmsNotification,
                 PersonalisationParams = request.PersonalisationParams,

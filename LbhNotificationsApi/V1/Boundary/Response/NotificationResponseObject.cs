@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using LbhNotificationsApi.V1.Common.Enums;
 
 namespace LbhNotificationsApi.V1.Boundary.Response
 {
@@ -9,8 +8,8 @@ namespace LbhNotificationsApi.V1.Boundary.Response
     {
         public Guid Id { get; set; }
         public string TargetId { get; set; }
-        public TargetType TargetType { get; set; }
-        public NotificationType NotificationType { get; set; }
+        public string TargetType { get; set; }
+        public string NotificationType { get; set; }
         public string User { get; set; }
         public string Message { get; set; }
         public string ServiceKey { get; set; }
@@ -25,7 +24,7 @@ namespace LbhNotificationsApi.V1.Boundary.Response
         public List<string> SentMessageDetails { get; set; }
         public string ActionNote { get; set; }
         public string PerformedActionDoneBy { get; set; }
-        public ActionType PerformedActionType { get; set; }
+        public string PerformedActionType { get; set; }
         public Dictionary<string, string> PersonalisationParams { get; set; }
         public DateTime? PerformedActionDate { get; set; }
         public DateTime CreatedDate { get; set; }

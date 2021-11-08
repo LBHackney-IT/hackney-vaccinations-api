@@ -17,10 +17,10 @@ namespace LbhNotificationsApi.V1.Infrastructure
         [DynamoDBProperty(AttributeName = "target_id")]
         public string TargetId { get; set; }
 
-        [DynamoDBProperty(AttributeName = "target_type", Converter = typeof(DynamoDbEnumConverter<TargetType>))]
-        public TargetType TargetType { get; set; }
-        [DynamoDBProperty(AttributeName = "notification_type", Converter = typeof(DynamoDbEnumConverter<NotificationType>))]
-        public NotificationType NotificationType { get; set; }
+        [DynamoDBProperty(AttributeName = "target_type")]
+        public string TargetType { get; set; }
+        [DynamoDBProperty(AttributeName = "notification_type")]
+        public string NotificationType { get; set; }
         [DynamoDBProperty(AttributeName = "user")]
         public string User { get; set; }
         [DynamoDBProperty(AttributeName = "message")]
@@ -49,8 +49,8 @@ namespace LbhNotificationsApi.V1.Infrastructure
         public bool RequireLetter { get; set; }
         [DynamoDBProperty(AttributeName = "personalisation_params")]
         public Dictionary<string, string> PersonalisationParams { get; set; }
-        [DynamoDBProperty(AttributeName = "performed_action_type", Converter = typeof(DynamoDbEnumConverter<ActionType>))]
-        public ActionType PerformedActionType { get; set; }
+        [DynamoDBProperty(AttributeName = "performed_action_type")]
+        public string PerformedActionType { get; set; }
         [DynamoDBProperty(AttributeName = "performed_action_done_by")]
         public string PerformedActionDoneBy { get; set; }
         [DynamoDBProperty(AttributeName = "performed_action_date", Converter = typeof(DynamoDbDateTimeConverter))]

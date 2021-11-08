@@ -52,4 +52,5 @@ namespace LbhNotificationsApi.V1.Boundary.Requests
         [JsonPropertyName("personalisationParams")]
         public Dictionary<string, string> PersonalisationParams { get; set; }
     }
+
 }
