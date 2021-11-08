@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Amazon.DynamoDBv2.DocumentModel;
+using Amazon.DynamoDBv2.Model;
+using Amazon.Util;
 
 namespace LbhNotificationsApi.V1.Gateways
 {
@@ -18,7 +20,7 @@ namespace LbhNotificationsApi.V1.Gateways
     {
         private readonly IDynamoDBContext _dynamoDbContext;
         private readonly IAmazonDynamoDB _amazonDynamoDb;
-
+        private const string Pk= "lbhNoification";
         public DynamoDbGateway(IDynamoDBContext dynamoDbContext, IAmazonDynamoDB amazonDynamoDb)
         {
             _dynamoDbContext = dynamoDbContext;
@@ -28,6 +30,7 @@ namespace LbhNotificationsApi.V1.Gateways
         public async Task AddAsync(Notification notification)
         {
             var dbEntity = notification.ToDatabase();
+            dbEntity.Pk = Pk;
             await _dynamoDbContext.SaveAsync(dbEntity).ConfigureAwait(false);
 
         }
@@ -47,6 +50,36 @@ namespace LbhNotificationsApi.V1.Gateways
 
         public async Task<List<Notification>> GetAllAsync(NotificationSearchQuery query)
         {
+            
+            DateTime startDate = DateTime.UtcNow;
+            string start = startDate.ToString(AWSSDKUtils.ISO8601DateFormat);
+
+            // You provide date value based on your test data.
+            DateTime endDate = DateTime.UtcNow - TimeSpan.FromDays(90);
+            string end = endDate.ToString(AWSSDKUtils.ISO8601DateFormat);
+            QueryRequest queryRequest = new QueryRequest
+            {
+                TableName = "Notifications",
+                KeyConditionExpression = "pk = :v1",
+                FilterExpression= "created_at BETWEEN :v2a AND :v2b AND is_removed_status <> :v3",
+                ExpressionAttributeValues = new Dictionary<string, AttributeValue>
+                    {
+                        {":v1", new AttributeValue {
+                     S = Pk
+                 }},
+                {":v2a", new AttributeValue {
+                     S = end
+                 }},
+                {":v2b", new AttributeValue {
+                     S = start
+                 }},
+                 {":v3", new AttributeValue {
+                     S = "true"
+                 }}
+                    }
+            };
+
+            var result = await _amazonDynamoDb.QueryAsync(queryRequest).ConfigureAwait(false);
             var conditions = new List<ScanCondition>
             {
                 new ScanCondition("Id", ScanOperator.NotEqual, Guid.Empty),
@@ -74,7 +107,7 @@ namespace LbhNotificationsApi.V1.Gateways
 
         public async Task<Notification> GetEntityByIdAsync(Guid id)
         {
-            var result = await _dynamoDbContext.LoadAsync<NotificationEntity>(id).ConfigureAwait(false);
+            var result = await _dynamoDbContext.LoadAsync<NotificationEntity>(Pk,id).ConfigureAwait(false);
             //update data status as read
             if (result == null) return null;
             result.IsReadStatus = true;

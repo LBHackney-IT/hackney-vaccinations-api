@@ -1,8 +1,7 @@
+using Amazon.DynamoDBv2.DataModel;
+using LbhNotificationsApi.V1.Infrastructure.Conventers;
 using System;
 using System.Collections.Generic;
-using Amazon.DynamoDBv2.DataModel;
-using LbhNotificationsApi.V1.Common.Enums;
-using LbhNotificationsApi.V1.Infrastructure.Conventers;
 
 namespace LbhNotificationsApi.V1.Infrastructure
 {
@@ -10,8 +9,12 @@ namespace LbhNotificationsApi.V1.Infrastructure
     [DynamoDBTable("Notifications", LowerCamelCaseProperties = true)]
     public class NotificationEntity
     {
-        [DynamoDBProperty(AttributeName = "id")]
+        [DynamoDBProperty(AttributeName = "pk")]
         [DynamoDBHashKey]
+        public string Pk { get; set; }
+
+        [DynamoDBProperty(AttributeName = "id")]
+        [DynamoDBRangeKey]
         public Guid Id { get; set; }
 
         [DynamoDBProperty(AttributeName = "target_id")]
