@@ -159,7 +159,7 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
             var id = Guid.Parse(apiNotification);
             var dbRecord = await DynamoDbContext.LoadAsync<NotificationEntity>(id).ConfigureAwait(false);
             id.Should().Be(dbRecord.Id);
-            requestObject.TargetType.Should().Be(dbRecord.TargetType);
+            requestObject.TargetType.ToString().Should().Be(dbRecord.TargetType);
             requestObject.Message.Should().BeEquivalentTo(dbRecord.Message);
         }
 
