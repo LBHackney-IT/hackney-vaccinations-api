@@ -3,7 +3,14 @@ resource "aws_dynamodb_table" "notifications_table" {
     billing_mode          = "PROVISIONED"
     read_capacity         = 10
     write_capacity        = 10
-    hash_key              = "id"
+    hash_key              = "pk"
+   range_key              = "id"
+
+
+    attribute {
+        name              = "pk"
+        type              = "S"
+    }
 
     attribute {
         name              = "id"
