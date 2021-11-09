@@ -33,6 +33,7 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using Amazon.XRay.Recorder.Core;
 using Amazon.XRay.Recorder.Core.Strategies;
+using AutoMapper;
 
 namespace LbhNotificationsApi
 {
@@ -57,7 +58,7 @@ namespace LbhNotificationsApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+
             services.AddMvc().AddProblemDetailsConventions()
                 .AddFluentValidation(fv =>
                 {
@@ -71,6 +72,7 @@ namespace LbhNotificationsApi
                 options.MapToStatusCode<HttpRequestException>(StatusCodes.Status503ServiceUnavailable);
                 options.MapToStatusCode<Exception>(StatusCodes.Status500InternalServerError);
             });
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddApiVersioning(o =>
             {
                 o.DefaultApiVersion = new ApiVersion(1, 0);
@@ -147,6 +149,10 @@ namespace LbhNotificationsApi
             RegisterGateways(services);
             RegisterUseCases(services);
             RegisterValidators(services);
+            services.AddCors(options =>
+            {
+                options.AddPolicy(ApiName, builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            });
         }
 
         private static void ConfigureDbContext(IServiceCollection services)
@@ -192,6 +198,8 @@ namespace LbhNotificationsApi
             services.AddScoped<IAddNotificationUseCase, AddNotificationUseCase>();
             services.AddScoped<IUpdateNotificationUseCase, UpdateNotificationUseCase>();
             services.AddScoped<IGetTargetDetailsCase, GetTargetDetailsCase>();
+            services.AddScoped<IDeleteNotificationUseCase, DeleteNotificationUseCase>();
+
         }
 
         private static void RegisterValidators(IServiceCollection services)
@@ -241,6 +249,7 @@ namespace LbhNotificationsApi
             });
             app.UseSwagger();
             app.UseRouting();
+            app.UseCors(ApiName);
             app.UseEndpoints(endpoints =>
             {
                 // SwaggerGen won't find controllers that are routed via this technique.
