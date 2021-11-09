@@ -24,6 +24,8 @@ namespace LbhNotificationsApi.Tests.V1.Controllers
         private readonly Mock<IGetByIdNotificationCase> _getByIdNotificationCase;
         private readonly Mock<IAddNotificationUseCase> _addNotificationUseCase;
         private readonly Mock<IUpdateNotificationUseCase> _updateNotificationUseCase;
+        private readonly Mock<IDeleteNotificationUseCase> _deleteNotification;
+
 
         private readonly Fixture _fixture = new Fixture();
 
@@ -37,10 +39,11 @@ namespace LbhNotificationsApi.Tests.V1.Controllers
             _getByIdNotificationCase = new Mock<IGetByIdNotificationCase>();
             _addNotificationUseCase = new Mock<IAddNotificationUseCase>();
             _updateNotificationUseCase = new Mock<IUpdateNotificationUseCase>();
+            _deleteNotification = new Mock<IDeleteNotificationUseCase>();
             _classUnderTest = new NotificationsV2Controller(_mockSmsNotificationUseCase.Object,
                 _mockEmailNotificationUseCase.Object, mockEmailRequestValidator.Object,
                 mockSmsRequestValidator.Object, _getAllNotificationCase.Object, _getByIdNotificationCase.Object,
-                _addNotificationUseCase.Object, _updateNotificationUseCase.Object);
+                _addNotificationUseCase.Object, _updateNotificationUseCase.Object, _deleteNotification.Object);
         }
 
 

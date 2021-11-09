@@ -14,5 +14,6 @@ namespace LbhNotificationsApi.V1.Gateways.Interfaces
         Task AddAsync(Notification notification);
 
         Task<Notification> UpdateAsync(Guid id, UpdateRequest notification);
+        Task<Notification> DeleteAsync(Guid id);
     }
 }

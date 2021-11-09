@@ -128,5 +128,16 @@ namespace LbhNotificationsApi.V1.Gateways
 
             return loadData.ToDomain();
         }
+
+
+        public async Task<Notification> DeleteAsync(Guid id)
+        {
+            var loadData = await _dynamoDbContext.LoadAsync<NotificationEntity>(Pk, id).ConfigureAwait(false);
+            if (loadData == null) return null;
+            loadData.IsRemovedStatus = true;
+            await _dynamoDbContext.SaveAsync(loadData).ConfigureAwait(false);
+
+            return loadData.ToDomain();
+        }
     }
 }

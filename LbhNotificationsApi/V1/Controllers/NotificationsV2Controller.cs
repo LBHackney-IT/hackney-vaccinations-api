@@ -26,6 +26,7 @@ namespace LbhNotificationsApi.V1.Controllers
         private readonly IGetByIdNotificationCase _getByIdNotificationCase;
         private readonly IAddNotificationUseCase _addNotificationUseCase;
         private readonly IUpdateNotificationUseCase _updateNotificationUseCase;
+        private readonly IDeleteNotificationUseCase _deleteNotification;
         public NotificationsV2Controller(
             ISendSmsNotificationUseCase sendSmsNotificationUseCase,
             ISendEmailNotificationUseCase sendEmailNotificationUseCase,
@@ -34,7 +35,8 @@ namespace LbhNotificationsApi.V1.Controllers
             IGetAllNotificationCase getAllNotificationCase,
             IGetByIdNotificationCase getByIdNotificationCase,
             IAddNotificationUseCase addNotificationUseCase,
-            IUpdateNotificationUseCase updateNotificationUseCase)
+            IUpdateNotificationUseCase updateNotificationUseCase,
+            IDeleteNotificationUseCase deleteNotification)
         {
             _sendSmsNotificationUseCase = sendSmsNotificationUseCase;
             _sendEmailNotificationUseCase = sendEmailNotificationUseCase;
@@ -44,6 +46,7 @@ namespace LbhNotificationsApi.V1.Controllers
             _getByIdNotificationCase = getByIdNotificationCase;
             _addNotificationUseCase = addNotificationUseCase;
             _updateNotificationUseCase = updateNotificationUseCase;
+            _deleteNotification = deleteNotification;
         }
 
 
@@ -162,6 +165,23 @@ namespace LbhNotificationsApi.V1.Controllers
                 return Ok(updateResult);
 
             return BadRequest(updateResult);
+
+        }
+
+        [ProducesResponseType(typeof(ActionResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> DeleteAsync(Guid id)
+        {
+            var result = await _deleteNotification.ExecuteAsync(id).ConfigureAwait(false);
+
+            if (result.Status)
+                return Ok(result);
+
+            return BadRequest(result);
 
         }
     }

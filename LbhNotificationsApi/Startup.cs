@@ -58,7 +58,7 @@ namespace LbhNotificationsApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+
             services.AddMvc().AddProblemDetailsConventions()
                 .AddFluentValidation(fv =>
                 {
@@ -149,6 +149,10 @@ namespace LbhNotificationsApi
             RegisterGateways(services);
             RegisterUseCases(services);
             RegisterValidators(services);
+            services.AddCors(options =>
+            {
+                options.AddPolicy(ApiName, builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            });
         }
 
         private static void ConfigureDbContext(IServiceCollection services)
@@ -194,6 +198,8 @@ namespace LbhNotificationsApi
             services.AddScoped<IAddNotificationUseCase, AddNotificationUseCase>();
             services.AddScoped<IUpdateNotificationUseCase, UpdateNotificationUseCase>();
             services.AddScoped<IGetTargetDetailsCase, GetTargetDetailsCase>();
+            services.AddScoped<IDeleteNotificationUseCase, DeleteNotificationUseCase>();
+
         }
 
         private static void RegisterValidators(IServiceCollection services)
@@ -243,6 +249,7 @@ namespace LbhNotificationsApi
             });
             app.UseSwagger();
             app.UseRouting();
+            app.UseCors(ApiName);
             app.UseEndpoints(endpoints =>
             {
                 // SwaggerGen won't find controllers that are routed via this technique.
