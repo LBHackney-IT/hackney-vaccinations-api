@@ -16,7 +16,7 @@ namespace LbhNotificationsApi.Tests
         private readonly List<TableDef> _tables = new List<TableDef>
         {
 
-            new TableDef { Name = "Notifications", KeyName = "id", KeyType = ScalarAttributeType.S }
+            new TableDef { Name = "Notifications", KeyName = "pk", RangeName="id", KeyType = KeyType.HASH,RangeType = KeyType.RANGE,  KeyScalarType= ScalarAttributeType.S}
         };
 
         protected DynamoDbIntegrationTests()
@@ -54,6 +54,9 @@ namespace LbhNotificationsApi.Tests
     {
         public string Name { get; set; }
         public string KeyName { get; set; }
-        public ScalarAttributeType KeyType { get; set; }
+        public string RangeName { get; set; }
+        public KeyType KeyType { get; set; }
+        public KeyType RangeType { get; set; }
+        public ScalarAttributeType KeyScalarType { get; set; }
     }
 }

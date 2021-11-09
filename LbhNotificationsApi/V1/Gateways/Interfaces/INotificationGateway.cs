@@ -10,7 +10,6 @@ namespace LbhNotificationsApi.V1.Gateways.Interfaces
     {
         Task<Notification> GetEntityByIdAsync(Guid id);
 
-        Task<List<Notification>> GetAllAsync();
         Task<List<Notification>> GetAllAsync(NotificationSearchQuery query);
         Task AddAsync(Notification notification);
 

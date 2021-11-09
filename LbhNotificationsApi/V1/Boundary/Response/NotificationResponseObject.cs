@@ -25,6 +25,7 @@ namespace LbhNotificationsApi.V1.Boundary.Response
         public string ActionNote { get; set; }
         public string PerformedActionDoneBy { get; set; }
         public string PerformedActionType { get; set; }
+        public bool IsRemovable { get; set; }
         public Dictionary<string, string> PersonalisationParams { get; set; }
         public DateTime? PerformedActionDate { get; set; }
         public DateTime CreatedDate { get; set; }

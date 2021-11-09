@@ -33,6 +33,7 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using Amazon.XRay.Recorder.Core;
 using Amazon.XRay.Recorder.Core.Strategies;
+using AutoMapper;
 
 namespace LbhNotificationsApi
 {
@@ -71,6 +72,7 @@ namespace LbhNotificationsApi
                 options.MapToStatusCode<HttpRequestException>(StatusCodes.Status503ServiceUnavailable);
                 options.MapToStatusCode<Exception>(StatusCodes.Status500InternalServerError);
             });
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddApiVersioning(o =>
             {
                 o.DefaultApiVersion = new ApiVersion(1, 0);

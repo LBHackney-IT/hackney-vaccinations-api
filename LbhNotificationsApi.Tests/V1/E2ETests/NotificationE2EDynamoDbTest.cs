@@ -23,6 +23,7 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
     public class NotificationE2EDynamoDbTest : DynamoDbIntegrationTests<Startup>
     {
         private readonly Fixture _fixture = new Fixture();
+        private string _pk = "lbhNoification";
 
         /// <summary>
         /// Method to construct a test entity that can be used in a test
@@ -97,10 +98,12 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
         /// <returns></returns>
         private async Task SetupTestData(Notification entity)
         {
-            await DynamoDbContext.SaveAsync(entity.ToDatabase()).ConfigureAwait(false);
+            var dbEntity = entity.ToDatabase();
+            dbEntity.Pk = _pk;
+            await DynamoDbContext.SaveAsync(dbEntity).ConfigureAwait(false);
 
             async void Item() =>
-                await DynamoDbContext.DeleteAsync<NotificationEntity>(entity.Id)
+                await DynamoDbContext.DeleteAsync<NotificationEntity>(_pk, entity.Id)
                     .ConfigureAwait(false);
 
             CleanupActions.Add(Item);
@@ -157,7 +160,7 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
             responseContent.Should().NotBeEmpty();
             var apiNotification = responseContent.Replace("\\", string.Empty).Replace("\"", string.Empty);
             var id = Guid.Parse(apiNotification);
-            var dbRecord = await DynamoDbContext.LoadAsync<NotificationEntity>(id).ConfigureAwait(false);
+            var dbRecord = await DynamoDbContext.LoadAsync<NotificationEntity>(_pk, id).ConfigureAwait(false);
             id.Should().Be(dbRecord.Id);
             requestObject.TargetType.ToString().Should().Be(dbRecord.TargetType);
             requestObject.Message.Should().BeEquivalentTo(dbRecord.Message);
