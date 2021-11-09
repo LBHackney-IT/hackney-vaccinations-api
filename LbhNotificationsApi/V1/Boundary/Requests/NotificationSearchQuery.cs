@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using LbhNotificationsApi.V1.Common.Enums;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 
 namespace LbhNotificationsApi.V1.Boundary.Requests
 {

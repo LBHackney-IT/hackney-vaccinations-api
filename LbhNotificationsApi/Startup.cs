@@ -33,6 +33,7 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using Amazon.XRay.Recorder.Core;
 using Amazon.XRay.Recorder.Core.Strategies;
+using AutoMapper;
 
 namespace LbhNotificationsApi
 {

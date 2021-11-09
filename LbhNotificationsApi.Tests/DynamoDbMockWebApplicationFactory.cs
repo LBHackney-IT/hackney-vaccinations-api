@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
+using Amazon.XRay.Recorder.Core;
+using Amazon.XRay.Recorder.Core.Strategies;
 using LbhNotificationsApi.V1.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -45,9 +47,13 @@ namespace LbhNotificationsApi.Tests
             {
                 try
                 {
+
+                    // This command helps to prevent the next exception:
+                    // Amazon.XRay.Recorder.Core.Exceptions.EntityNotAvailableException : Entity doesn't exist in AsyncLocal
+                    AWSXRayRecorder.Instance.ContextMissingStrategy = ContextMissingStrategy.LOG_ERROR;
                     var request = new CreateTableRequest(table.Name,
-                        new List<KeySchemaElement> { new KeySchemaElement(table.KeyName, KeyType.HASH) },
-                        new List<AttributeDefinition> { new AttributeDefinition(table.KeyName, table.KeyType) },
+                        new List<KeySchemaElement> { new KeySchemaElement(table.KeyName, table.KeyType), new KeySchemaElement(table.RangeName, table.RangeType) },
+                        new List<AttributeDefinition> { new AttributeDefinition(table.KeyName, table.KeyScalarType), new AttributeDefinition(table.RangeName, table.KeyScalarType) },
                         new ProvisionedThroughput(3, 3));
                     _ = dynamoDb.CreateTableAsync(request).GetAwaiter().GetResult();
                 }

@@ -1,34 +1,42 @@
+using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.Model;
 using AutoFixture;
 using FluentAssertions;
+using LbhNotificationsApi.Tests.V1.Helper;
+using LbhNotificationsApi.V1.Boundary.Requests;
+using LbhNotificationsApi.V1.Common.Enums;
+using LbhNotificationsApi.V1.Domain;
+using LbhNotificationsApi.V1.Factories;
+using LbhNotificationsApi.V1.Gateways;
+using LbhNotificationsApi.V1.Infrastructure;
 using Moq;
-using NotificationsApi.Tests.V1.Helper;
-using NotificationsApi.V1.Boundary.Request;
-using NotificationsApi.V1.Common.Enums;
-using NotificationsApi.V1.Domain;
-using NotificationsApi.V1.Gateways;
-using NotificationsApi.V1.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace NotificationsApi.Tests.V1.Gateways
+namespace LbhNotificationsApi.Tests.V1.Gateways
 {
 
     public sealed class DynamoDbGatewayTests : IDisposable
     {
+
         private readonly Fixture _fixture = new Fixture();
+        private string _pk = "lbhNoification";
+
         private readonly Mock<IDynamoDBContext> _dynamoDb;
-        private readonly DynamoDbGateway _classUnderTest;
+        private readonly Mock<IAmazonDynamoDB> _amazonDynamoDB;
+        private readonly DynamoDbGateway _gateway;
         private readonly List<Action> _cleanup;
 
         public DynamoDbGatewayTests()
         {
             _cleanup = new List<Action>();
             _dynamoDb = new Mock<IDynamoDBContext>();
-            _classUnderTest = new DynamoDbGateway(_dynamoDb.Object);
+            _amazonDynamoDB = new Mock<IAmazonDynamoDB>();
+            _gateway = new DynamoDbGateway(_dynamoDb.Object, _amazonDynamoDB.Object);
         }
 
         public void Dispose()
@@ -50,30 +58,29 @@ namespace NotificationsApi.Tests.V1.Gateways
             }
         }
         [Fact]
-        public void GetAllNotifications()
+        public async Task GetAllNotifications()
         {
-            //var entities = _fixture.Build<Notification>()
-            //    .With(x => x.TargetId, Guid.NewGuid()).CreateMany(3).ToList();
+            var query = new NotificationSearchQuery();
 
-            //var entity = entities.FirstOrDefault();
+            var databaseEntities = MockQueryResponse(1);
+            var entities = databaseEntities.ToNotification();
 
-            //var databaseEntities = entities.Select(entity => entity.ToDatabase());
+            _amazonDynamoDB.Setup(x => x.QueryAsync(It.IsAny<QueryRequest>(), It.IsAny<CancellationToken>()))
+                  .ReturnsAsync(databaseEntities);
 
-            //_dynamoDb.Setup(x => x.ScanAsync(
-            //    It.IsAny<IEnumerable<ScanCondition>>(),
-            //    It.IsAny<DynamoDBOperationConfig>()))
-            //    .Returns((databaseEntities));
+            var response = await _gateway.GetAllAsync(query).ConfigureAwait(false);
 
-            //var response = await _gateway.GetAllTransactionsAsync(entity.TargetId, entity.TransactionType, entity.TransactionDate, entity.TransactionDate).ConfigureAwait(false);
-
-            //response.Should().BeEquivalentTo(entities);
+            response.Should().BeEquivalentTo(entities);
         }
         [Fact]
-        public void GetEntityByIdReturnsNullIfEntityDoesntExist()
+        public async Task GetEntityByIdReturnsNullIfEntityDoesntExist()
         {
             var guid = Guid.NewGuid();
-            var response = _classUnderTest.GetEntityById(guid);
+            _dynamoDb.Setup(x => x.LoadAsync<NotificationEntity>(_pk, guid, default))
+                  .ReturnsAsync((NotificationEntity) null);
+            var response = await _gateway.GetEntityByIdAsync(guid).ConfigureAwait(false);
 
+            _dynamoDb.Verify(x => x.LoadAsync<NotificationEntity>(_pk, guid, default), Times.Once);
             response.Should().BeNull();
         }
 
@@ -83,13 +90,14 @@ namespace NotificationsApi.Tests.V1.Gateways
             var entity = _fixture.Create<Notification>();
             var dbEntity = DatabaseEntityHelper.CreateDatabaseEntityFrom(entity);
 
-            _dynamoDb.Setup(x => x.LoadAsync<NotificationEntity>(entity.TargetId, default))
+            _dynamoDb.Setup(x => x.LoadAsync<NotificationEntity>(_pk, entity.Id, default))
                      .ReturnsAsync(dbEntity);
 
-            var response = await _classUnderTest.GetEntityByIdAsync(entity.TargetId).ConfigureAwait(false);
+            var response = await _gateway.GetEntityByIdAsync(entity.Id).ConfigureAwait(false);
 
-            _dynamoDb.Verify(x => x.LoadAsync<NotificationEntity>(entity.TargetId, default), Times.Once);
+            _dynamoDb.Verify(x => x.LoadAsync<NotificationEntity>(_pk, entity.Id, default), Times.Once);
 
+            entity.Id.Should().Be(response.Id);
             entity.TargetId.Should().Be(response.TargetId);
             entity.CreatedAt.Should().BeSameDateAs(response.CreatedAt);
         }
@@ -104,7 +112,7 @@ namespace NotificationsApi.Tests.V1.Gateways
             _dynamoDb.Setup(x => x.SaveAsync(It.IsAny<NotificationEntity>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
             // Act
-            await _classUnderTest.AddAsync(entityRequest).ConfigureAwait(false);
+            await _gateway.AddAsync(entityRequest).ConfigureAwait(false);
 
             // Assert
             _dynamoDb.Verify(x => x.SaveAsync(It.IsAny<NotificationEntity>(), default), Times.Once);
@@ -117,26 +125,24 @@ namespace NotificationsApi.Tests.V1.Gateways
         {
             // Arrange
             var entityRequest = _fixture.Build<Notification>()
-                                   .With(x => x.ApprovalStatus, ApprovalStatus.Initiated)
+                                   .With(x => x.PerformedActionType, ActionType.Initiated.ToString())
                                  .Create();
             var dbEntity = DatabaseEntityHelper.CreateDatabaseEntityFrom(entityRequest);
-            _dynamoDb.Setup(x => x.LoadAsync<NotificationEntity>(entityRequest.TargetId, default))
+            _dynamoDb.Setup(x => x.LoadAsync<NotificationEntity>(_pk, entityRequest.Id, default))
                      .ReturnsAsync(dbEntity);
 
-            var approvalRequest = new ApprovalRequest { ApprovalNote = "Approval Note", ApprovalStatus = ApprovalStatus.Approved };
+            var approvalRequest = new UpdateRequest { ActionNote = "Approval Note", ActionType = ActionType.Approved };
 
             _dynamoDb.Setup(x => x.SaveAsync(It.IsAny<NotificationEntity>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
             // Act
-            await _classUnderTest.UpdateAsync(entityRequest.TargetId, approvalRequest).ConfigureAwait(false);
-
-            // Assert
+            var response = await _gateway.UpdateAsync(entityRequest.Id, approvalRequest).ConfigureAwait(false);
 
             _dynamoDb.Verify(x => x.SaveAsync(It.IsAny<NotificationEntity>(), default), Times.Once);
-            var load = await _classUnderTest.GetEntityByIdAsync(entityRequest.TargetId).ConfigureAwait(false);
-            load.AuthorizerNote.Should().BeEquivalentTo(approvalRequest.ApprovalNote);
-            load.ApprovalStatus.Should().Be(approvalRequest.ApprovalStatus);
-            load.AuthorizedDate?.Date.Should().BeSameDateAs(DateTime.UtcNow.Date);
+            // var load = await _gateway.GetEntityByIdAsync(entityRequest.Id).ConfigureAwait(false);
+            response.ActionNote.Should().BeEquivalentTo(approvalRequest.ActionNote);
+            response.PerformedActionType.Should().Be(approvalRequest.ActionType.ToString());
+            response.PerformedActionDate?.Date.Should().BeSameDateAs(DateTime.UtcNow.Date);
 
         }
 
@@ -146,21 +152,99 @@ namespace NotificationsApi.Tests.V1.Gateways
             // Arrange
             var guid = Guid.NewGuid();
 
-            var approvalRequest = new ApprovalRequest { ApprovalNote = "Approval Note", ApprovalStatus = ApprovalStatus.Approved };
+            var approvalRequest = new UpdateRequest { ActionNote = "Approval Note", ActionType = ActionType.Approved };
 
             _dynamoDb.Setup(x => x.SaveAsync(It.IsAny<NotificationEntity>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
             // Act
-            await _classUnderTest.UpdateAsync(guid, approvalRequest).ConfigureAwait(false);
+            await _gateway.UpdateAsync(guid, approvalRequest).ConfigureAwait(false);
 
             // Assert
 
             _dynamoDb.Verify(x => x.SaveAsync(It.IsAny<NotificationEntity>(), default), Times.Never);
-            var load = await _classUnderTest.GetEntityByIdAsync(guid).ConfigureAwait(false);
+            var load = await _gateway.GetEntityByIdAsync(guid).ConfigureAwait(false);
             load.Should().BeNull();
 
         }
 
+        private QueryResponse MockQueryResponse(int cnt = 1)
+        {
+            var response = new QueryResponse();
+            for (int i = 0; i < cnt; i++)
+            {
+                response.Items.Add(
+                    new Dictionary<string, AttributeValue>()
+                    {
+                        {"pk", new AttributeValue {S = _pk}},
+                        {"id", new AttributeValue {S = _fixture.Create<Guid>().ToString()}},
+                        {"target_id", new AttributeValue {S = _fixture.Create<Guid>().ToString()}},
+                        {"target_type", new AttributeValue {S = _fixture.Create<TargetType>().ToString()}},
+                        {"notification_type", new AttributeValue {S = _fixture.Create<NotificationType>().ToString()}},
+                        {
+                            "created_at",
+                            new AttributeValue {S = _fixture.Create<DateTime>().ToString("F")}
+                        },
+                        {"action_note", new AttributeValue {S = _fixture.Create<string>()}},
+                        {
+                            "performed_action_date",
+                            new AttributeValue {S = _fixture.Create<DateTime>().ToString("F")}
+                        },
+                        {"performed_action_done_by", new AttributeValue {S = _fixture.Create<string>()}},
+                        {"performed_action_type", new AttributeValue {S = _fixture.Create<ActionType>().ToString()}},
+                        {"require_action", new AttributeValue {S = _fixture.Create<bool>().ToString()}},
+                        {"require_sms_notification", new AttributeValue {S = _fixture.Create<bool>().ToString()}},
+                        {"require_letter", new AttributeValue {S = _fixture.Create<bool>().ToString()}},
+                        {"require_email_notification", new AttributeValue {S = _fixture.Create<bool>().ToString()}},
+                        {"is_read_status", new AttributeValue {S = _fixture.Create<bool>().ToString()}},
+                        {"Email", new AttributeValue {S = _fixture.Create<string>()}},
+                        {"message", new AttributeValue {S = _fixture.Create<string>().ToString()}},
 
+                        {
+                            "is_message_sent",
+                            new AttributeValue {SS = _fixture.Create<List<string>>()}
+                        },
+                        {
+                            "mobile_number",
+                            new AttributeValue {S = _fixture.Create<string>()}
+                        },
+                        {"user", new AttributeValue {S = _fixture.Create<string>()}},
+                       
+                        //{
+                        //    "person",
+                        //    new AttributeValue
+                        //    {
+                        //        M = new Dictionary<string, AttributeValue>
+                        //        {
+                        //            {"id", new AttributeValue {S = _fixture.Create<Guid>().ToString()}},
+                        //            {"fullName", new AttributeValue {S = _fixture.Create<string>()}}
+                        //        }
+                        //    }
+                        //},
+                        //{
+                        //    "suspense_resolution_info",
+                        //    new AttributeValue
+                        //    {
+                        //        M = new Dictionary<string, AttributeValue>
+                        //        {
+                        //            {
+                        //                "isConfirmed",
+                        //                new AttributeValue {BOOL = _fixture.Create<bool>()}
+                        //            },
+                        //            {
+                        //                "isApproved",
+                        //                new AttributeValue {BOOL = _fixture.Create<bool>()}
+                        //            },
+                        //            {"note", new AttributeValue {S = _fixture.Create<string>()}},
+                        //            {
+                        //                "resolutionDate",
+                        //                new AttributeValue {S = _fixture.Create<DateTime>().ToString("F")}
+                        //            }
+                        //        }
+                        //    }
+                        //}
+                    });
+            }
+            return response;
+        }
     }
 }

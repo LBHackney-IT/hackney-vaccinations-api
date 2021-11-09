@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using LbhNotificationsApi.V1.Common.Enums;
 
 namespace LbhNotificationsApi.V1.Domain
 {

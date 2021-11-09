@@ -1,5 +1,7 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.Model;
+using Amazon.Util;
 using LbhNotificationsApi.V1.Boundary.Requests;
 using LbhNotificationsApi.V1.Common.Enums;
 using LbhNotificationsApi.V1.Domain;
@@ -8,12 +10,7 @@ using LbhNotificationsApi.V1.Gateways.Interfaces;
 using LbhNotificationsApi.V1.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Amazon.DynamoDBv2.DocumentModel;
-using Amazon.DynamoDBv2.Model;
-using Amazon.Util;
-using AutoMapper;
 
 namespace LbhNotificationsApi.V1.Gateways
 {
@@ -21,13 +18,11 @@ namespace LbhNotificationsApi.V1.Gateways
     {
         private readonly IDynamoDBContext _dynamoDbContext;
         private readonly IAmazonDynamoDB _amazonDynamoDb;
-        private readonly IMapper _mapper;
-        private const string Pk= "lbhNoification";
-        public DynamoDbGateway(IDynamoDBContext dynamoDbContext, IAmazonDynamoDB amazonDynamoDb, IMapper mapper)
+        private const string Pk = "lbhNoification";
+        public DynamoDbGateway(IDynamoDBContext dynamoDbContext, IAmazonDynamoDB amazonDynamoDb)
         {
             _dynamoDbContext = dynamoDbContext;
             _amazonDynamoDb = amazonDynamoDb;
-            _mapper = mapper;
         }
 
         public async Task AddAsync(Notification notification)
@@ -38,22 +33,11 @@ namespace LbhNotificationsApi.V1.Gateways
 
         }
 
-        public async Task<List<Notification>> GetAllAsync()
-        {
-            var conditions = new List<ScanCondition>
-            {
-                new ScanCondition("Id", ScanOperator.NotEqual, Guid.Empty),
-                new ScanCondition("IsRemovedStatus", ScanOperator.NotEqual, true),
-                new ScanCondition("CreatedAt", ScanOperator.Between, DateTime.Today.Date, DateTime.Today.Date.AddMonths(3))
-            };
-            var data = await _dynamoDbContext.ScanAsync<NotificationEntity>(conditions).GetRemainingAsync().ConfigureAwait(false);
-            return data.Select(x => x.ToDomain()).ToList();
-        }
 
 
         public async Task<List<Notification>> GetAllAsync(NotificationSearchQuery query)
         {
-            
+
             DateTime startDate = DateTime.UtcNow;
             string start = startDate.ToString(AWSSDKUtils.ISO8601DateFormat);
 
@@ -64,7 +48,7 @@ namespace LbhNotificationsApi.V1.Gateways
             {
                 TableName = "Notifications",
                 KeyConditionExpression = "pk = :v1",
-                FilterExpression= "created_at BETWEEN :v2a AND :v2b AND is_removed_status <> :v3",
+                FilterExpression = "created_at BETWEEN :v2a AND :v2b AND is_removed_status <> :v3",
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                     {
                         {":v1", new AttributeValue {
@@ -82,38 +66,32 @@ namespace LbhNotificationsApi.V1.Gateways
                     }
             };
 
-            var data = await _amazonDynamoDb.QueryAsync(queryRequest).ConfigureAwait(false);
-            //var resp = data.ToNotification();
-            var results = _mapper.Map<List<Notification>>(data);
-
-            var conditions = new List<ScanCondition>
+            if (query.NotificationType != NotificationType.All)
             {
-                new ScanCondition("Id", ScanOperator.NotEqual, Guid.Empty),
-                new ScanCondition("IsRemovedStatus", ScanOperator.NotEqual, true),
-                new ScanCondition("CreatedAt", ScanOperator.Between, DateTime.Today.Date, DateTime.Today.Date.AddMonths(3))
-            };
-            if (query.NotificationType.Equals(NotificationType.Screen))
-            {
-                conditions.Add(new ScanCondition("NotificationType", ScanOperator.Equal, query.NotificationType.ToString()));
+                queryRequest.FilterExpression += " AND notification_type = :v4";
+                queryRequest.ExpressionAttributeValues.Add(":v4", new AttributeValue { S = query.NotificationType.ToString() });
             }
             if (!string.IsNullOrEmpty(query.User))
             {
-                conditions.Add(new ScanCondition("User", ScanOperator.Equal, query.User));
+                queryRequest.FilterExpression += " AND #app_user = :v5";
+                queryRequest.ExpressionAttributeValues.Add(":v5", new AttributeValue { S = query.User });
+                queryRequest.ExpressionAttributeNames.Add("#app_user", "user");
             }
 
             if (query.TargetId != Guid.Empty)
             {
-                conditions.Add(new ScanCondition("TargetId", ScanOperator.Equal, query.TargetId));
+                queryRequest.FilterExpression += " AND target_id = :v6";
+                queryRequest.ExpressionAttributeValues.Add(":v6", new AttributeValue { S = query.TargetId.ToString() });
             }
-
-            var data1 = await _dynamoDbContext.ScanAsync<NotificationEntity>(conditions).GetRemainingAsync().ConfigureAwait(false);
-            return data1.Select(x => x.ToDomain()).ToList();
+            var data = await _amazonDynamoDb.QueryAsync(queryRequest).ConfigureAwait(false);
+            var results = data.ToNotification();
+            return results;
         }
 
 
         public async Task<Notification> GetEntityByIdAsync(Guid id)
         {
-            var result = await _dynamoDbContext.LoadAsync<NotificationEntity>(Pk,id).ConfigureAwait(false);
+            var result = await _dynamoDbContext.LoadAsync<NotificationEntity>(Pk, id).ConfigureAwait(false);
             //update data status as read
             if (result == null) return null;
             result.IsReadStatus = true;
@@ -123,17 +101,29 @@ namespace LbhNotificationsApi.V1.Gateways
 
         public async Task<Notification> UpdateAsync(Guid id, UpdateRequest notification)
         {
-            var loadData = await _dynamoDbContext.LoadAsync<NotificationEntity>(id).ConfigureAwait(false);
+            var loadData = await _dynamoDbContext.LoadAsync<NotificationEntity>(Pk, id).ConfigureAwait(false);
             if (loadData == null) return null;
 
             if (!string.IsNullOrWhiteSpace(notification.ActionNote))
                 loadData.ActionNote = notification.ActionNote;
 
-            if (notification.ActionType == ActionType.Removed)
-                loadData.IsRemovedStatus = true;
+            if (notification.ActionType == ActionType.IsRead)
+                loadData.IsReadStatus = true;
 
-            loadData.PerformedActionType = notification.ActionType.ToString();
-            loadData.PerformedActionDate = DateTime.UtcNow;
+            if (notification.ActionType == ActionType.Removed)
+            {
+                if (loadData.RequireAction && string.IsNullOrEmpty(loadData.PerformedActionType))
+                    throw new ArgumentException("You are not allow to remove/delete this data");
+
+                loadData.IsRemovedStatus = true;
+            }
+
+            if (notification.ActionType == ActionType.Approved || notification.ActionType == ActionType.Rejected || notification.ActionType == ActionType.Validate)
+            {
+
+                loadData.PerformedActionType = notification.ActionType.ToString();
+                loadData.PerformedActionDate = DateTime.UtcNow;
+            }
             await _dynamoDbContext.SaveAsync(loadData).ConfigureAwait(false);
 
             return loadData.ToDomain();

@@ -34,7 +34,8 @@ namespace LbhNotificationsApi.V1.Factories
                     MobileNumber = domain.MobileNumber,
                     NotificationType = domain.NotificationType,
                     RequireSmsNotification = domain.RequireSmsNotification,
-                    PersonalisationParams = domain.PersonalisationParams
+                    PersonalisationParams = domain.PersonalisationParams,
+                    IsRemovable = !domain.RequireAction || string.IsNullOrEmpty(domain.PerformedActionType)
                 };
         }
 
