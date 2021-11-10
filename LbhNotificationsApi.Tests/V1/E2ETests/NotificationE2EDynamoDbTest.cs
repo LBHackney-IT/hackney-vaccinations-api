@@ -277,7 +277,7 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
 
         }
         [Fact]
-        public async Task DeleteNotificationByIdReturnsSuccessResponse()
+        public async Task DeleteNotificationByIdReturnSuccessResponse()
         {
             var entity = ConstructTestEntity();
             await SetupTestData(entity).ConfigureAwait(false);

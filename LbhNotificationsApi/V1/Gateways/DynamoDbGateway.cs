@@ -1,5 +1,6 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
 using Amazon.Util;
 using LbhNotificationsApi.V1.Boundary.Requests;
@@ -10,6 +11,7 @@ using LbhNotificationsApi.V1.Gateways.Interfaces;
 using LbhNotificationsApi.V1.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LbhNotificationsApi.V1.Gateways
@@ -91,9 +93,17 @@ namespace LbhNotificationsApi.V1.Gateways
 
         public async Task<Notification> GetEntityByIdAsync(Guid id)
         {
-            var result = await _dynamoDbContext.LoadAsync<NotificationEntity>(Pk, id).ConfigureAwait(false);
-            if (result == null) return null;
-            return result.ToDomain();
+            var config = new DynamoDBOperationConfig()
+            {
+                QueryFilter = new List<ScanCondition>() {
+                    new ScanCondition("Id", ScanOperator.Equal, id),
+                     new ScanCondition("IsRemovedStatus", ScanOperator.NotEqual, true)
+                }
+            };
+            var result = await _dynamoDbContext.QueryAsync<NotificationEntity>(Pk, config).GetRemainingAsync().ConfigureAwait(false);
+            // var result = await _dynamoDbContext.LoadAsync<NotificationEntity>(Pk, id).ConfigureAwait(false);
+            if (result.Count < 1) return null;
+            return result.FirstOrDefault().ToDomain();
         }
 
         public async Task<Notification> UpdateAsync(Guid id, UpdateRequest notification)
