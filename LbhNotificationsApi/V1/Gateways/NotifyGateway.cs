@@ -1,10 +1,10 @@
+using LbhNotificationsApi.V1.Boundary.Requests;
+using LbhNotificationsApi.V1.Gateways.Interfaces;
+using Notify.Client;
+using Notify.Models.Responses;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LbhNotificationsApi.V1.Boundary.Requests;
-using Notify.Client;
-using LbhNotificationsApi.V1.Gateways.Interfaces;
-using LbhNotificationsApi.V1.Infrastructure;
 
 namespace LbhNotificationsApi.V1.Gateways
 {
@@ -76,12 +76,28 @@ namespace LbhNotificationsApi.V1.Gateways
             if (personalisation.Count > 0)
             {
                 _client.SendSms(request.MobileNumber, request.TemplateId, personalisation);
+
             }
             else
             {
                 _client.SendSms(request.MobileNumber, request.TemplateId);
             }
             return true;
+        }
+
+
+        public async Task<TemplateList> GetTaskAllTemplateAsync()
+        {
+            try
+            {
+                var results = await _client.GetAllTemplatesAsync().ConfigureAwait(false);
+                return results;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
     }
 }

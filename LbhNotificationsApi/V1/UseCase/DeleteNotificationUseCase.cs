@@ -17,10 +17,16 @@ namespace LbhNotificationsApi.V1.UseCase
         public async Task<ActionResponse> ExecuteAsync(Guid id)
         {
             var response = await _gateway.DeleteAsync(id).ConfigureAwait(false);
+            ActionResponse result = response switch
+            {
+                -1 => new ActionResponse { Status = false, Message = "You are not allow to remove/delete this record" },
+                0 => new ActionResponse { Status = false, Message = $"Record with Id: {id} not found" },
+                1 => new ActionResponse { Status = true, Message = "successfully removed" },
 
-            var status = response != null;
+                _ => new ActionResponse { Status = false, Message = "Unknow error, please try again later" },
+            };
 
-            return new ActionResponse { Status = status, Message = status ? "successfully removed" : "remove action failed" };
+            return result;
         }
     }
 }

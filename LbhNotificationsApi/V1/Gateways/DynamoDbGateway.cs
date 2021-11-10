@@ -1,5 +1,6 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
 using Amazon.Util;
 using LbhNotificationsApi.V1.Boundary.Requests;
@@ -10,6 +11,7 @@ using LbhNotificationsApi.V1.Gateways.Interfaces;
 using LbhNotificationsApi.V1.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LbhNotificationsApi.V1.Gateways
@@ -91,12 +93,17 @@ namespace LbhNotificationsApi.V1.Gateways
 
         public async Task<Notification> GetEntityByIdAsync(Guid id)
         {
-            var result = await _dynamoDbContext.LoadAsync<NotificationEntity>(Pk, id).ConfigureAwait(false);
-            //update data status as read
-            if (result == null) return null;
-            result.IsReadStatus = true;
-            await _dynamoDbContext.SaveAsync(result).ConfigureAwait(false);
-            return result.ToDomain();
+            var config = new DynamoDBOperationConfig()
+            {
+                QueryFilter = new List<ScanCondition>() {
+                    new ScanCondition("Id", ScanOperator.Equal, id),
+                     new ScanCondition("IsRemovedStatus", ScanOperator.NotEqual, true)
+                }
+            };
+            var result = await _dynamoDbContext.QueryAsync<NotificationEntity>(Pk, config).GetRemainingAsync().ConfigureAwait(false);
+            // var result = await _dynamoDbContext.LoadAsync<NotificationEntity>(Pk, id).ConfigureAwait(false);
+            if (result.Count < 1) return null;
+            return result.FirstOrDefault().ToDomain();
         }
 
         public async Task<Notification> UpdateAsync(Guid id, UpdateRequest notification)
@@ -110,14 +117,6 @@ namespace LbhNotificationsApi.V1.Gateways
             if (notification.ActionType == ActionType.IsRead)
                 loadData.IsReadStatus = true;
 
-            if (notification.ActionType == ActionType.Removed)
-            {
-                if (loadData.RequireAction && string.IsNullOrEmpty(loadData.PerformedActionType))
-                    throw new ArgumentException("You are not allow to remove/delete this data");
-
-                loadData.IsRemovedStatus = true;
-            }
-
             if (notification.ActionType == ActionType.Approved || notification.ActionType == ActionType.Rejected || notification.ActionType == ActionType.Validate)
             {
 
@@ -130,14 +129,18 @@ namespace LbhNotificationsApi.V1.Gateways
         }
 
 
-        public async Task<Notification> DeleteAsync(Guid id)
+        public async Task<int> DeleteAsync(Guid id)
         {
             var loadData = await _dynamoDbContext.LoadAsync<NotificationEntity>(Pk, id).ConfigureAwait(false);
-            if (loadData == null) return null;
+            if (loadData == null) return 0;
+            if (loadData.RequireAction && string.IsNullOrEmpty(loadData.PerformedActionType))
+                return -1;
+            //throw new InvalidOperationException("You are not allow to remove/delete this record");
+
             loadData.IsRemovedStatus = true;
             await _dynamoDbContext.SaveAsync(loadData).ConfigureAwait(false);
 
-            return loadData.ToDomain();
+            return 1;
         }
     }
 }
