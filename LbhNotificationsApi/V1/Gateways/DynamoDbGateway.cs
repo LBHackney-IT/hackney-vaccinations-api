@@ -92,10 +92,7 @@ namespace LbhNotificationsApi.V1.Gateways
         public async Task<Notification> GetEntityByIdAsync(Guid id)
         {
             var result = await _dynamoDbContext.LoadAsync<NotificationEntity>(Pk, id).ConfigureAwait(false);
-            //update data status as read
             if (result == null) return null;
-            result.IsReadStatus = true;
-            await _dynamoDbContext.SaveAsync(result).ConfigureAwait(false);
             return result.ToDomain();
         }
 
@@ -110,14 +107,6 @@ namespace LbhNotificationsApi.V1.Gateways
             if (notification.ActionType == ActionType.IsRead)
                 loadData.IsReadStatus = true;
 
-            if (notification.ActionType == ActionType.Removed)
-            {
-                if (loadData.RequireAction && string.IsNullOrEmpty(loadData.PerformedActionType))
-                    throw new ArgumentException("You are not allow to remove/delete this data");
-
-                loadData.IsRemovedStatus = true;
-            }
-
             if (notification.ActionType == ActionType.Approved || notification.ActionType == ActionType.Rejected || notification.ActionType == ActionType.Validate)
             {
 
@@ -130,14 +119,18 @@ namespace LbhNotificationsApi.V1.Gateways
         }
 
 
-        public async Task<Notification> DeleteAsync(Guid id)
+        public async Task<int> DeleteAsync(Guid id)
         {
             var loadData = await _dynamoDbContext.LoadAsync<NotificationEntity>(Pk, id).ConfigureAwait(false);
-            if (loadData == null) return null;
+            if (loadData == null) return 0;
+            if (loadData.RequireAction && string.IsNullOrEmpty(loadData.PerformedActionType))
+                return -1;
+            //throw new InvalidOperationException("You are not allow to remove/delete this record");
+
             loadData.IsRemovedStatus = true;
             await _dynamoDbContext.SaveAsync(loadData).ConfigureAwait(false);
 
-            return loadData.ToDomain();
+            return 1;
         }
     }
 }

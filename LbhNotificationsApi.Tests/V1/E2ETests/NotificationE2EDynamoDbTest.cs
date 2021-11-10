@@ -137,6 +137,7 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
                 .Excluding(y => y.IsMessageSent)
                 .Excluding(y => y.ServiceKey)
                 .Excluding(y => y.TemplateId)
+                .Excluding(y => y.IsReadStatus)
                 .Excluding(y => y.User));
             apiEntity.CreatedDate.Date.Should().BeCloseTo(DateTime.UtcNow.Date);
         }
@@ -274,6 +275,55 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
 
             response.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
 
+        }
+        [Fact]
+        public async Task DeleteNotificationByIdReturnsSuccessResponse()
+        {
+            var entity = ConstructTestEntity();
+            await SetupTestData(entity).ConfigureAwait(false);
+            var uri = new Uri($"api/v2/notifications/{entity.Id}", UriKind.Relative);
+            var response = await Client.DeleteAsync(uri).ConfigureAwait(false);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var apiEntity = JsonSerializer.Deserialize<ActionResponse>(responseContent, CreateJsonOptions());
+            apiEntity.Status.Should().BeTrue();
+            apiEntity.Message.Should().BeEquivalentTo("successfully removed");
+        }
+
+        [Fact]
+        public async Task DeleteNotificationByIdReturnsFailedResponse()
+        {
+            var id = Guid.NewGuid();
+            var uri = new Uri($"api/v2/notifications/{id}", UriKind.Relative);
+            var response = await Client.DeleteAsync(uri).ConfigureAwait(false);
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+            var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var apiEntity = JsonSerializer.Deserialize<ActionResponse>(responseContent, CreateJsonOptions());
+            apiEntity.Status.Should().BeFalse();
+            apiEntity.Message.Should().BeEquivalentTo($"Record with Id: {id} not found");
+        }
+
+
+        [Fact]
+        public async Task DeleteNotificationByIdWithRequireActionSetToTrueAndPerformedActionEmptyReturnBadRequestResponse()
+        {
+            var entity = ConstructTestEntity();
+            entity.RequireAction = true;
+            entity.PerformedActionType = string.Empty;
+            await SetupTestData(entity).ConfigureAwait(false);
+            var uri = new Uri($"api/v2/notifications/{entity.Id}", UriKind.Relative);
+            var response = await Client.DeleteAsync(uri).ConfigureAwait(false);
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+            var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var apiEntity = JsonSerializer.Deserialize<ActionResponse>(responseContent, CreateJsonOptions());
+            apiEntity.Status.Should().BeFalse();
+            apiEntity.Message.Should().BeEquivalentTo("You are not allow to remove/delete this record");
         }
         private static void ShouldHaveErrorFor(JEnumerable<JToken> errors, string propertyName, string errorCode = null)
         {

@@ -49,7 +49,14 @@ namespace LbhNotificationsApi.V1.Controllers
             _deleteNotification = deleteNotification;
         }
 
-
+        ////[ProducesResponseType(typeof(NotificationResponseObjectList), StatusCodes.Status200OK)]
+        //[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        //[HttpGet]
+        //[Route("template")]
+        //public async Task<IActionResult> ListNotificationTemplateAsync()
+        //{
+        //    return Ok(await _getAllNotificationCase.ExecuteAsync(query).ConfigureAwait(false));
+        //}
         /// <summary>
         /// ...
         /// </summary>
