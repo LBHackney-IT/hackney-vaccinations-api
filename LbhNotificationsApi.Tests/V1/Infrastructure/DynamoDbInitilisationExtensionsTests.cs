@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using LbhNotificationsApi.V1.Infrastructure;
 using Xunit;
+using Hackney.Core.DynamoDb;
 
 namespace NotificationsApi.Tests.V1.Infrastructure
 {
@@ -23,8 +24,7 @@ namespace NotificationsApi.Tests.V1.Infrastructure
             Environment.SetEnvironmentVariable("DynamoDb_LocalMode", localModeEnvVar);
 
             var services = new ServiceCollection();
-            services.ConfigureDynamoDb();
-
+            services.ConfigureDynamoDB();
             services.Any(x => x.ServiceType == typeof(IAmazonDynamoDB)).Should().BeTrue();
             services.Any(x => x.ServiceType == typeof(IDynamoDBContext)).Should().BeTrue();
 

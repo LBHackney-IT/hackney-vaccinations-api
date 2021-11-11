@@ -34,6 +34,7 @@ using System.Text.Json.Serialization;
 using Amazon.XRay.Recorder.Core;
 using Amazon.XRay.Recorder.Core.Strategies;
 using AutoMapper;
+using Hackney.Core.DynamoDb;
 
 namespace LbhNotificationsApi
 {
@@ -143,9 +144,8 @@ namespace LbhNotificationsApi
 
             //ConfigureDbContext(services);
             //TODO: For DynamoDb, remove the line above and uncomment the line below.
-            //services.ConfigureDynamoDB();
+            services.ConfigureDynamoDB();
             ConfigureLogging(services, Configuration);
-            services.ConfigureDynamoDb();
             RegisterGateways(services);
             RegisterUseCases(services);
             RegisterValidators(services);
@@ -155,13 +155,6 @@ namespace LbhNotificationsApi
             });
         }
 
-        private static void ConfigureDbContext(IServiceCollection services)
-        {
-            var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
-
-            services.AddDbContext<DatabaseContext>(
-                opt => opt.UseNpgsql(connectionString).AddXRayInterceptor(true));
-        }
 
         private static void ConfigureLogging(IServiceCollection services, IConfiguration configuration)
         {
