@@ -3,6 +3,9 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1
 # disable microsoft telematry
 ENV DOTNET_CLI_TELEMETRY_OPTOUT='true'
 
+ARG LBHPACKAGESTOKEN
+ENV LBHPACKAGESTOKEN=$LBHPACKAGESTOKEN
+
 ENV DynamoDb_LocalMode='true'
 
 WORKDIR /app
@@ -11,6 +14,7 @@ WORKDIR /app
 COPY ./LbhNotificationsApi.sln ./
 COPY ./LbhNotificationsApi/LbhNotificationsApi.csproj ./LbhNotificationsApi/
 COPY ./LbhNotificationsApi.Tests/LbhNotificationsApi.Tests.csproj ./LbhNotificationsApi.Tests/
+COPY /NuGet.Config /root/.nuget/NuGet/NuGet.Config
 
 RUN dotnet restore ./LbhNotificationsApi/LbhNotificationsApi.csproj
 RUN dotnet restore ./LbhNotificationsApi.Tests/LbhNotificationsApi.Tests.csproj

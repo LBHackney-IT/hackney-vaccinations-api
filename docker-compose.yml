@@ -6,6 +6,8 @@ services:
     build:
       context: LbhNotificationsApi/
       dockerfile: ./Dockerfile
+      args:
+      - LBHPACKAGESTOKEN=${LBHPACKAGESTOKEN}
     ports:
       - 3000:3000
     environment:
@@ -24,6 +26,8 @@ services:
     build:
       context: .
       dockerfile: LbhNotificationsApi.Tests/Dockerfile
+      args:
+      - LBHPACKAGESTOKEN=${LBHPACKAGESTOKEN}
     environment:
       #- DB_HOST=test-database
       #- DB_PORT=5432
