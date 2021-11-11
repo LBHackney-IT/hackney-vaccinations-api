@@ -1,5 +1,6 @@
 using LbhNotificationsApi.V1.Boundary.Requests;
-using Notify.Models.Responses;
+using LbhNotificationsApi.V1.Boundary.Response;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LbhNotificationsApi.V1.Gateways.Interfaces
@@ -8,6 +9,6 @@ namespace LbhNotificationsApi.V1.Gateways.Interfaces
     {
         bool SendEmailNotification(EmailNotificationRequest request);
         bool SendTextMessageNotification(SmsNotificationRequest request);
-        Task<TemplateList> GetTaskAllTemplateAsync();
+        Task<IEnumerable<NotifyTemplate>> GetTaskAllTemplateAsync(string serviceKey);
     }
 }
