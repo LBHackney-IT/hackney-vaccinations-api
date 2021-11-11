@@ -6,6 +6,7 @@ using LbhNotificationsApi.V1.Validators.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 
@@ -27,6 +28,7 @@ namespace LbhNotificationsApi.V1.Controllers
         private readonly IAddNotificationUseCase _addNotificationUseCase;
         private readonly IUpdateNotificationUseCase _updateNotificationUseCase;
         private readonly IDeleteNotificationUseCase _deleteNotification;
+        private readonly IGetAllTemplateCase _getAllTemplateCase;
         public NotificationsV2Controller(
             ISendSmsNotificationUseCase sendSmsNotificationUseCase,
             ISendEmailNotificationUseCase sendEmailNotificationUseCase,
@@ -36,7 +38,7 @@ namespace LbhNotificationsApi.V1.Controllers
             IGetByIdNotificationCase getByIdNotificationCase,
             IAddNotificationUseCase addNotificationUseCase,
             IUpdateNotificationUseCase updateNotificationUseCase,
-            IDeleteNotificationUseCase deleteNotification)
+            IDeleteNotificationUseCase deleteNotification, IGetAllTemplateCase getAllTemplateCase)
         {
             _sendSmsNotificationUseCase = sendSmsNotificationUseCase;
             _sendEmailNotificationUseCase = sendEmailNotificationUseCase;
@@ -47,16 +49,17 @@ namespace LbhNotificationsApi.V1.Controllers
             _addNotificationUseCase = addNotificationUseCase;
             _updateNotificationUseCase = updateNotificationUseCase;
             _deleteNotification = deleteNotification;
+            _getAllTemplateCase = getAllTemplateCase; ;
         }
 
-        ////[ProducesResponseType(typeof(NotificationResponseObjectList), StatusCodes.Status200OK)]
-        //[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        //[HttpGet]
-        //[Route("template")]
-        //public async Task<IActionResult> ListNotificationTemplateAsync()
-        //{
-        //    return Ok(await _getAllNotificationCase.ExecuteAsync(query).ConfigureAwait(false));
-        //}
+        [ProducesResponseType(typeof(IEnumerable<NotifyTemplate>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [HttpGet]
+        [Route("template")]
+        public async Task<IActionResult> ListNotificationTemplateAsync([FromQuery] string serviceKey)
+        {
+            return Ok(await _getAllTemplateCase.ExecuteAsync(serviceKey).ConfigureAwait(false));
+        }
         /// <summary>
         /// ...
         /// </summary>

@@ -1,9 +1,10 @@
 using LbhNotificationsApi.V1.Boundary.Requests;
+using LbhNotificationsApi.V1.Boundary.Response;
 using LbhNotificationsApi.V1.Gateways.Interfaces;
 using Notify.Client;
-using Notify.Models.Responses;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LbhNotificationsApi.V1.Gateways
@@ -86,14 +87,28 @@ namespace LbhNotificationsApi.V1.Gateways
         }
 
 
-        public async Task<TemplateList> GetTaskAllTemplateAsync()
+        public async Task<IEnumerable<NotifyTemplate>> GetTaskAllTemplateAsync(string serviceKey)
         {
             try
             {
-                var results = await _client.GetAllTemplatesAsync().ConfigureAwait(false);
+                _client = new NotificationClient(serviceKey);
+                var response = await _client.GetAllTemplatesAsync().ConfigureAwait(false);
+                var results = response?.templates.Select(x => new NotifyTemplate
+                {
+                    Body = x.body,
+                    CreatedDate = x.created_at,
+                    Id = x.id,
+                    Name = x.name,
+                    Subject = x.subject,
+                    Type = x.type,
+                    Version = x.version,
+                    UpdatedDate = x.updated_at,
+                    LetterContactBlock = x.letter_contact_block,
+                    CreatedBy = x.created_by
+                });
                 return results;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 throw;

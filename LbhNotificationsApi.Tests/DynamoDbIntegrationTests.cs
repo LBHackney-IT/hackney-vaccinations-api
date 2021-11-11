@@ -38,8 +38,8 @@ namespace LbhNotificationsApi.Tests
         {
             if (!disposing || _disposed) return;
             _factory?.Dispose();
-            if (null != Client)
-                Client.Dispose();
+            //if (null != Client)
+            //    Client.Dispose();
             _disposed = true;
         }
         private static void EnsureEnvVarConfigured(string name, string defaultValue)

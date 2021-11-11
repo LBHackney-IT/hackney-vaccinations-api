@@ -23,7 +23,7 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
     public class NotificationE2EDynamoDbTest : DynamoDbIntegrationTests<Startup>
     {
         private readonly Fixture _fixture = new Fixture();
-        private string _pk = "lbhNoification";
+        private readonly string _pk = "lbhNoification";
 
         /// <summary>
         /// Method to construct a test entity that can be used in a test
@@ -138,6 +138,7 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
                 .Excluding(y => y.ServiceKey)
                 .Excluding(y => y.TemplateId)
                 .Excluding(y => y.IsReadStatus)
+                 .Excluding(y => y.PerformedActionDate)
                 .Excluding(y => y.User));
             apiEntity.CreatedDate.Date.Should().BeCloseTo(DateTime.UtcNow.Date);
         }
@@ -280,6 +281,8 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
         public async Task DeleteNotificationByIdReturnSuccessResponse()
         {
             var entity = ConstructTestEntity();
+            entity.RequireAction = false;
+            entity.PerformedActionType = string.Empty;
             await SetupTestData(entity).ConfigureAwait(false);
             var uri = new Uri($"api/v2/notifications/{entity.Id}", UriKind.Relative);
             var response = await Client.DeleteAsync(uri).ConfigureAwait(false);

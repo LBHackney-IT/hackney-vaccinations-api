@@ -193,13 +193,13 @@ namespace LbhNotificationsApi
         {
             services.AddScoped<ISendSmsNotificationUseCase, SendSmsNotificationUseCase>();
             services.AddScoped<ISendEmailNotificationUseCase, SendEmailNotificationUseCase>();
+            services.AddScoped<IGetAllTemplateCase, GetAllTemplateCase>();
             services.AddScoped<IGetAllNotificationCase, GetAllNotificationCase>();
             services.AddScoped<IGetByIdNotificationCase, GetByIdNotificationCase>();
             services.AddScoped<IAddNotificationUseCase, AddNotificationUseCase>();
             services.AddScoped<IUpdateNotificationUseCase, UpdateNotificationUseCase>();
             services.AddScoped<IGetTargetDetailsCase, GetTargetDetailsCase>();
             services.AddScoped<IDeleteNotificationUseCase, DeleteNotificationUseCase>();
-
         }
 
         private static void RegisterValidators(IServiceCollection services)
