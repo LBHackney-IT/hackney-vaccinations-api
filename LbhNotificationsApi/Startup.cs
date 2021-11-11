@@ -35,6 +35,10 @@ using Amazon.XRay.Recorder.Core;
 using Amazon.XRay.Recorder.Core.Strategies;
 using AutoMapper;
 using Hackney.Core.DynamoDb;
+using Hackney.Core.DynamoDb.HealthCheck;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Hackney.Core.HealthCheck;
+using Hackney.Core.Logging;
 
 namespace LbhNotificationsApi
 {
@@ -82,7 +86,7 @@ namespace LbhNotificationsApi
             });
 
             services.AddSingleton<IApiVersionDescriptionProvider, DefaultApiVersionDescriptionProvider>();
-
+            services.AddDynamoDbHealthCheck<NotificationEntity>();
             services.AddSwaggerGen(c =>
             {
                 c.AddSecurityDefinition("Token",
@@ -139,7 +143,7 @@ namespace LbhNotificationsApi
                 if (File.Exists(xmlPath))
                     c.IncludeXmlComments(xmlPath);
             });
-
+            services.ConfigureLambdaLogging(Configuration);
             ConfigureLogging(services, Configuration);
 
             //ConfigureDbContext(services);
@@ -205,10 +209,6 @@ namespace LbhNotificationsApi
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
-            app.UseCors(builder => builder
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod());
             app.UseCorrelation();
             app.UseMiddleware<ExceptionMiddleware>();
 
@@ -247,6 +247,10 @@ namespace LbhNotificationsApi
             {
                 // SwaggerGen won't find controllers that are routed via this technique.
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions()
+                {
+                    ResponseWriter = HealthCheckResponseWriter.WriteResponse
+                });
             });
         }
     }
