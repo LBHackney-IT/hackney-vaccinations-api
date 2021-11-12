@@ -90,7 +90,7 @@ namespace LbhNotificationsApi.V1.Gateways
             return true;
         }
 
-        [LogCall]
+        // [LogCall]
         public async Task<IEnumerable<NotifyTemplate>> GetTaskAllTemplateAsync(string serviceKey)
         {
             try

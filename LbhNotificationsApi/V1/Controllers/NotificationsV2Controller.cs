@@ -186,7 +186,6 @@ namespace LbhNotificationsApi.V1.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpDelete]
         [Route("{id}")]
-        [LogCall(LogLevel.Information)]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
             var result = await _deleteNotification.ExecuteAsync(id).ConfigureAwait(false);

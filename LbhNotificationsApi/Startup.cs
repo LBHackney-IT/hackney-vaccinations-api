@@ -252,6 +252,7 @@ namespace LbhNotificationsApi
                     ResponseWriter = HealthCheckResponseWriter.WriteResponse
                 });
             });
+            app.UseLogCall();
         }
     }
 }

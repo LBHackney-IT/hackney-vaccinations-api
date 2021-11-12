@@ -106,7 +106,6 @@ namespace LbhNotificationsApi.V1.Gateways
             if (result.Count < 1) return null;
             return result.FirstOrDefault().ToDomain();
         }
-        [LogCall]
         public async Task<Notification> UpdateAsync(Guid id, UpdateRequest notification)
         {
             var loadData = await _dynamoDbContext.LoadAsync<NotificationEntity>(Pk, id).ConfigureAwait(false);
@@ -129,7 +128,6 @@ namespace LbhNotificationsApi.V1.Gateways
             return loadData.ToDomain();
         }
 
-        [LogCall]
         public async Task<int> DeleteAsync(Guid id)
         {
             var loadData = await _dynamoDbContext.LoadAsync<NotificationEntity>(Pk, id).ConfigureAwait(false);
