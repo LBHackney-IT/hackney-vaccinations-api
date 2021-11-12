@@ -1,6 +1,8 @@
+using Hackney.Core.Logging;
 using LbhNotificationsApi.V1.Boundary.Requests;
 using LbhNotificationsApi.V1.Boundary.Response;
 using LbhNotificationsApi.V1.Gateways.Interfaces;
+using Microsoft.Extensions.Logging;
 using Notify.Client;
 using System;
 using System.Collections.Generic;
@@ -12,9 +14,11 @@ namespace LbhNotificationsApi.V1.Gateways
     public class NotifyGateway : INotifyGateway
     {
         private NotificationClient _client;
+        private readonly ILogger<NotifyGateway> _logger;
 
-        public NotifyGateway()
+        public NotifyGateway(ILogger<NotifyGateway> logger)
         {
+            _logger = logger;
         }
         public bool SendEmailNotification(EmailNotificationRequest request)
         {
@@ -86,7 +90,7 @@ namespace LbhNotificationsApi.V1.Gateways
             return true;
         }
 
-
+        [LogCall]
         public async Task<IEnumerable<NotifyTemplate>> GetTaskAllTemplateAsync(string serviceKey)
         {
             try
@@ -108,9 +112,9 @@ namespace LbhNotificationsApi.V1.Gateways
                 });
                 return results;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                _logger.LogError($"Calling Notify.GetAllTemplatesAsync {Environment.NewLine} {ex.Message}{Environment.NewLine} {ex.InnerException?.Message}");
                 throw;
             }
         }

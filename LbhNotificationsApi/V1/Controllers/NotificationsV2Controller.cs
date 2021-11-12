@@ -1,3 +1,4 @@
+using Hackney.Core.Logging;
 using LbhNotificationsApi.V1.Boundary.Requests;
 using LbhNotificationsApi.V1.Boundary.Response;
 using LbhNotificationsApi.V1.UseCase.Interfaces;
@@ -5,6 +6,7 @@ using LbhNotificationsApi.V1.Validators;
 using LbhNotificationsApi.V1.Validators.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -184,6 +186,7 @@ namespace LbhNotificationsApi.V1.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpDelete]
         [Route("{id}")]
+        [LogCall(LogLevel.Information)]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
             var result = await _deleteNotification.ExecuteAsync(id).ConfigureAwait(false);

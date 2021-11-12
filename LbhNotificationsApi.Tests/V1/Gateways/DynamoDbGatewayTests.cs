@@ -77,11 +77,10 @@ namespace LbhNotificationsApi.Tests.V1.Gateways
         //public async Task GetEntityByIdReturnsNullIfEntityDoesntExist()
         //{
         //    var guid = Guid.NewGuid();
-        //    _dynamoDb.Setup(x => x.LoadAsync<NotificationEntity>(_pk, guid, default))
-        //             .ReturnsAsync((NotificationEntity) null);
+
         //    var response = await _gateway.GetEntityByIdAsync(guid).ConfigureAwait(false);
 
-        //    //_dynamoDb.Verify(x => x.LoadAsync<NotificationEntity>(_pk, guid, default), Times.Once);
+        //    _dynamoDb.Verify(x => x.QueryAsync<NotificationEntity>(_pk, guid, default), Times.Once);
         //    response.Should().BeNull();
         //}
 

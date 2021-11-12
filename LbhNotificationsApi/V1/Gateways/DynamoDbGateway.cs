@@ -3,6 +3,7 @@ using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
 using Amazon.Util;
+using Hackney.Core.Logging;
 using LbhNotificationsApi.V1.Boundary.Requests;
 using LbhNotificationsApi.V1.Common.Enums;
 using LbhNotificationsApi.V1.Domain;
@@ -105,7 +106,7 @@ namespace LbhNotificationsApi.V1.Gateways
             if (result.Count < 1) return null;
             return result.FirstOrDefault().ToDomain();
         }
-
+        [LogCall]
         public async Task<Notification> UpdateAsync(Guid id, UpdateRequest notification)
         {
             var loadData = await _dynamoDbContext.LoadAsync<NotificationEntity>(Pk, id).ConfigureAwait(false);
@@ -128,7 +129,7 @@ namespace LbhNotificationsApi.V1.Gateways
             return loadData.ToDomain();
         }
 
-
+        [LogCall]
         public async Task<int> DeleteAsync(Guid id)
         {
             var loadData = await _dynamoDbContext.LoadAsync<NotificationEntity>(Pk, id).ConfigureAwait(false);
