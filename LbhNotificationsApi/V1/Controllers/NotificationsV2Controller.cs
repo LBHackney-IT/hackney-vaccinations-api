@@ -77,7 +77,7 @@ namespace LbhNotificationsApi.V1.Controllers
         [Route("template/{service}/{id}")]
         public async Task<IActionResult> GetTemplateByIdAsync(string service, string id)
         {
-            return Ok(await _getTemplateByIdCase.ExecuteAsync(id,service).ConfigureAwait(false));
+            return Ok(await _getTemplateByIdCase.ExecuteAsync(id, service).ConfigureAwait(false));
         }
 
         [ProducesResponseType(typeof(GovNotificationResponse), StatusCodes.Status200OK)]
