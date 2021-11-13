@@ -1,6 +1,7 @@
 using Hackney.Core.Logging;
 using LbhNotificationsApi.V1.Boundary.Requests;
 using LbhNotificationsApi.V1.Boundary.Response;
+using LbhNotificationsApi.V1.UseCase;
 using LbhNotificationsApi.V1.UseCase.Interfaces;
 using LbhNotificationsApi.V1.Validators;
 using LbhNotificationsApi.V1.Validators.Interfaces;
@@ -25,22 +26,27 @@ namespace LbhNotificationsApi.V1.Controllers
         private readonly ISendEmailNotificationUseCase _sendEmailNotificationUseCase;
         private readonly IEmailRequestValidator _emailRequestValidator;
         private readonly ISmsRequestValidator _smsRequestValidator;
-        private readonly IGetAllNotificationCase _getAllNotificationCase;
-        private readonly IGetByIdNotificationCase _getByIdNotificationCase;
+        private readonly IGetAllNotificationUseCase _getAllNotificationCase;
+        private readonly IGetByIdNotificationUseCase _getByIdNotificationCase;
         private readonly IAddNotificationUseCase _addNotificationUseCase;
         private readonly IUpdateNotificationUseCase _updateNotificationUseCase;
         private readonly IDeleteNotificationUseCase _deleteNotification;
-        private readonly IGetAllTemplateCase _getAllTemplateCase;
+        private readonly IGetAllTemplateUseCase _getAllTemplateCase;
+        private readonly IGetTemplateByIdUseCase _getTemplateByIdCase;
+        private readonly IGetNotificationByIdUseCase _getNotificationByNotificationId;
         public NotificationsV2Controller(
             ISendSmsNotificationUseCase sendSmsNotificationUseCase,
             ISendEmailNotificationUseCase sendEmailNotificationUseCase,
             IEmailRequestValidator emailRequestValidator,
             ISmsRequestValidator smsRequestValidator,
-            IGetAllNotificationCase getAllNotificationCase,
-            IGetByIdNotificationCase getByIdNotificationCase,
+            IGetAllNotificationUseCase getAllNotificationCase,
+            IGetByIdNotificationUseCase getByIdNotificationCase,
             IAddNotificationUseCase addNotificationUseCase,
             IUpdateNotificationUseCase updateNotificationUseCase,
-            IDeleteNotificationUseCase deleteNotification, IGetAllTemplateCase getAllTemplateCase)
+            IDeleteNotificationUseCase deleteNotification,
+            IGetAllTemplateUseCase getAllTemplateCase,
+            IGetTemplateByIdUseCase getTemplateByIdCase,
+            IGetNotificationByIdUseCase getNotificationByNotificationId)
         {
             _sendSmsNotificationUseCase = sendSmsNotificationUseCase;
             _sendEmailNotificationUseCase = sendEmailNotificationUseCase;
@@ -52,15 +58,35 @@ namespace LbhNotificationsApi.V1.Controllers
             _updateNotificationUseCase = updateNotificationUseCase;
             _deleteNotification = deleteNotification;
             _getAllTemplateCase = getAllTemplateCase; ;
+            _getTemplateByIdCase = getTemplateByIdCase;
+            _getNotificationByNotificationId = getNotificationByNotificationId;
         }
 
         [ProducesResponseType(typeof(IEnumerable<NotifyTemplate>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [HttpGet]
-        [Route("template")]
-        public async Task<IActionResult> ListNotificationTemplateAsync([FromQuery] string serviceKey)
+        [Route("template/{service}")]
+        public async Task<IActionResult> ListTemplatesAsync(string service)
         {
-            return Ok(await _getAllTemplateCase.ExecuteAsync(serviceKey).ConfigureAwait(false));
+            return Ok(await _getAllTemplateCase.ExecuteAsync(service).ConfigureAwait(false));
+        }
+
+        [ProducesResponseType(typeof(NotifyTemplate), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [HttpGet]
+        [Route("template/{service}/{id}")]
+        public async Task<IActionResult> GetTemplateByIdAsync(string service, string id)
+        {
+            return Ok(await _getTemplateByIdCase.ExecuteAsync(id,service).ConfigureAwait(false));
+        }
+
+        [ProducesResponseType(typeof(GovNotificationResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [HttpGet]
+        [Route("message-status/{service}/{notificationId}")]
+        public async Task<IActionResult> GetNotificationByIdAsync(string service, string notificationId)
+        {
+            return Ok(await _getNotificationByNotificationId.ExecuteAsync(notificationId, service).ConfigureAwait(false));
         }
         /// <summary>
         /// ...

@@ -4,8 +4,8 @@ using LbhNotificationsApi.V1.Boundary.Response;
 
 namespace LbhNotificationsApi.V1.UseCase.Interfaces
 {
-    public interface IGetTargetDetailsCase
+    public interface IGetByIdNotificationUseCase
     {
-        Task<NotificationDetailsObject> ExecuteAsync(Guid targetId);
+        Task<NotificationResponseObject> ExecuteAsync(Guid id);
     }
 }

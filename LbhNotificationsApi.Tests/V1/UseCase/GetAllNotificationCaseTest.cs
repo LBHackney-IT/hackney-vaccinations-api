@@ -16,13 +16,13 @@ namespace LbhNotificationsApi.Tests.V1.UseCase
     public class GetAllNotificationCaseTest
     {
         private readonly Mock<INotificationGateway> _mockGateway;
-        private readonly GetAllNotificationCase _classUnderTest;
+        private readonly GetAllNotificationUseCase _classUnderTest;
         private readonly Fixture _fixture;
 
         public GetAllNotificationCaseTest()
         {
             _mockGateway = new Mock<INotificationGateway>();
-            _classUnderTest = new GetAllNotificationCase(_mockGateway.Object);
+            _classUnderTest = new GetAllNotificationUseCase(_mockGateway.Object);
             _fixture = new Fixture();
         }
 

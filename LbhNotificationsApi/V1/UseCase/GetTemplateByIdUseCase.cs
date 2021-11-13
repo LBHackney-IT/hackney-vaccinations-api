@@ -1,23 +1,21 @@
 using LbhNotificationsApi.V1.Boundary.Response;
 using LbhNotificationsApi.V1.Gateways.Interfaces;
 using LbhNotificationsApi.V1.UseCase.Interfaces;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LbhNotificationsApi.V1.UseCase
 {
-
-    public class GetAllTemplateCase : IGetAllTemplateCase
+    public class GetTemplateByIdUseCase : IGetTemplateByIdUseCase
     {
         private readonly INotifyGateway _notifyGateway;
-        public GetAllTemplateCase(INotifyGateway notifyGateway)
+        public GetTemplateByIdUseCase(INotifyGateway notifyGateway)
         {
             _notifyGateway = notifyGateway;
         }
 
-        public async Task<IEnumerable<NotifyTemplate>> ExecuteAsync(string query)
+        public async Task<NotifyTemplate> ExecuteAsync(string id, string service)
         {
-            var response = await _notifyGateway.GetTaskAllTemplateAsync(query).ConfigureAwait(false);
+            var response = await _notifyGateway.GetTemplateByAsync(id, service).ConfigureAwait(false);
             return response;
         }
     }

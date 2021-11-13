@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using LbhNotificationsApi.V1.Boundary.Requests;
 using LbhNotificationsApi.V1.Gateways.Interfaces;
 using LbhNotificationsApi.V1.UseCase.Interfaces;
