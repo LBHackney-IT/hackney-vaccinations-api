@@ -23,7 +23,7 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
     public class NotificationE2EDynamoDbTest : DynamoDbIntegrationTests<Startup>
     {
         private readonly Fixture _fixture = new Fixture();
-        private string _pk = "lbhNoification";
+        private readonly string _pk = "lbhNoification";
 
         /// <summary>
         /// Method to construct a test entity that can be used in a test
