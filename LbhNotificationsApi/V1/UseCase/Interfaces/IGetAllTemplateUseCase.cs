@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace LbhNotificationsApi.V1.UseCase.Interfaces
 {
-    public interface IGetAllTemplateCase
+    public interface IGetAllTemplateUseCase
     {
         Task<IEnumerable<NotifyTemplate>> ExecuteAsync(string query);
     }

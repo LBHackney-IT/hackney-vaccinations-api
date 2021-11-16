@@ -4,6 +4,7 @@ using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
 using Amazon.XRay.Recorder.Core;
 using Amazon.XRay.Recorder.Core.Strategies;
+using Hackney.Core.DynamoDb;
 using LbhNotificationsApi.V1.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -31,8 +32,7 @@ namespace LbhNotificationsApi.Tests
                 .UseStartup<Startup>();
             builder.ConfigureServices(services =>
             {
-                services.ConfigureDynamoDb();
-
+                services.ConfigureDynamoDB();
                 var serviceProvider = services.BuildServiceProvider();
                 DynamoDb = serviceProvider.GetRequiredService<IAmazonDynamoDB>();
                 DynamoDbContext = serviceProvider.GetRequiredService<IDynamoDBContext>();

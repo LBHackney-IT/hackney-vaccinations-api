@@ -9,8 +9,8 @@ namespace LbhNotificationsApi.V1.Common.Enums
         FailedDirectDebits,
         MissedServiceCharge,
         EstimatesAndActuals,
-        ViewNewProperty,
-        ViewNewTenancy,
+        AddNewProperty,
+        AddNewTenancy,
         SuspenseAccount,
         GlobalCharges,
         Adjustments

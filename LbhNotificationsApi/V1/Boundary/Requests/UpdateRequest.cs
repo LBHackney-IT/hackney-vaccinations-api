@@ -5,7 +5,7 @@ namespace LbhNotificationsApi.V1.Boundary.Requests
     public class UpdateRequest
     {
         /// <summary>
-        /// Type of ActionType [None, Initiated,Validate, Approved, Rejected]
+        /// Type of ActionType [Initiated, Approved, Validate, Rejected, IsRead]
         /// </summary>
         /// <example>
         /// None

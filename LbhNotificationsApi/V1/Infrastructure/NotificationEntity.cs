@@ -1,5 +1,5 @@
 using Amazon.DynamoDBv2.DataModel;
-using LbhNotificationsApi.V1.Infrastructure.Conventers;
+using Hackney.Core.DynamoDb.Converters;
 using System;
 using System.Collections.Generic;
 
@@ -28,9 +28,9 @@ namespace LbhNotificationsApi.V1.Infrastructure
         public string User { get; set; }
         [DynamoDBProperty(AttributeName = "message")]
         public string Message { get; set; }
-        [DynamoDBProperty(AttributeName = "is_read_status", Converter = typeof(DynamoDbBooleanConverter))]
+        [DynamoDBProperty(AttributeName = "is_read_status", Converter = typeof(DynamoDbBoolConverter))]
         public bool IsReadStatus { get; set; }
-        [DynamoDBProperty(AttributeName = "is_removed_status", Converter = typeof(DynamoDbBooleanConverter))]
+        [DynamoDBProperty(AttributeName = "is_removed_status", Converter = typeof(DynamoDbBoolConverter))]
         public bool IsRemovedStatus { get; set; }
         [DynamoDBProperty(AttributeName = "action_note")]
         public string ActionNote { get; set; }
@@ -42,13 +42,13 @@ namespace LbhNotificationsApi.V1.Infrastructure
         public string MobileNumber { get; set; }
         [DynamoDBProperty(AttributeName = "email")]
         public string Email { get; set; }
-        [DynamoDBProperty(AttributeName = "require_action", Converter = typeof(DynamoDbBooleanConverter))]
+        [DynamoDBProperty(AttributeName = "require_action", Converter = typeof(DynamoDbBoolConverter))]
         public bool RequireAction { get; set; }
-        [DynamoDBProperty(AttributeName = "require_email_notification", Converter = typeof(DynamoDbBooleanConverter))]
+        [DynamoDBProperty(AttributeName = "require_email_notification", Converter = typeof(DynamoDbBoolConverter))]
         public bool RequireEmailNotification { get; set; }
-        [DynamoDBProperty(AttributeName = "require_sms_notification", Converter = typeof(DynamoDbBooleanConverter))]
+        [DynamoDBProperty(AttributeName = "require_sms_notification", Converter = typeof(DynamoDbBoolConverter))]
         public bool RequireSmsNotification { get; set; }
-        [DynamoDBProperty(AttributeName = "require_letter", Converter = typeof(DynamoDbBooleanConverter))]
+        [DynamoDBProperty(AttributeName = "require_letter", Converter = typeof(DynamoDbBoolConverter))]
         public bool RequireLetter { get; set; }
         [DynamoDBProperty(AttributeName = "personalisation_params")]
         public Dictionary<string, string> PersonalisationParams { get; set; }

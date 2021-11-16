@@ -21,12 +21,14 @@ namespace LbhNotificationsApi.Tests.V1.Controllers
         private readonly NotificationsV2Controller _classUnderTest;
         private readonly Mock<ISendSmsNotificationUseCase> _mockSmsNotificationUseCase;
         private readonly Mock<ISendEmailNotificationUseCase> _mockEmailNotificationUseCase;
-        private readonly Mock<IGetAllNotificationCase> _getAllNotificationCase;
-        private readonly Mock<IGetByIdNotificationCase> _getByIdNotificationCase;
+        private readonly Mock<IGetAllNotificationUseCase> _getAllNotificationCase;
+        private readonly Mock<IGetByIdNotificationUseCase> _getByIdNotificationCase;
         private readonly Mock<IAddNotificationUseCase> _addNotificationUseCase;
         private readonly Mock<IUpdateNotificationUseCase> _updateNotificationUseCase;
         private readonly Mock<IDeleteNotificationUseCase> _deleteNotification;
-        private readonly Mock<IGetAllTemplateCase> _getAllTemplate;
+        private readonly Mock<IGetAllTemplateUseCase> _getAllTemplate;
+        private readonly Mock<IGetTemplateByIdUseCase> _getTemplateByIdCase;
+        private readonly Mock<IGetNotificationByIdUseCase> _getNotificationById;
 
 
         private readonly Fixture _fixture = new Fixture();
@@ -37,16 +39,27 @@ namespace LbhNotificationsApi.Tests.V1.Controllers
             _mockEmailNotificationUseCase = new Mock<ISendEmailNotificationUseCase>();
             var mockEmailRequestValidator = new Mock<IEmailRequestValidator>();
             var mockSmsRequestValidator = new Mock<ISmsRequestValidator>();
-            _getAllNotificationCase = new Mock<IGetAllNotificationCase>();
-            _getByIdNotificationCase = new Mock<IGetByIdNotificationCase>();
+            _getAllNotificationCase = new Mock<IGetAllNotificationUseCase>();
+            _getByIdNotificationCase = new Mock<IGetByIdNotificationUseCase>();
             _addNotificationUseCase = new Mock<IAddNotificationUseCase>();
             _updateNotificationUseCase = new Mock<IUpdateNotificationUseCase>();
             _deleteNotification = new Mock<IDeleteNotificationUseCase>();
-            _getAllTemplate = new Mock<IGetAllTemplateCase>();
-            _classUnderTest = new NotificationsV2Controller(_mockSmsNotificationUseCase.Object,
-                _mockEmailNotificationUseCase.Object, mockEmailRequestValidator.Object,
-                mockSmsRequestValidator.Object, _getAllNotificationCase.Object, _getByIdNotificationCase.Object,
-                _addNotificationUseCase.Object, _updateNotificationUseCase.Object, _deleteNotification.Object, _getAllTemplate.Object);
+            _getAllTemplate = new Mock<IGetAllTemplateUseCase>();
+            _getTemplateByIdCase = new Mock<IGetTemplateByIdUseCase>();
+            _getNotificationById = new Mock<IGetNotificationByIdUseCase>();
+            _classUnderTest = new NotificationsV2Controller(
+                _mockSmsNotificationUseCase.Object,
+                _mockEmailNotificationUseCase.Object,
+                mockEmailRequestValidator.Object,
+                mockSmsRequestValidator.Object,
+                _getAllNotificationCase.Object,
+                _getByIdNotificationCase.Object,
+                _addNotificationUseCase.Object,
+                _updateNotificationUseCase.Object,
+                _deleteNotification.Object,
+                _getAllTemplate.Object,
+                _getTemplateByIdCase.Object,
+                _getNotificationById.Object);
         }
 
 

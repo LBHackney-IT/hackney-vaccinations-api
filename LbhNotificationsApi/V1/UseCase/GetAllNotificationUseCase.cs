@@ -8,10 +8,10 @@ using LbhNotificationsApi.V1.UseCase.Interfaces;
 namespace LbhNotificationsApi.V1.UseCase
 {
 
-    public class GetAllNotificationCase : IGetAllNotificationCase
+    public class GetAllNotificationUseCase : IGetAllNotificationUseCase
     {
         private readonly INotificationGateway _gateway;
-        public GetAllNotificationCase(INotificationGateway gateway)
+        public GetAllNotificationUseCase(INotificationGateway gateway)
         {
             _gateway = gateway;
         }

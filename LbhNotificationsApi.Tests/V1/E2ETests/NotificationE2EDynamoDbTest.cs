@@ -138,7 +138,7 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
                 .Excluding(y => y.ServiceKey)
                 .Excluding(y => y.TemplateId)
                 .Excluding(y => y.IsReadStatus)
-                 .Excluding(y => y.PerformedActionDate)
+                .Excluding(y => y.PerformedActionDate)
                 .Excluding(y => y.User));
             apiEntity.CreatedDate.Date.Should().BeCloseTo(DateTime.UtcNow.Date);
         }

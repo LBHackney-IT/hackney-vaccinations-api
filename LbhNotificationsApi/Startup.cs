@@ -1,5 +1,12 @@
+using Amazon.XRay.Recorder.Core;
+using Amazon.XRay.Recorder.Core.Strategies;
 using Amazon.XRay.Recorder.Handlers.AwsSdk;
+using AutoMapper;
 using FluentValidation.AspNetCore;
+using Hackney.Core.DynamoDb;
+using Hackney.Core.DynamoDb.HealthCheck;
+using Hackney.Core.HealthCheck;
+using Hackney.Core.Logging;
 using Hellang.Middleware.ProblemDetails;
 using Hellang.Middleware.ProblemDetails.Mvc;
 using LbhNotificationsApi.V1;
@@ -12,12 +19,12 @@ using LbhNotificationsApi.V1.Validators;
 using LbhNotificationsApi.V1.Validators.Interfaces;
 using LbhNotificationsApi.Versioning;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,9 +38,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text.Json.Serialization;
-using Amazon.XRay.Recorder.Core;
-using Amazon.XRay.Recorder.Core.Strategies;
-using AutoMapper;
 
 namespace LbhNotificationsApi
 {
@@ -81,7 +85,7 @@ namespace LbhNotificationsApi
             });
 
             services.AddSingleton<IApiVersionDescriptionProvider, DefaultApiVersionDescriptionProvider>();
-
+            services.AddDynamoDbHealthCheck<NotificationEntity>();
             services.AddSwaggerGen(c =>
             {
                 c.AddSecurityDefinition("Token",
@@ -138,14 +142,13 @@ namespace LbhNotificationsApi
                 if (File.Exists(xmlPath))
                     c.IncludeXmlComments(xmlPath);
             });
-
+            services.ConfigureLambdaLogging(Configuration);
             ConfigureLogging(services, Configuration);
 
             //ConfigureDbContext(services);
             //TODO: For DynamoDb, remove the line above and uncomment the line below.
-            //services.ConfigureDynamoDB();
+            services.ConfigureDynamoDB();
             ConfigureLogging(services, Configuration);
-            services.ConfigureDynamoDb();
             RegisterGateways(services);
             RegisterUseCases(services);
             RegisterValidators(services);
@@ -155,13 +158,6 @@ namespace LbhNotificationsApi
             });
         }
 
-        private static void ConfigureDbContext(IServiceCollection services)
-        {
-            var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
-
-            services.AddDbContext<DatabaseContext>(
-                opt => opt.UseNpgsql(connectionString).AddXRayInterceptor(true));
-        }
 
         private static void ConfigureLogging(IServiceCollection services, IConfiguration configuration)
         {
@@ -193,13 +189,15 @@ namespace LbhNotificationsApi
         {
             services.AddScoped<ISendSmsNotificationUseCase, SendSmsNotificationUseCase>();
             services.AddScoped<ISendEmailNotificationUseCase, SendEmailNotificationUseCase>();
-            services.AddScoped<IGetAllTemplateCase, GetAllTemplateCase>();
-            services.AddScoped<IGetAllNotificationCase, GetAllNotificationCase>();
-            services.AddScoped<IGetByIdNotificationCase, GetByIdNotificationCase>();
+            services.AddScoped<IGetAllTemplateUseCase, GetAllTemplateUseCase>();
+            services.AddScoped<IGetAllNotificationUseCase, GetAllNotificationUseCase>();
+            services.AddScoped<IGetByIdNotificationUseCase, GetByIdNotificationUseCase>();
             services.AddScoped<IAddNotificationUseCase, AddNotificationUseCase>();
             services.AddScoped<IUpdateNotificationUseCase, UpdateNotificationUseCase>();
-            services.AddScoped<IGetTargetDetailsCase, GetTargetDetailsCase>();
+            services.AddScoped<IGetNotificationByIdUseCase, GetNotificationByIdUseCase>();
             services.AddScoped<IDeleteNotificationUseCase, DeleteNotificationUseCase>();
+            services.AddScoped<IGetTemplateByIdUseCase, GetTemplateByIdUseCase>();
+
         }
 
         private static void RegisterValidators(IServiceCollection services)
@@ -212,10 +210,6 @@ namespace LbhNotificationsApi
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
-            app.UseCors(builder => builder
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod());
             app.UseCorrelation();
             app.UseMiddleware<ExceptionMiddleware>();
 
@@ -254,7 +248,12 @@ namespace LbhNotificationsApi
             {
                 // SwaggerGen won't find controllers that are routed via this technique.
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions()
+                {
+                    ResponseWriter = HealthCheckResponseWriter.WriteResponse
+                });
             });
+            app.UseLogCall();
         }
     }
 }
