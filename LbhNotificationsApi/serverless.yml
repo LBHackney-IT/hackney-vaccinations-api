@@ -12,14 +12,6 @@ provider:
   # TODO: Enable this line if DynamoDb is in use
   account: ${opt:account}
   region: eu-west-2
-  apiKeys:
-    - secureAccess:
-      - api-key-${self:service}-${self:provider.stage}
-  usagePlan:
-    - secureAccess:
-        throttle:
-          burstLimit: 200
-          rateLimit: 100
 
 package:
 # TODO: Rename zipfile in build.sh and build.cmd to match this
