@@ -277,7 +277,7 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
             response.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
 
         }
-        [Fact]
+        //[Fact]
         public async Task DeleteNotificationByIdReturnSuccessResponse()
         {
             var entity = ConstructTestEntity();
