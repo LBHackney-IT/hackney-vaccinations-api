@@ -278,22 +278,22 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
 
         }
         //[Fact]
-        public async Task DeleteNotificationByIdReturnSuccessResponse()
-        {
-            var entity = ConstructTestEntity();
-            entity.RequireAction = false;
-            entity.PerformedActionType = string.Empty;
-            await SetupTestData(entity).ConfigureAwait(false);
-            var uri = new Uri($"api/v2/notifications/{entity.Id}", UriKind.Relative);
-            var response = await Client.DeleteAsync(uri).ConfigureAwait(false);
+        //public async Task DeleteNotificationByIdReturnSuccessResponse()
+        //{
+        //    var entity = ConstructTestEntity();
+        //    entity.RequireAction = false;
+        //    entity.PerformedActionType = string.Empty;
+        //    await SetupTestData(entity).ConfigureAwait(false);
+        //    var uri = new Uri($"api/v2/notifications/{entity.Id}", UriKind.Relative);
+        //    var response = await Client.DeleteAsync(uri).ConfigureAwait(false);
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+        //    response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var apiEntity = JsonSerializer.Deserialize<ActionResponse>(responseContent, CreateJsonOptions());
-            apiEntity.Status.Should().BeTrue();
-            apiEntity.Message.Should().BeEquivalentTo("successfully removed");
-        }
+        //    var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        //    var apiEntity = JsonSerializer.Deserialize<ActionResponse>(responseContent, CreateJsonOptions());
+        //    apiEntity.Status.Should().BeTrue();
+        //    apiEntity.Message.Should().BeEquivalentTo("successfully removed");
+        //}
 
         [Fact]
         public async Task DeleteNotificationByIdReturnsFailedResponse()
