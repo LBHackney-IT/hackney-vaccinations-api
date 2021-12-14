@@ -3,9 +3,11 @@ using Amazon.XRay.Recorder.Core.Strategies;
 using Amazon.XRay.Recorder.Handlers.AwsSdk;
 using AutoMapper;
 using FluentValidation.AspNetCore;
+using Hackney.Core.Authorization;
 using Hackney.Core.DynamoDb;
 using Hackney.Core.DynamoDb.HealthCheck;
 using Hackney.Core.HealthCheck;
+using Hackney.Core.JWT;
 using Hackney.Core.Logging;
 using Hellang.Middleware.ProblemDetails;
 using Hellang.Middleware.ProblemDetails.Mvc;
@@ -142,6 +144,7 @@ namespace LbhNotificationsApi
                 if (File.Exists(xmlPath))
                     c.IncludeXmlComments(xmlPath);
             });
+            services.AddTokenFactory();
             services.ConfigureLambdaLogging(Configuration);
             ConfigureLogging(services, Configuration);
 
@@ -243,6 +246,7 @@ namespace LbhNotificationsApi
             });
             app.UseSwagger();
             app.UseRouting();
+            app.UseGoogleGroupAuthorization();
             app.UseCors(ApiName);
             app.UseEndpoints(endpoints =>
             {
