@@ -3,11 +3,13 @@ using Amazon.DynamoDBv2.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace LbhNotificationsApi.Tests
 {
     public class DynamoDbIntegrationTests<TStartup> where TStartup : class
     {
+        private const string Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMTIyNDE2MjU4ODQ1MjgxMDQxNDAiLCJlbWFpbCI6ImRlbmlzZS5udWRnZUBoYWNrbmV5Lmdvdi51ayIsImlzcyI6IkhhY2tuZXkiLCJuYW1lIjoiRGVuaXNlIE51ZGdlIiwiZ3JvdXBzIjpbInNvbWUtdmFsaWQtZ29vZ2xlLWdyb3VwIl0sImlhdCI6MTYzOTQxNzE4OX0.Rai_olTwhVugBY8L8bpyhSGxX3lLB-ZLqxlSDQh96nE";
         public HttpClient Client { get; private set; }
         private readonly DynamoDbMockWebApplicationFactory<TStartup> _factory;
         public IDynamoDBContext DynamoDbContext => _factory?.DynamoDbContext;
@@ -26,6 +28,7 @@ namespace LbhNotificationsApi.Tests
             EnsureEnvVarConfigured("REQUIRED_GOOGL_GROUPS", "some-valid-google-group");
             _factory = new DynamoDbMockWebApplicationFactory<TStartup>(_tables);
             Client = _factory.CreateClient();
+            Client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(Token);
             CleanupActions = new List<Action>();
         }
 

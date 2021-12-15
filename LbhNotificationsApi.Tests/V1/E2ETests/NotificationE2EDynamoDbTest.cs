@@ -22,7 +22,7 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
 
     public class NotificationE2EDynamoDbTest : DynamoDbIntegrationTests<Startup>
     {
-        private const string Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMTIyNDE2MjU4ODQ1MjgxMDQxNDAiLCJlbWFpbCI6ImRlbmlzZS5udWRnZUBoYWNrbmV5Lmdvdi51ayIsImlzcyI6IkhhY2tuZXkiLCJuYW1lIjoiRGVuaXNlIE51ZGdlIiwiZ3JvdXBzIjpbInNvbWUtdmFsaWQtZ29vZ2xlLWdyb3VwIl0sImlhdCI6MTYzOTQxNzE4OX0.Rai_olTwhVugBY8L8bpyhSGxX3lLB-ZLqxlSDQh96nE";
+
         private readonly Fixture _fixture = new Fixture();
         private readonly string _pk = "lbhNoification";
 
@@ -115,7 +115,6 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
         {
             var id = Guid.NewGuid();
             var uri = new Uri($"api/v2/notifications/{id}", UriKind.Relative);
-            Client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(Token);
             var response = await Client.GetAsync(uri).ConfigureAwait(false);
 
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -127,7 +126,6 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
             var entity = ConstructTestEntity();
             await SetupTestData(entity).ConfigureAwait(false);
             var uri = new Uri($"api/v2/notifications/{entity.Id}", UriKind.Relative);
-            Client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(Token);
             var response = await Client.GetAsync(uri).ConfigureAwait(false);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -156,7 +154,6 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
 
             using var stringContent = new StringContent(body);
             stringContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            Client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(Token);
             var response = await Client.PostAsync(uri, stringContent).ConfigureAwait(false);
 
             response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -193,7 +190,6 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
 
             using var content = new StringContent(body);
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            Client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(Token);
             var response = await Client.PostAsync(uri, content).ConfigureAwait(false);
 
             var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -218,7 +214,6 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
 
             using var content = new StringContent(body);
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            Client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(Token);
             var response = await Client.PostAsync(uri, content).ConfigureAwait(false);
 
             var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -244,7 +239,6 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
 
             using var content = new StringContent(body);
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            Client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(Token);
             var response = await Client.PostAsync(uri, content).ConfigureAwait(false);
 
             var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -270,7 +264,6 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
 
             using var content = new StringContent(body);
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            Client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(Token);
             var response = await Client.PostAsync(uri, content).ConfigureAwait(false);
 
             var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -293,7 +286,6 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
             entity.PerformedActionType = string.Empty;
             await SetupTestData(entity).ConfigureAwait(false);
             var uri = new Uri($"api/v2/notifications/{entity.Id}", UriKind.Relative);
-            Client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(Token);
             var response = await Client.DeleteAsync(uri).ConfigureAwait(false);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -309,7 +301,6 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
         {
             var id = Guid.NewGuid();
             var uri = new Uri($"api/v2/notifications/{id}", UriKind.Relative);
-            Client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(Token);
             var response = await Client.DeleteAsync(uri).ConfigureAwait(false);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -329,7 +320,6 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
             entity.PerformedActionType = string.Empty;
             await SetupTestData(entity).ConfigureAwait(false);
             var uri = new Uri($"api/v2/notifications/{entity.Id}", UriKind.Relative);
-            Client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(Token);
             var response = await Client.DeleteAsync(uri).ConfigureAwait(false);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);

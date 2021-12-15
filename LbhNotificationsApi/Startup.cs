@@ -90,13 +90,14 @@ namespace LbhNotificationsApi
             services.AddDynamoDbHealthCheck<NotificationEntity>();
             services.AddSwaggerGen(c =>
             {
-                c.AddSecurityDefinition("Token",
+                c.AddSecurityDefinition("Bearer",
                     new OpenApiSecurityScheme
                     {
                         In = ParameterLocation.Header,
-                        Description = "Your Hackney API Key",
-                        Name = "X-Api-Key",
-                        Type = SecuritySchemeType.ApiKey
+                        Description = "Your Hackney Token. Example: \"Authorization: Bearer {token}\"",
+                        Name = "Authorization",
+                        Type = SecuritySchemeType.Http,
+                        Scheme = "bearer"
                     });
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -104,7 +105,7 @@ namespace LbhNotificationsApi
                     {
                         new OpenApiSecurityScheme
                         {
-                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Token" }
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
                         },
                         new List<string>()
                     }
@@ -128,7 +129,7 @@ namespace LbhNotificationsApi
                 //Get every ApiVersion attribute specified and create swagger docs for them
                 foreach (var apiVersion in _apiVersions)
                 {
-                    var version = $"v{apiVersion.ApiVersion.ToString()}";
+                    var version = $"v{apiVersion.ApiVersion}";
                     c.SwaggerDoc(version, new OpenApiInfo
                     {
                         Title = $"{ApiName}-api {version}",
@@ -144,6 +145,7 @@ namespace LbhNotificationsApi
                 if (File.Exists(xmlPath))
                     c.IncludeXmlComments(xmlPath);
             });
+
             services.AddTokenFactory();
             services.ConfigureLambdaLogging(Configuration);
             ConfigureLogging(services, Configuration);
