@@ -22,6 +22,7 @@ namespace LbhNotificationsApi.Tests.V1.E2ETests
 
     public class NotificationE2EDynamoDbTest : DynamoDbIntegrationTests<Startup>
     {
+
         private readonly Fixture _fixture = new Fixture();
         private readonly string _pk = "lbhNoification";
 
