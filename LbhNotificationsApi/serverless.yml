@@ -25,6 +25,9 @@ package:
 # TODO: Rename zipfile in build.sh and build.cmd to match this
   artifact: ./bin/release/netcoreapp3.1/lbh-notifications-api.zip
 
+  plugins:
+  - serverless-associate-waf  
+
 functions:
   LbhNotificationsApi:
     name: ${self:service}-${self:provider.stage}
@@ -90,6 +93,9 @@ resources:
                     - "lambda:InvokeFunction"
                   Resource: "*"
 custom:
+  associateWaf:
+    name: Platform_APIs_Web_ACL
+    version: V2
   vpc:
     development:
       securityGroupIds:
